@@ -1,0 +1,10 @@
+export { GrixApp } from './components/GrixApp.js';
+export { Canvas } from './components/Canvas.js';
+export { ToolBar } from './components/ToolBar.js';
+export { PluginManagerProvider, usePluginManager } from './plugins/PluginManager.js';
+export { createRayTool } from './plugins/RayTool.js';
+export { createRectangleTool } from './plugins/RectangleTool.js';
+export { createAreaCounter } from './plugins/AreaCounter.js';
+export { useCanvasStore } from './store/canvasStore.js';
+export { useInputSystem } from './hooks/useInputSystem.js';
+export declare const version = "0.1.0";

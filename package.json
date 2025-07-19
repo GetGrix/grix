@@ -1,0 +1,43 @@
+{
+  "name": "grix-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "demo-app"
+  ],
+  "scripts": {
+    "dev": "npm --workspace=demo-app run dev",
+    "build": "npm run build --workspaces",
+    "build:core": "npm --workspace=packages/core run build",
+    "build:ui": "npm --workspace=packages/ui run build", 
+    "build:demo": "npm --workspace=demo-app run build",
+    "test": "npm run test --workspaces",
+    "test:watch": "npx vitest",
+    "lint": "npx eslint .",
+    "clean": "npx rimraf packages/*/dist demo-app/dist"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^9.19.0",
+    "globals": "^15.14.0",
+    "postcss": "^8.4.32",
+    "rimraf": "^5.0.5",
+    "tailwindcss": "^3.3.6",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.22.0",
+    "vite": "^6.1.0",
+    "vitest": "^1.5.0"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zustand": "^5.0.3"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "grix-demo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npx vite",
+    "build": "npx tsc -b && npx vite build",
+    "preview": "npx vite preview"
+  },
+  "dependencies": {
+    "@getgrix/core": "*",
+    "@getgrix/ui": "*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

@@ -97,10 +97,40 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
     />
   ));
 
+  // Calculate 45-degree reference line (y=x)
+  const origin = worldToScreen({ x: 0, y: 0 });
+  
+  // Find the bounds of the canvas in world coordinates
+  const viewBounds = {
+    left: viewport.center.x - (canvasSize.width / 2) / viewport.zoom,
+    right: viewport.center.x + (canvasSize.width / 2) / viewport.zoom,
+    top: viewport.center.y + (canvasSize.height / 2) / viewport.zoom,
+    bottom: viewport.center.y - (canvasSize.height / 2) / viewport.zoom
+  };
+  
+  // Calculate start and end points for the y=x line that spans the visible area
+  const minCoord = Math.min(viewBounds.left, viewBounds.bottom);
+  const maxCoord = Math.max(viewBounds.right, viewBounds.top);
+  
+  const lineStart = worldToScreen({ x: minCoord, y: minCoord });
+  const lineEnd = worldToScreen({ x: maxCoord, y: maxCoord });
+
   return (
     <g className="grid">
       {verticalLines}
       {horizontalLines}
+      
+      {/* 45-degree reference line (y=x) */}
+      <line
+        x1={lineStart.x}
+        y1={lineStart.y}
+        x2={lineEnd.x}
+        y2={lineEnd.y}
+        stroke="#A78BFA"
+        strokeWidth="1.5"
+        opacity="0.6"
+        strokeDasharray="5,5"
+      />
       
       {/* Coordinate labels */}
       {gridSystem.shouldShowLabels && (

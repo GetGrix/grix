@@ -462,6 +462,7 @@ export function Canvas({
           touchTargetSize={touchTargetSize}
           worldToScreen={worldToScreen}
           selectedObjects={selectedObjects}
+          canvasSize={{ width, height }}
         />
         
         {/* Preview cursor dot in build mode - hide when pointer is down */}

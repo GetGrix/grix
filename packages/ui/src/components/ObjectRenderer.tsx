@@ -9,9 +9,10 @@ interface ObjectRendererProps {
   touchTargetSize: number;
   worldToScreen: (point: Point) => Point;
   selectedObjects?: string[];
+  canvasSize: { width: number; height: number };
 }
 
-export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScreen, selectedObjects = [] }: ObjectRendererProps) {
+export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScreen, selectedObjects = [], canvasSize }: ObjectRendererProps) {
   // Determine grid size for coordinate formatting (shared across all objects)
   const gridSize = viewport.zoom > 50 ? 0.1 : viewport.zoom > 10 ? 1 : 10;
   
@@ -56,7 +57,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
               fill={isSelected ? "#1D4ED8" : "#2563eb"}
               stroke={isSelected ? "#60A5FA" : "none"}
               strokeWidth={isSelected ? 2 : 0}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'move' }}
               onMouseEnter={() => setHoveredEndpoint(`${obj.id}-start`)}
               onMouseLeave={() => setHoveredEndpoint(null)}
             />
@@ -67,7 +68,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
               fill={isSelected ? "#1D4ED8" : "#2563eb"}
               stroke={isSelected ? "#60A5FA" : "none"}
               strokeWidth={isSelected ? 2 : 0}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'move' }}
               onMouseEnter={() => setHoveredEndpoint(`${obj.id}-end`)}
               onMouseLeave={() => setHoveredEndpoint(null)}
             />
@@ -176,6 +177,233 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                 }
               }
               return null;
+            })()}
+            
+            {/* Infinite line extension and equivalent fractions for origin lines */}
+            {(() => {
+              const isFromOrigin = Math.abs(obj.properties.startPoint.x) < 0.001 && Math.abs(obj.properties.startPoint.y) < 0.001;
+              
+              if (!isFromOrigin) return null;
+              
+              const endX = obj.properties.endPoint.x;
+              const endY = obj.properties.endPoint.y;
+              
+              // Only show if we have a valid line (not just a point)
+              if (Math.abs(endX) < 0.001 && Math.abs(endY) < 0.001) return null;
+              
+              // Calculate the direction vector
+              const dx = endX;
+              const dy = endY;
+              
+              // Find the bounds of the canvas in world coordinates
+              const viewBounds = {
+                left: viewport.center.x - (canvasSize.width / 2) / viewport.zoom,
+                right: viewport.center.x + (canvasSize.width / 2) / viewport.zoom,
+                top: viewport.center.y + (canvasSize.height / 2) / viewport.zoom,
+                bottom: viewport.center.y - (canvasSize.height / 2) / viewport.zoom
+              };
+              
+              // Extend the line far beyond the viewport
+              const maxExtent = Math.max(
+                Math.abs(viewBounds.left), Math.abs(viewBounds.right),
+                Math.abs(viewBounds.top), Math.abs(viewBounds.bottom)
+              ) * 2;
+              
+              // Calculate extended endpoint
+              const length = Math.sqrt(dx * dx + dy * dy);
+              if (length === 0) return null;
+              
+              const unitX = dx / length;
+              const unitY = dy / length;
+              const extendedEnd = {
+                x: maxExtent * unitX,
+                y: maxExtent * unitY
+              };
+              
+              const extendedEndScreen = worldToScreen(extendedEnd);
+              
+              // Find all integer intersections along the extended line
+              const equivalentPoints = [];
+              
+              // We'll check multiples of the original fraction
+              const gcd = (a: number, b: number): number => b === 0 ? Math.abs(a) : gcd(b, a % b);
+              const originalGCD = gcd(Math.abs(Math.round(endY)), Math.abs(Math.round(endX)));
+              
+              if (originalGCD > 0) {
+                const baseY = Math.round(endY) / originalGCD;
+                const baseX = Math.round(endX) / originalGCD;
+                
+                // Find multiples that are within reasonable bounds and have integer coordinates
+                for (let multiplier = 1; multiplier <= 20; multiplier++) {
+                  const pointX = baseX * multiplier;
+                  const pointY = baseY * multiplier;
+                  
+                  // Check if this point is within a reasonable distance and has integer coordinates
+                  if (Math.abs(pointX - Math.round(pointX)) < 0.001 && 
+                      Math.abs(pointY - Math.round(pointY)) < 0.001 &&
+                      Math.abs(pointX) <= maxExtent && 
+                      Math.abs(pointY) <= maxExtent) {
+                    
+                    const screenPos = worldToScreen({ x: pointX, y: pointY });
+                    
+                    // Only include if within visible area (with some padding)
+                    if (screenPos.x >= -100 && screenPos.x <= canvasSize.width + 100 &&
+                        screenPos.y >= -100 && screenPos.y <= canvasSize.height + 100) {
+                      equivalentPoints.push({
+                        world: { x: pointX, y: pointY },
+                        screen: screenPos,
+                        fraction: { num: Math.round(pointY), den: Math.round(pointX) }
+                      });
+                    }
+                  }
+                }
+              }
+              
+              // Calculate line length multiples for educational purposes
+              const originalLength = Math.sqrt(endX * endX + endY * endY);
+              const lengthMultiples = [];
+              
+              if (originalLength > 0) {
+                for (let multiple = 2; multiple <= 5; multiple++) {
+                  const multipleX = endX * multiple;
+                  const multipleY = endY * multiple;
+                  const screenPos = worldToScreen({ x: multipleX, y: multipleY });
+                  
+                  // Only show if within reasonable view bounds
+                  if (screenPos.x >= -50 && screenPos.x <= canvasSize.width + 50 &&
+                      screenPos.y >= -50 && screenPos.y <= canvasSize.height + 50) {
+                    lengthMultiples.push({
+                      screen: screenPos,
+                      multiple: multiple
+                    });
+                  }
+                }
+              }
+
+              return (
+                <g>
+                  {/* Extended dotted line */}
+                  <line
+                    x1={end.x}
+                    y1={end.y}
+                    x2={extendedEndScreen.x}
+                    y2={extendedEndScreen.y}
+                    stroke={isSelected ? "#1D4ED8" : "#2563eb"}
+                    strokeWidth="1"
+                    opacity="0.3"
+                    strokeDasharray="3,3"
+                  />
+                  
+                  {/* Length multiple tick marks */}
+                  {lengthMultiples.map((mark, index) => (
+                    <g key={`length-${index}`}>
+                      {/* Small tick mark */}
+                      <circle
+                        cx={mark.screen.x}
+                        cy={mark.screen.y}
+                        r="2"
+                        fill={isSelected ? "#1D4ED8" : "#2563eb"}
+                        opacity="0.4"
+                      />
+                      {/* Subtle multiple label */}
+                      <text
+                        x={mark.screen.x + 8}
+                        y={mark.screen.y - 8}
+                        fontSize="7"
+                        fontWeight="400"
+                        fill={isSelected ? "#1D4ED8" : "#2563eb"}
+                        textAnchor="start"
+                        opacity="0.5"
+                      >
+                        ×{mark.multiple}
+                      </text>
+                    </g>
+                  ))}
+                  
+                  {/* Soft area rectangle for multiplication visualization */}
+                  {(() => {
+                    // Only show if endpoint has positive integer-ish coordinates
+                    const roundedX = Math.round(endX);
+                    const roundedY = Math.round(endY);
+                    
+                    if (roundedX > 0 && roundedY > 0 && 
+                        Math.abs(endX - roundedX) < 0.1 && 
+                        Math.abs(endY - roundedY) < 0.1) {
+                      
+                      const originScreen = worldToScreen({ x: 0, y: 0 });
+                      const endpointScreen = worldToScreen({ x: roundedX, y: roundedY });
+                      
+                      const rectWidth = Math.abs(endpointScreen.x - originScreen.x);
+                      const rectHeight = Math.abs(endpointScreen.y - originScreen.y);
+                      
+                      // Position rectangle properly (origin at bottom-left in world coords)
+                      const rectX = Math.min(originScreen.x, endpointScreen.x);
+                      const rectY = Math.min(originScreen.y, endpointScreen.y);
+                      
+                      const area = roundedX * roundedY;
+                      
+                      return (
+                        <g>
+                          {/* Super soft background rectangle */}
+                          <rect
+                            x={rectX}
+                            y={rectY}
+                            width={rectWidth}
+                            height={rectHeight}
+                            fill={isSelected ? "#1D4ED8" : "#2563eb"}
+                            opacity="0.08"
+                            stroke={isSelected ? "#1D4ED8" : "#2563eb"}
+                            strokeWidth="0.5"
+                            strokeOpacity="0.15"
+                          />
+                          
+                          {/* Area label at top center */}
+                          <text
+                            x={rectX + rectWidth / 2}
+                            y={rectY + 15}
+                            fontSize="10"
+                            fontWeight="400"
+                            fill={isSelected ? "#1D4ED8" : "#2563eb"}
+                            textAnchor="middle"
+                            opacity="0.6"
+                          >
+                            {roundedY} × {roundedX} = {area}
+                          </text>
+                        </g>
+                      );
+                    }
+                    return null;
+                  })()}
+                  
+                  {/* Equivalent fraction points */}
+                  {equivalentPoints.map((point, index) => (
+                    <g key={`equiv-${index}`}>
+                      {/* Green hollow circle */}
+                      <circle
+                        cx={point.screen.x}
+                        cy={point.screen.y}
+                        r="4"
+                        fill="white"
+                        stroke="#22C55E"
+                        strokeWidth="2"
+                        opacity="0.8"
+                      />
+                      {/* Fraction label */}
+                      <text
+                        x={point.screen.x + 15}
+                        y={point.screen.y + 4}
+                        fontSize="9"
+                        fontWeight="500"
+                        fill="#22C55E"
+                        textAnchor="start"
+                        opacity="0.8"
+                      >
+                        {point.fraction.num}/{point.fraction.den}
+                      </text>
+                    </g>
+                  ))}
+                </g>
+              );
             })()}
           </g>
         );

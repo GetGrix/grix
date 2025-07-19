@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { PluginManagerProvider, usePluginManager } from '../plugins/PluginManager.js';
 import { Canvas } from './Canvas.js';
 import { ToolBar } from './ToolBar.js';
+import { ErrorBoundary } from './ErrorBoundary.js';
 import { createRayTool } from '../plugins/RayTool.js';
 import { createRectangleTool } from '../plugins/RectangleTool.js';
 import { createAreaCounter } from '../plugins/AreaCounter.js';
@@ -45,8 +46,12 @@ function GrixAppContent() {
 
 export function GrixApp() {
   return (
-    <PluginManagerProvider>
-      <GrixAppContent />
-    </PluginManagerProvider>
+    <ErrorBoundary>
+      <PluginManagerProvider>
+        <ErrorBoundary>
+          <GrixAppContent />
+        </ErrorBoundary>
+      </PluginManagerProvider>
+    </ErrorBoundary>
   );
 }

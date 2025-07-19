@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { MathUtils } from '@getgrix/core';
 import { EventBus } from '@getgrix/core';
 import type { Plugin, PluginContext, MathAPI } from '@getgrix/core';
@@ -33,16 +33,29 @@ export function PluginManagerProvider({ children }: PluginManagerProviderProps) 
   const [pluginContexts] = useState(() => new Map<string, PluginContext>());
   const [activeTool, setActiveTool] = useState<string | null>(null);
 
-  // Create shared API instances
-  const [canvasAPI] = useState(() => createCanvasAPI());
-  const [stateManager] = useState(() => createStateManager());
+  // Create shared API instances using useRef to avoid re-creation
+  const canvasAPIRef = useRef<ReturnType<typeof createCanvasAPI>>();
+  const stateManagerRef = useRef<ReturnType<typeof createStateManager>>();
+  const mathAPIRef = useRef<MathAPI>();
   
-  const [mathAPI] = useState((): MathAPI => ({
-    distance: MathUtils.distance,
-    slope: MathUtils.slope,
-    snapToGrid: MathUtils.snapToGrid,
-    calculateArea: MathUtils.calculateArea
-  }));
+  if (!canvasAPIRef.current) {
+    canvasAPIRef.current = createCanvasAPI();
+  }
+  if (!stateManagerRef.current) {
+    stateManagerRef.current = createStateManager();
+  }
+  if (!mathAPIRef.current) {
+    mathAPIRef.current = {
+      distance: MathUtils.distance,
+      slope: MathUtils.slope,
+      snapToGrid: MathUtils.snapToGrid,
+      calculateArea: MathUtils.calculateArea
+    };
+  }
+  
+  const canvasAPI = canvasAPIRef.current;
+  const stateManager = stateManagerRef.current;
+  const mathAPI = mathAPIRef.current;
 
   const registerPlugin = (plugin: Plugin) => {
     if (plugins.has(plugin.id)) {
@@ -103,6 +116,7 @@ export function PluginManagerProvider({ children }: PluginManagerProviderProps) 
     const handlePointerEvent = (eventType: string) => (data: any) => {
       const activePlugin = activeTool ? plugins.get(activeTool) : null;
       
+      // If we have an active tool, use it
       if (activePlugin) {
         try {
           switch (eventType) {
@@ -118,6 +132,41 @@ export function PluginManagerProvider({ children }: PluginManagerProviderProps) 
           }
         } catch (error) {
           console.error(`Error in plugin ${activeTool} handling ${eventType}:`, error);
+        }
+      } else {
+        // If no active tool, check if we need tools for object manipulation
+        // Only forward to the tool that owns the selected object
+        const selectedObjects = stateManager.getState().selectedObjects;
+        
+        try {
+          // Determine which tool should handle this based on selected objects
+          let targetTool: Plugin | undefined;
+          
+          if (selectedObjects.length === 1) {
+            const selectedObj = canvasAPI.getObject(selectedObjects[0]);
+            if (selectedObj?.type === 'ray') {
+              targetTool = plugins.get('ray-tool');
+            } else if (selectedObj?.type === 'rectangle') {
+              targetTool = plugins.get('rectangle-tool');
+            }
+          }
+          
+          // Only forward to the relevant tool
+          if (targetTool) {
+            switch (eventType) {
+              case 'pointer:down':
+                targetTool.onPointerDown?.(data);
+                break;
+              case 'pointer:move':
+                targetTool.onPointerMove?.(data);
+                break;
+              case 'pointer:up':
+                targetTool.onPointerUp?.(data);
+                break;
+            }
+          }
+        } catch (error) {
+          console.error(`Error in tool handling ${eventType} for manipulation:`, error);
         }
       }
     };

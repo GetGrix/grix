@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
 import type { 
   CanvasState, 
   MathObject, 
@@ -33,8 +32,7 @@ interface CanvasStore extends CanvasState {
   worldToScreen: (point: Point) => Point;
 }
 
-export const useCanvasStore = create<CanvasStore>()(
-  subscribeWithSelector((set, get) => ({
+export const useCanvasStore = create<CanvasStore>((set, get) => ({
     // Initial state
     viewport: {
       center: { x: 0, y: 0 },
@@ -133,21 +131,18 @@ export const useCanvasStore = create<CanvasStore>()(
       const { viewport, canvasSize } = get();
       return MathUtils.worldToScreen(point, viewport, canvasSize);
     }
-  }))
-);
+  }));
 
 // Create API implementations for plugins
 export const createCanvasAPI = (): CanvasAPI => {
-  const store = useCanvasStore.getState();
-  
   return {
-    addObject: store.addObject,
-    removeObject: store.removeObject,
-    updateObject: store.updateObject,
-    getObject: store.getObject,
-    getAllObjects: store.getAllObjects,
-    screenToWorld: store.screenToWorld,
-    worldToScreen: store.worldToScreen
+    addObject: (object: MathObject) => useCanvasStore.getState().addObject(object),
+    removeObject: (id: string) => useCanvasStore.getState().removeObject(id),
+    updateObject: (id: string, updates: Partial<MathObject>) => useCanvasStore.getState().updateObject(id, updates),
+    getObject: (id: string) => useCanvasStore.getState().getObject(id),
+    getAllObjects: () => useCanvasStore.getState().getAllObjects(),
+    screenToWorld: (point: Point) => useCanvasStore.getState().screenToWorld(point),
+    worldToScreen: (point: Point) => useCanvasStore.getState().worldToScreen(point)
   };
 };
 
@@ -169,16 +164,15 @@ export const createStateManager = (): StateManager => {
     },
     
     subscribe: (callback) => {
-      return useCanvasStore.subscribe(
-        (state) => ({
+      return useCanvasStore.subscribe((state) => {
+        callback({
           viewport: state.viewport,
           objects: state.objects,
           selectedObjects: state.selectedObjects,
           snapToGrid: state.snapToGrid,
           gridDensity: state.gridDensity
-        }),
-        callback
-      );
+        });
+      });
     }
   };
 };

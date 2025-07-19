@@ -1,0 +1,189 @@
+// Grid rendering component for better modularity
+import React from 'react';
+import { calculateAdaptiveGrid, generateGridLines, formatCoordinate } from '../utils/gridUtils.js';
+import type { Point, Viewport, MathObject } from '@getgrix/core';
+
+interface GridRendererProps {
+  viewport: Viewport;
+  canvasSize: { width: number; height: number };
+  worldToScreen: (point: Point) => Point;
+  objects?: MathObject[];
+}
+
+export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = [] }: GridRendererProps) {
+  // Calculate adaptive grid system
+  const gridSystem = calculateAdaptiveGrid(viewport);
+  const { verticalLines: vLines, horizontalLines: hLines } = generateGridLines(
+    viewport,
+    canvasSize,
+    gridSystem,
+    worldToScreen
+  );
+
+  if (!gridSystem.shouldShowGrid) {
+    return null;
+  }
+
+  // Find ray intersections with x=1 line (rays starting from origin)
+  const rayIntersections: Array<{ y: number; screenY: number }> = [];
+  objects.forEach(obj => {
+    if (obj.type === 'ray') {
+      const { startPoint, endPoint } = obj.properties;
+      // Check if ray starts from origin (0,0)
+      if (Math.abs(startPoint.x) < 0.001 && Math.abs(startPoint.y) < 0.001) {
+        // Calculate intersection with x=1 line
+        const dx = endPoint.x - startPoint.x;
+        const dy = endPoint.y - startPoint.y;
+        
+        if (Math.abs(dx) > 0.001) { // Avoid division by zero
+          const t = 1 / dx; // Parameter for x=1
+          if (t > 0 && t <= 1) { // Ray goes through x=1 within its length
+            const intersectionY = startPoint.y + t * dy;
+            const screenPos = worldToScreen({ x: 1, y: intersectionY });
+            rayIntersections.push({ y: intersectionY, screenY: screenPos.y });
+          }
+        }
+      }
+    }
+  });
+
+  // Generate grid line elements with special x=1 line
+  const verticalLines = vLines.map(line => {
+    // Special styling for x=1 line
+    const isXOne = Math.abs(line.value - 1) < 0.001;
+    const stroke = line.isAxis ? '#374151' : 
+                   isXOne ? '#60A5FA' : // Light blue for x=1
+                   line.isInteger ? '#E5E7EB' : // Very faint for integer lines
+                   line.isMajor ? '#9CA3AF' : '#E5E7EB';
+    const strokeWidth = line.isAxis ? 2 : 
+                        isXOne ? 1.5 :
+                        line.isInteger ? 0.3 :
+                        line.isMajor ? 1 : 0.5;
+    const opacity = line.isAxis ? 1 : 
+                    isXOne ? 0.8 :
+                    line.isInteger ? 0.15 : // Very faint for integer lines
+                    line.isMajor ? 0.6 * gridSystem.opacity : 0.3 * gridSystem.opacity;
+    
+    return (
+      <line
+        key={`v${line.value}`}
+        x1={line.x}
+        y1={0}
+        x2={line.x}
+        y2={canvasSize.height}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        opacity={opacity}
+      />
+    );
+  });
+
+  const horizontalLines = hLines.map(line => (
+    <line
+      key={`h${line.value}`}
+      x1={0}
+      y1={line.y}
+      x2={canvasSize.width}
+      y2={line.y}
+      stroke={line.isAxis ? '#374151' : 
+              line.isInteger ? '#E5E7EB' : // Very faint for integer lines
+              line.isMajor ? '#9CA3AF' : '#E5E7EB'}
+      strokeWidth={line.isAxis ? 2 : 
+                   line.isInteger ? 0.3 :
+                   line.isMajor ? 1 : 0.5}
+      opacity={line.isAxis ? 1 : 
+               line.isInteger ? 0.15 : // Very faint for integer lines
+               line.isMajor ? 0.6 * gridSystem.opacity : 0.3 * gridSystem.opacity}
+    />
+  ));
+
+  return (
+    <g className="grid">
+      {verticalLines}
+      {horizontalLines}
+      
+      {/* Coordinate labels */}
+      {gridSystem.shouldShowLabels && (
+        <g className="labels" fontSize="12" fill="#374151">
+          {/* X-axis labels */}
+          {vLines
+            .filter(line => Math.abs(line.value % gridSystem.labelStep) < gridSystem.gridSize / 2 && Math.abs(line.value) >= gridSystem.labelStep / 2)
+            .map(line => (
+              <text
+                key={`xlabel${line.value}`}
+                x={line.x}
+                y={worldToScreen({ x: 0, y: 0 }).y + 20}
+                textAnchor="middle"
+                fontSize="11"
+                fontWeight="500"
+                opacity={Math.max(0.7, gridSystem.opacity)}
+              >
+                {formatCoordinate(line.value, gridSystem.gridSize)}
+              </text>
+            ))
+          }
+          
+          {/* Y-axis labels */}
+          {hLines
+            .filter(line => Math.abs(line.value % gridSystem.labelStep) < gridSystem.gridSize / 2 && Math.abs(line.value) >= gridSystem.labelStep / 2)
+            .map(line => (
+              <text
+                key={`ylabel${line.value}`}
+                x={worldToScreen({ x: 0, y: 0 }).x - 15}
+                y={line.y + 4}
+                textAnchor="middle"
+                fontSize="11"
+                fontWeight="500"
+                opacity={Math.max(0.7, gridSystem.opacity)}
+              >
+                {formatCoordinate(line.value, gridSystem.gridSize)}
+              </text>
+            ))
+          }
+          
+          {/* Origin label - positioned to the left of y-axis */}
+          <text
+            x={worldToScreen({ x: 0, y: 0 }).x - 25}
+            y={worldToScreen({ x: 0, y: 0 }).y - 10}
+            fontSize="11"
+            fontWeight="600"
+            fill="#374151"
+            opacity={Math.max(0.8, gridSystem.opacity)}
+          >
+            (0,0)
+          </text>
+
+          {/* Ray intersection labels and dots on x=1 line */}
+          {rayIntersections.map((intersection, index) => {
+            const xOneScreenX = worldToScreen({ x: 1, y: 0 }).x;
+            return (
+              <g key={`ray-intersection-${index}`}>
+                {/* Hollow dot at intersection point */}
+                <circle
+                  cx={xOneScreenX}
+                  cy={intersection.screenY}
+                  r="4"
+                  fill="white"
+                  stroke="#60A5FA"
+                  strokeWidth="2"
+                  opacity="0.9"
+                />
+                {/* Label text */}
+                <text
+                  x={xOneScreenX + 15}
+                  y={intersection.screenY + 4}
+                  fontSize="10"
+                  fontWeight="600"
+                  fill="#60A5FA"
+                  opacity="0.9"
+                >
+                  y = {intersection.y.toFixed(2)}
+                </text>
+              </g>
+            );
+          })}
+        </g>
+      )}
+    </g>
+  );
+}

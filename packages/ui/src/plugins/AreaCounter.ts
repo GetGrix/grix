@@ -172,14 +172,14 @@ export class AreaCounter implements Plugin {
   }
 
   private formatArea(area: number, width: number, height: number): string {
-    // For integer dimensions, show the multiplication
+    // For integer dimensions, show the multiplication - HEIGHT × WIDTH = AREA
     const isIntegerWidth = Math.abs(width - Math.round(width)) < 0.001;
     const isIntegerHeight = Math.abs(height - Math.round(height)) < 0.001;
     
     if (isIntegerWidth && isIntegerHeight) {
       const w = Math.round(width);
       const h = Math.round(height);
-      return `${w} × ${h} = ${w * h}`;
+      return `${h} × ${w} = ${h * w}`;
     }
     
     // For non-integer dimensions, show decimal area

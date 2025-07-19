@@ -4,35 +4,46 @@ interface RayState {
   isCreating: boolean;
   startPoint: Point | null;
   currentRay: Ray | null;
-  dragTarget: 'start' | 'end' | null;
+  dragTarget: 'start' | 'end' | 'move' | null;
+  dragOffset: Point | null;
 }
 
 export class RayTool implements Plugin {
   id = 'ray-tool';
-  name = 'Ray Builder';
+  name = 'Line Builder';
   
   private context!: PluginContext;
   private state: RayState = {
     isCreating: false,
     startPoint: null,
     currentRay: null,
-    dragTarget: null
+    dragTarget: null,
+    dragOffset: null
   };
 
   init(context: PluginContext): void {
     this.context = context;
     
-    // Listen for tool activation
+    // Listen for tool activation and cancellation
     context.events.on('tool:changed', this.handleToolChange.bind(this));
+    context.events.on('tool:cancel', this.handleToolCancel.bind(this));
   }
 
   destroy(): void {
     this.context.events.off('tool:changed', this.handleToolChange.bind(this));
+    this.context.events.off('tool:cancel', this.handleToolCancel.bind(this));
   }
 
   private handleToolChange(data: { current: string | null }): void {
     if (data.current !== this.id) {
       // Cancel any ongoing creation when tool is deactivated
+      this.cancelCreation();
+    }
+  }
+
+  private handleToolCancel(data: { toolId: string }): void {
+    if (data.toolId === this.id) {
+      // Cancel any ongoing creation when Esc is pressed
       this.cancelCreation();
     }
   }
@@ -45,7 +56,8 @@ export class RayTool implements Plugin {
       isCreating: false,
       startPoint: null,
       currentRay: null,
-      dragTarget: null
+      dragTarget: null,
+      dragOffset: null
     };
   }
 
@@ -62,27 +74,44 @@ export class RayTool implements Plugin {
     return point;
   }
 
-  private findNearestHandle(screenPoint: Point, tolerance: number = 20): { rayId: string; handle: 'start' | 'end' } | null {
+  private findNearestHandle(screenPoint: Point, tolerance: number = 20): { rayId: string; handle: 'start' | 'end' | 'move' } | null {
     const worldPoint = this.context.canvas.screenToWorld(screenPoint);
     const objects = this.context.canvas.getAllObjects();
     
     for (const obj of objects) {
       if (obj.type === 'ray') {
         const ray = obj as Ray;
-        const startDistance = this.context.math.distance(worldPoint, ray.properties.startPoint);
-        const endDistance = this.context.math.distance(worldPoint, ray.properties.endPoint);
-        
         const startScreen = this.context.canvas.worldToScreen(ray.properties.startPoint);
         const endScreen = this.context.canvas.worldToScreen(ray.properties.endPoint);
         
         const startScreenDistance = this.context.math.distance(screenPoint, startScreen);
         const endScreenDistance = this.context.math.distance(screenPoint, endScreen);
         
+        // Check endpoints first (higher priority)
         if (startScreenDistance <= tolerance) {
           return { rayId: ray.id, handle: 'start' };
         }
         if (endScreenDistance <= tolerance) {
           return { rayId: ray.id, handle: 'end' };
+        }
+        
+        // Check if clicking on the line itself for moving
+        const lineDistanceThreshold = 8; // pixels
+        const dx = endScreen.x - startScreen.x;
+        const dy = endScreen.y - startScreen.y;
+        const length = Math.sqrt(dx * dx + dy * dy);
+        
+        if (length > 0) {
+          const t = Math.max(0, Math.min(1, ((screenPoint.x - startScreen.x) * dx + (screenPoint.y - startScreen.y) * dy) / (length * length)));
+          const projection = {
+            x: startScreen.x + t * dx,
+            y: startScreen.y + t * dy
+          };
+          
+          const lineDistance = this.context.math.distance(screenPoint, projection);
+          if (lineDistance <= lineDistanceThreshold) {
+            return { rayId: ray.id, handle: 'move' };
+          }
         }
       }
     }
@@ -98,17 +127,27 @@ export class RayTool implements Plugin {
     const handle = this.findNearestHandle(screenPoint);
     
     if (handle) {
-      // Start dragging existing ray handle
+      // Start dragging existing ray handle - only if this ray is selected
       const ray = this.context.canvas.getObject(handle.rayId) as Ray;
-      if (ray) {
+      const selectedObjects = this.context.state.getState().selectedObjects;
+      
+      if (ray && selectedObjects.includes(handle.rayId)) {
         this.state.currentRay = ray;
         this.state.dragTarget = handle.handle;
         this.state.isCreating = false;
+        
+        // For move operations, calculate offset
+        if (handle.handle === 'move') {
+          this.state.dragOffset = {
+            x: worldPoint.x - ray.properties.startPoint.x,
+            y: worldPoint.y - ray.properties.startPoint.y
+          };
+        }
         return;
       }
     }
 
-    // Start creating new ray
+    // Create new ray (this will only be called when this tool is active due to PluginManager logic)
     if (!this.state.isCreating) {
       this.state.isCreating = true;
       this.state.startPoint = worldPoint;
@@ -159,16 +198,31 @@ export class RayTool implements Plugin {
       
       if (this.state.dragTarget === 'start') {
         newProperties.startPoint = worldPoint;
-      } else {
+      } else if (this.state.dragTarget === 'end') {
         newProperties.endPoint = worldPoint;
+      } else if (this.state.dragTarget === 'move' && this.state.dragOffset) {
+        // Move the entire ray without changing length or angle
+        const dx = worldPoint.x - this.state.dragOffset.x - currentRay.properties.startPoint.x;
+        const dy = worldPoint.y - this.state.dragOffset.y - currentRay.properties.startPoint.y;
+        
+        newProperties.startPoint = {
+          x: currentRay.properties.startPoint.x + dx,
+          y: currentRay.properties.startPoint.y + dy
+        };
+        newProperties.endPoint = {
+          x: currentRay.properties.endPoint.x + dx,
+          y: currentRay.properties.endPoint.y + dy
+        };
       }
       
-      // Recalculate slope and y-intercept
-      const slope = this.context.math.slope(newProperties.startPoint, newProperties.endPoint);
-      newProperties.slope = slope;
-      newProperties.yIntercept = isFinite(slope) 
-        ? newProperties.startPoint.y - slope * newProperties.startPoint.x
-        : newProperties.startPoint.y;
+      // Recalculate slope and y-intercept only if endpoints changed
+      if (this.state.dragTarget === 'start' || this.state.dragTarget === 'end') {
+        const slope = this.context.math.slope(newProperties.startPoint, newProperties.endPoint);
+        newProperties.slope = slope;
+        newProperties.yIntercept = isFinite(slope) 
+          ? newProperties.startPoint.y - slope * newProperties.startPoint.x
+          : newProperties.startPoint.y;
+      }
 
       this.context.canvas.updateObject(this.state.currentRay.id, {
         properties: newProperties
@@ -201,6 +255,12 @@ export class RayTool implements Plugin {
           rayId: this.state.currentRay.id,
           ray: this.state.currentRay
         });
+        
+        // Emit event to return to pan mode after successful creation
+        this.context.events.emit('tool:creation-complete', {
+          toolId: this.id,
+          objectId: this.state.currentRay.id
+        });
       }
     }
 
@@ -209,7 +269,8 @@ export class RayTool implements Plugin {
       isCreating: false,
       startPoint: null,
       currentRay: null,
-      dragTarget: null
+      dragTarget: null,
+      dragOffset: null
     };
   }
 }

@@ -4,13 +4,14 @@ interface RectangleState {
   isCreating: boolean;
   startPoint: Point | null;
   currentRectangle: Rectangle | null;
-  dragTarget: 'move' | 'corner' | null;
+  dragTarget: 'corner-tl' | 'corner-tr' | 'corner-bl' | 'corner-br' | 'move' | null;
   dragOffset: Point | null;
+  lockedCorner: Point | null; // The opposite corner that stays fixed during resize
 }
 
 export class RectangleTool implements Plugin {
   id = 'rectangle-tool';
-  name = 'Rectangle Selector';
+  name = 'Rectangle Builder';
   
   private context!: PluginContext;
   private state: RectangleState = {
@@ -18,23 +19,33 @@ export class RectangleTool implements Plugin {
     startPoint: null,
     currentRectangle: null,
     dragTarget: null,
-    dragOffset: null
+    dragOffset: null,
+    lockedCorner: null
   };
 
   init(context: PluginContext): void {
     this.context = context;
     
-    // Listen for tool activation
+    // Listen for tool activation and cancellation
     context.events.on('tool:changed', this.handleToolChange.bind(this));
+    context.events.on('tool:cancel', this.handleToolCancel.bind(this));
   }
 
   destroy(): void {
     this.context.events.off('tool:changed', this.handleToolChange.bind(this));
+    this.context.events.off('tool:cancel', this.handleToolCancel.bind(this));
   }
 
   private handleToolChange(data: { current: string | null }): void {
     if (data.current !== this.id) {
       // Cancel any ongoing creation when tool is deactivated
+      this.cancelCreation();
+    }
+  }
+
+  private handleToolCancel(data: { toolId: string }): void {
+    if (data.toolId === this.id) {
+      // Cancel any ongoing creation when Esc is pressed
       this.cancelCreation();
     }
   }
@@ -48,7 +59,8 @@ export class RectangleTool implements Plugin {
       startPoint: null,
       currentRectangle: null,
       dragTarget: null,
-      dragOffset: null
+      dragOffset: null,
+      lockedCorner: null
     };
   }
 
@@ -83,20 +95,25 @@ export class RectangleTool implements Plugin {
     return null;
   }
 
-  private isNearCorner(worldPoint: Point, rect: Rectangle, tolerance: number = 0.5): boolean {
+  private findNearestCorner(worldPoint: Point, rect: Rectangle, tolerance: number = 0.5): 'corner-tl' | 'corner-tr' | 'corner-bl' | 'corner-br' | null {
     const { x, y, width, height } = rect.properties;
     
-    // Check all four corners
+    // Define all four corners with their types
     const corners = [
-      { x, y }, // bottom-left
-      { x: x + width, y }, // bottom-right
-      { x, y: y + height }, // top-left
-      { x: x + width, y: y + height } // top-right
+      { point: { x, y }, type: 'corner-bl' as const }, // bottom-left
+      { point: { x: x + width, y }, type: 'corner-br' as const }, // bottom-right
+      { point: { x, y: y + height }, type: 'corner-tl' as const }, // top-left
+      { point: { x: x + width, y: y + height }, type: 'corner-tr' as const } // top-right
     ];
     
-    return corners.some(corner => 
-      this.context.math.distance(worldPoint, corner) <= tolerance
-    );
+    // Find the closest corner within tolerance
+    for (const corner of corners) {
+      if (this.context.math.distance(worldPoint, corner.point) <= tolerance) {
+        return corner.type;
+      }
+    }
+    
+    return null;
   }
 
   onPointerDown(event: UnifiedPointerEvent): void {
@@ -107,26 +124,49 @@ export class RectangleTool implements Plugin {
     const existingRect = this.findRectangleAtPoint(worldPoint);
     
     if (existingRect) {
-      // Check if we're near a corner for resizing
-      if (this.isNearCorner(worldPoint, existingRect)) {
-        this.state.currentRectangle = existingRect;
-        this.state.dragTarget = 'corner';
-        this.state.isCreating = false;
-        return;
-      } else {
-        // Start moving the rectangle
-        this.state.currentRectangle = existingRect;
-        this.state.dragTarget = 'move';
-        this.state.dragOffset = {
-          x: worldPoint.x - existingRect.properties.x,
-          y: worldPoint.y - existingRect.properties.y
-        };
-        this.state.isCreating = false;
-        return;
+      // Only handle rectangle manipulation if this rectangle is selected
+      const selectedObjects = this.context.state.getState().selectedObjects;
+      
+      if (selectedObjects.includes(existingRect.id)) {
+        // Check if we're near a corner for resizing
+        const cornerType = this.findNearestCorner(worldPoint, existingRect);
+        if (cornerType) {
+          this.state.currentRectangle = existingRect;
+          this.state.dragTarget = cornerType;
+          this.state.isCreating = false;
+          
+          // Calculate the locked corner (opposite corner)
+          const { x, y, width, height } = existingRect.properties;
+          switch (cornerType) {
+            case 'corner-tl': // top-left, lock bottom-right
+              this.state.lockedCorner = { x: x + width, y };
+              break;
+            case 'corner-tr': // top-right, lock bottom-left
+              this.state.lockedCorner = { x, y };
+              break;
+            case 'corner-bl': // bottom-left, lock top-right
+              this.state.lockedCorner = { x: x + width, y: y + height };
+              break;
+            case 'corner-br': // bottom-right, lock top-left
+              this.state.lockedCorner = { x, y: y + height };
+              break;
+          }
+          return;
+        } else {
+          // Start moving the rectangle
+          this.state.currentRectangle = existingRect;
+          this.state.dragTarget = 'move';
+          this.state.dragOffset = {
+            x: worldPoint.x - existingRect.properties.x,
+            y: worldPoint.y - existingRect.properties.y
+          };
+          this.state.isCreating = false;
+          return;
+        }
       }
     }
 
-    // Start creating new rectangle
+    // Create new rectangle (this will only be called when this tool is active due to PluginManager logic)
     this.state.isCreating = true;
     this.state.startPoint = worldPoint;
     
@@ -183,52 +223,32 @@ export class RectangleTool implements Plugin {
           y: newY
         }
       });
-    } else if (this.state.dragTarget === 'corner') {
-      // Resize the rectangle from the corner
-      const current = this.context.canvas.getObject(this.state.currentRectangle.id) as Rectangle;
-      if (!current) return;
-
-      const { x: origX, y: origY, width: origWidth, height: origHeight } = current.properties;
+    } else if (this.state.dragTarget && this.state.dragTarget.startsWith('corner-') && this.state.lockedCorner) {
+      // Resize the rectangle from a specific corner
+      const lockedCorner = this.state.lockedCorner;
       
-      // Determine which corner we're dragging based on the current position
-      const centerX = origX + origWidth / 2;
-      const centerY = origY + origHeight / 2;
+      // Calculate new rectangle bounds with locked corner
+      const minX = Math.min(worldPoint.x, lockedCorner.x);
+      const maxX = Math.max(worldPoint.x, lockedCorner.x);
+      const minY = Math.min(worldPoint.y, lockedCorner.y);
+      const maxY = Math.max(worldPoint.y, lockedCorner.y);
       
-      let newX = origX;
-      let newY = origY;
-      let newWidth = origWidth;
-      let newHeight = origHeight;
-      
-      if (worldPoint.x > centerX) {
-        // Dragging right side
-        newWidth = worldPoint.x - origX;
-      } else {
-        // Dragging left side
-        newX = worldPoint.x;
-        newWidth = origX + origWidth - worldPoint.x;
-      }
-      
-      if (worldPoint.y > centerY) {
-        // Dragging top side
-        newHeight = worldPoint.y - origY;
-      } else {
-        // Dragging bottom side
-        newY = worldPoint.y;
-        newHeight = origY + origHeight - worldPoint.y;
-      }
+      const newX = minX;
+      const newY = minY;
+      const newWidth = maxX - minX;
+      const newHeight = maxY - minY;
       
       // Ensure minimum size
-      newWidth = Math.max(0.1, newWidth);
-      newHeight = Math.max(0.1, newHeight);
-      
-      const area = newWidth * newHeight;
+      const finalWidth = Math.max(0.1, newWidth);
+      const finalHeight = Math.max(0.1, newHeight);
+      const area = finalWidth * finalHeight;
 
       this.context.canvas.updateObject(this.state.currentRectangle.id, {
         properties: {
           x: newX,
           y: newY,
-          width: newWidth,
-          height: newHeight,
+          width: finalWidth,
+          height: finalHeight,
           area
         }
       });
@@ -256,6 +276,12 @@ export class RectangleTool implements Plugin {
             rectangleId: this.state.currentRectangle.id,
             rectangle: current
           });
+          
+          // Emit event to return to pan mode after successful creation
+          this.context.events.emit('tool:creation-complete', {
+            toolId: this.id,
+            objectId: this.state.currentRectangle.id
+          });
         }
       }
     }
@@ -266,7 +292,8 @@ export class RectangleTool implements Plugin {
       startPoint: null,
       currentRectangle: null,
       dragTarget: null,
-      dragOffset: null
+      dragOffset: null,
+      lockedCorner: null
     };
   }
 }

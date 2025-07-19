@@ -1,6 +1,7 @@
 // Object rendering component for better modularity
 import React, { useState } from 'react';
 import { formatCoordinate } from '../utils/gridUtils.js';
+import { useVisualizationStore } from '../store/visualizationStore.js';
 import type { MathObject, Point, Viewport } from '@getgrix/core';
 
 interface ObjectRendererProps {
@@ -13,6 +14,9 @@ interface ObjectRendererProps {
 }
 
 export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScreen, selectedObjects = [], canvasSize }: ObjectRendererProps) {
+  // Get visualization settings
+  const visualSettings = useVisualizationStore();
+  
   // Determine grid size for coordinate formatting (shared across all objects)
   const gridSize = viewport.zoom > 50 ? 0.1 : viewport.zoom > 10 ? 1 : 10;
   
@@ -263,7 +267,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
               const originalLength = Math.sqrt(endX * endX + endY * endY);
               const lengthMultiples = [];
               
-              if (originalLength > 0) {
+              if (originalLength > 0 && visualSettings.showLengthMultiples) {
                 for (let multiple = 2; multiple <= 5; multiple++) {
                   const multipleX = endX * multiple;
                   const multipleY = endY * multiple;
@@ -282,17 +286,19 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
 
               return (
                 <g>
-                  {/* Extended dotted line */}
-                  <line
-                    x1={end.x}
-                    y1={end.y}
-                    x2={extendedEndScreen.x}
-                    y2={extendedEndScreen.y}
-                    stroke={isSelected ? "#1D4ED8" : "#2563eb"}
-                    strokeWidth="1"
-                    opacity="0.3"
-                    strokeDasharray="3,3"
-                  />
+                  {/* Extended dotted line - only show if equivalent fractions are enabled */}
+                  {visualSettings.showEquivalentFractions && (
+                    <line
+                      x1={end.x}
+                      y1={end.y}
+                      x2={extendedEndScreen.x}
+                      y2={extendedEndScreen.y}
+                      stroke={isSelected ? "#1D4ED8" : "#2563eb"}
+                      strokeWidth="1"
+                      opacity="0.3"
+                      strokeDasharray="3,3"
+                    />
+                  )}
                   
                   {/* Length multiple tick marks */}
                   {lengthMultiples.map((mark, index) => (
@@ -321,7 +327,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                   ))}
                   
                   {/* Soft area rectangle for multiplication visualization */}
-                  {(() => {
+                  {visualSettings.showAreaRectangle && (() => {
                     // Only show if endpoint has positive integer-ish coordinates
                     const roundedX = Math.round(endX);
                     const roundedY = Math.round(endY);
@@ -375,33 +381,209 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                     return null;
                   })()}
                   
+                  {/* Rise/Run Triangle for slope visualization */}
+                  {visualSettings.showRiseRunTriangle && (() => {
+                    const roundedX = Math.round(endX);
+                    const roundedY = Math.round(endY);
+                    
+                    if (roundedX > 0 && roundedY > 0 && 
+                        Math.abs(endX - roundedX) < 0.1 && 
+                        Math.abs(endY - roundedY) < 0.1) {
+                      
+                      const originScreen = worldToScreen({ x: 0, y: 0 });
+                      const rightScreen = worldToScreen({ x: roundedX, y: 0 });
+                      const topScreen = worldToScreen({ x: roundedX, y: roundedY });
+                      
+                      return (
+                        <g>
+                          {/* Triangle outline */}
+                          <path
+                            d={`M ${originScreen.x},${originScreen.y} L ${rightScreen.x},${rightScreen.y} L ${topScreen.x},${topScreen.y} Z`}
+                            fill="none"
+                            stroke={isSelected ? "#1D4ED8" : "#2563eb"}
+                            strokeWidth="1"
+                            opacity="0.4"
+                            strokeDasharray="2,2"
+                          />
+                          
+                          {/* Rise label */}
+                          <text
+                            x={rightScreen.x + 10}
+                            y={(rightScreen.y + topScreen.y) / 2}
+                            fontSize="9"
+                            fontWeight="500"
+                            fill={isSelected ? "#1D4ED8" : "#2563eb"}
+                            textAnchor="start"
+                            opacity="0.7"
+                          >
+                            rise: {roundedY}
+                          </text>
+                          
+                          {/* Run label */}
+                          <text
+                            x={(originScreen.x + rightScreen.x) / 2}
+                            y={rightScreen.y + 8}
+                            fontSize="9"
+                            fontWeight="500"
+                            fill={isSelected ? "#1D4ED8" : "#2563eb"}
+                            textAnchor="middle"
+                            opacity="0.7"
+                          >
+                            run: {roundedX}
+                          </text>
+                        </g>
+                      );
+                    }
+                    return null;
+                  })()}
+                  
+                  {/* Radial distance markers as quarter circles */}
+                  {visualSettings.showDistanceMarkers && (() => {
+                    const radialMarkers = [];
+                    const lineLength = Math.sqrt(endX * endX + endY * endY);
+                    
+                    if (lineLength > 0) {
+                      const originScreen = worldToScreen({ x: 0, y: 0 });
+                      const lineAngle = Math.atan2(endY, endX);
+                      
+                      // Show quarter-circle arcs at unit intervals from origin, plus one at the exact endpoint
+                      const radiiToShow = [];
+                      
+                      // Add integer unit circles
+                      for (let i = 1; i <= Math.floor(lineLength); i++) {
+                        radiiToShow.push({ radius: i, isUnit: true });
+                      }
+                      
+                      // Add circle at exact endpoint if it's not already an integer
+                      if (Math.abs(lineLength - Math.floor(lineLength)) > 0.1) {
+                        radiiToShow.push({ radius: lineLength, isUnit: false });
+                      }
+                      
+                      radiiToShow.forEach(({ radius, isUnit }, index) => {
+                        const radiusInScreen = radius * viewport.zoom;
+                        
+                        // Only show if radius is reasonable size on screen
+                        if (radiusInScreen >= 15 && radiusInScreen <= 800) {
+                          // Only show if we have a meaningful angle (not too close to x-axis)
+                          if (Math.abs(lineAngle) > 0.05) {
+                            const arcPath = `M ${originScreen.x + radiusInScreen},${originScreen.y} A ${radiusInScreen},${radiusInScreen} 0 0,0 ${originScreen.x + radiusInScreen * Math.cos(lineAngle)},${originScreen.y - radiusInScreen * Math.sin(lineAngle)}`;
+                            
+                            radialMarkers.push(
+                              <path
+                                key={`radial-${radius}`}
+                                d={arcPath}
+                                fill="none"
+                                stroke={isSelected ? "#1D4ED8" : "#2563eb"}
+                                strokeWidth={isUnit ? "1" : "1.5"}
+                                opacity={isUnit ? "0.3" : "0.6"}
+                                strokeDasharray={isUnit ? "2,2" : "none"}
+                              />
+                            );
+                          }
+                        }
+                      });
+                    }
+                    
+                    return <g>{radialMarkers}</g>;
+                  })()}
+                  
+                  {/* Angle arc for trigonometry preview */}
+                  {visualSettings.showAngleArc && (() => {
+                    let angle = Math.atan2(endY, endX);
+                    
+                    // Convert negative angles to positive (0-360°)
+                    if (angle < 0) {
+                      angle = angle + 2 * Math.PI;
+                    }
+                    
+                    // Only show if we have a meaningful line (not just a point)
+                    if (Math.abs(endX) > 0.05 || Math.abs(endY) > 0.05) {
+                      const originScreen = worldToScreen({ x: 0, y: 0 });
+                      const arcRadius = 50; // screen pixels
+                      const angleInDegrees = (angle * 180 / Math.PI).toFixed(1);
+                      
+                      // Calculate arc path - always from positive x-axis to the line direction
+                      const startAngle = 0;
+                      const endAngle = angle;
+                      
+                      // Determine if we need a large arc (> 180°)
+                      const largeArcFlag = angle > Math.PI ? 1 : 0;
+                      
+                      const arcPath = `M ${originScreen.x + arcRadius},${originScreen.y} A ${arcRadius},${arcRadius} 0 ${largeArcFlag},0 ${originScreen.x + arcRadius * Math.cos(endAngle)},${originScreen.y - arcRadius * Math.sin(endAngle)}`;
+                      
+                      // Position text at the middle of the arc
+                      const textAngle = angle / 2;
+                      const textRadius = arcRadius * 0.7;
+                      const textX = originScreen.x + textRadius * Math.cos(textAngle);
+                      const textY = originScreen.y - textRadius * Math.sin(textAngle);
+                      
+                      return (
+                        <g>
+                          {/* Arc */}
+                          <path
+                            d={arcPath}
+                            fill="none"
+                            stroke={isSelected ? "#1D4ED8" : "#2563eb"}
+                            strokeWidth="2"
+                            opacity="0.6"
+                          />
+                          
+                          {/* Angle symbol and value */}
+                          <text
+                            x={textX}
+                            y={textY}
+                            fontSize="11"
+                            fontWeight="600"
+                            fill={isSelected ? "#1D4ED8" : "#2563eb"}
+                            textAnchor="middle"
+                            opacity="0.8"
+                          >
+                            θ = {angleInDegrees}°
+                          </text>
+                        </g>
+                      );
+                    }
+                    return null;
+                  })()}
+                  
                   {/* Equivalent fraction points */}
-                  {equivalentPoints.map((point, index) => (
-                    <g key={`equiv-${index}`}>
-                      {/* Green hollow circle */}
-                      <circle
-                        cx={point.screen.x}
-                        cy={point.screen.y}
-                        r="4"
-                        fill="white"
-                        stroke="#22C55E"
-                        strokeWidth="2"
-                        opacity="0.8"
-                      />
-                      {/* Fraction label */}
-                      <text
-                        x={point.screen.x + 15}
-                        y={point.screen.y + 4}
-                        fontSize="9"
-                        fontWeight="500"
-                        fill="#22C55E"
-                        textAnchor="start"
-                        opacity="0.8"
-                      >
-                        {point.fraction.num}/{point.fraction.den}
-                      </text>
-                    </g>
-                  ))}
+                  {visualSettings.showEquivalentFractions && equivalentPoints.map((point, index) => {
+                    // Don't show green circle if it's at x=1 and division answer is also showing
+                    const isAtXOne = Math.abs(point.world.x - 1) < 0.1;
+                    const shouldSkipForDivision = isAtXOne && visualSettings.showDivisionAnswer;
+                    
+                    // Don't show green circle if it's at the same location as the line endpoint (which already has blue fraction label)
+                    const isAtEndpoint = Math.abs(point.world.x - endX) < 0.1 && Math.abs(point.world.y - endY) < 0.1;
+                    
+                    if (shouldSkipForDivision || isAtEndpoint) return null;
+                    
+                    return (
+                      <g key={`equiv-${index}`}>
+                        {/* Green hollow circle */}
+                        <circle
+                          cx={point.screen.x}
+                          cy={point.screen.y}
+                          r="4"
+                          fill="white"
+                          stroke="#22C55E"
+                          strokeWidth="2"
+                          opacity="0.8"
+                        />
+                        {/* Fraction label */}
+                        <text
+                          x={point.screen.x + 15}
+                          y={point.screen.y + 4}
+                          fontSize="9"
+                          fontWeight="500"
+                          fill="#22C55E"
+                          textAnchor="start"
+                          opacity="0.8"
+                        >
+                          {point.fraction.num}/{point.fraction.den}
+                        </text>
+                      </g>
+                    );
+                  })}
                 </g>
               );
             })()}

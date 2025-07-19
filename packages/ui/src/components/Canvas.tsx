@@ -7,6 +7,7 @@ import { ZoomControls } from './ZoomControls.js';
 import { ObjectRenderer } from './ObjectRenderer.js';
 import { DebugInfo } from './DebugInfo.js';
 import { ContextMenu } from './ContextMenu.js';
+import { SettingsPanel } from './SettingsPanel.js';
 import type { UnifiedPointerEvent } from '@getgrix/core';
 import type { GestureEvent } from '../hooks/useInputSystem.js';
 
@@ -503,6 +504,9 @@ export function Canvas({
           onClose={handleContextMenuClose}
         />
       )}
+
+      {/* Settings panel */}
+      <SettingsPanel />
     </div>
   );
 }

@@ -117,7 +117,8 @@ export function generateGridLines(
   viewport: Viewport,
   canvasSize: { width: number; height: number },
   gridSystem: GridSystem,
-  worldToScreen: (point: Point) => Point
+  worldToScreen: (point: Point) => Point,
+  showIntegerLines: boolean = true
 ): {
   verticalLines: Array<{ x: number; isAxis: boolean; isMajor: boolean; isInteger: boolean; value: number }>;
   horizontalLines: Array<{ y: number; isAxis: boolean; isMajor: boolean; isInteger: boolean; value: number }>;
@@ -147,8 +148,8 @@ export function generateGridLines(
     verticalLines.push({ x: screenX, isAxis, isMajor, isInteger: false, value: x });
   }
   
-  // Generate faint integer lines if grid size > 1
-  if (gridSize > 1) {
+  // Generate faint integer lines if grid size > 1 and setting is enabled
+  if (gridSize > 1 && showIntegerLines) {
     const intStartX = Math.floor(viewBounds.left);
     const intEndX = Math.ceil(viewBounds.right);
     
@@ -175,8 +176,8 @@ export function generateGridLines(
     horizontalLines.push({ y: screenY, isAxis, isMajor, isInteger: false, value: y });
   }
   
-  // Generate faint integer lines if grid size > 1
-  if (gridSize > 1) {
+  // Generate faint integer lines if grid size > 1 and setting is enabled
+  if (gridSize > 1 && showIntegerLines) {
     const intStartY = Math.floor(viewBounds.bottom);
     const intEndY = Math.ceil(viewBounds.top);
     

@@ -1,6 +1,7 @@
 // Grid rendering component for better modularity
 import React from 'react';
 import { calculateAdaptiveGrid, generateGridLines, formatCoordinate } from '../utils/gridUtils.js';
+import { useVisualizationStore } from '../store/visualizationStore.js';
 import type { Point, Viewport, MathObject } from '@getgrix/core';
 
 interface GridRendererProps {
@@ -11,13 +12,17 @@ interface GridRendererProps {
 }
 
 export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = [] }: GridRendererProps) {
+  // Get visualization settings
+  const visualSettings = useVisualizationStore();
+  
   // Calculate adaptive grid system
   const gridSystem = calculateAdaptiveGrid(viewport);
   const { verticalLines: vLines, horizontalLines: hLines } = generateGridLines(
     viewport,
     canvasSize,
     gridSystem,
-    worldToScreen
+    worldToScreen,
+    visualSettings.showIntegerGridLines
   );
 
   if (!gridSystem.shouldShowGrid) {
@@ -57,11 +62,11 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
                    line.isMajor ? '#9CA3AF' : '#E5E7EB';
     const strokeWidth = line.isAxis ? 2 : 
                         isXOne ? 1.5 :
-                        line.isInteger ? 0.3 :
+                        line.isInteger ? Math.max(1.0, viewport.zoom * 0.05) :
                         line.isMajor ? 1 : 0.5;
     const opacity = line.isAxis ? 1 : 
                     isXOne ? 0.8 :
-                    line.isInteger ? 0.15 : // Very faint for integer lines
+                    line.isInteger ? Math.max(0.6, 0.4 * gridSystem.opacity) : // Ensure minimum visibility
                     line.isMajor ? 0.6 * gridSystem.opacity : 0.3 * gridSystem.opacity;
     
     return (
@@ -89,48 +94,107 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
               line.isInteger ? '#E5E7EB' : // Very faint for integer lines
               line.isMajor ? '#9CA3AF' : '#E5E7EB'}
       strokeWidth={line.isAxis ? 2 : 
-                   line.isInteger ? 0.3 :
+                   line.isInteger ? Math.max(1.0, viewport.zoom * 0.05) :
                    line.isMajor ? 1 : 0.5}
       opacity={line.isAxis ? 1 : 
-               line.isInteger ? 0.15 : // Very faint for integer lines
+               line.isInteger ? Math.max(0.6, 0.4 * gridSystem.opacity) : // Ensure minimum visibility
                line.isMajor ? 0.6 * gridSystem.opacity : 0.3 * gridSystem.opacity}
     />
   ));
 
-  // Calculate 45-degree reference line (y=x)
-  const origin = worldToScreen({ x: 0, y: 0 });
+  // Calculate 45-degree reference line (y=x) if enabled
+  const yEqualsXLine = visualSettings.showReferenceLineY_equals_X ? (() => {
+    // Find the bounds of the canvas in world coordinates
+    const viewBounds = {
+      left: viewport.center.x - (canvasSize.width / 2) / viewport.zoom,
+      right: viewport.center.x + (canvasSize.width / 2) / viewport.zoom,
+      top: viewport.center.y + (canvasSize.height / 2) / viewport.zoom,
+      bottom: viewport.center.y - (canvasSize.height / 2) / viewport.zoom
+    };
+    
+    // Calculate start and end points for the y=x line that spans the visible area
+    const minCoord = Math.min(viewBounds.left, viewBounds.bottom);
+    const maxCoord = Math.max(viewBounds.right, viewBounds.top);
+    
+    const lineStart = worldToScreen({ x: minCoord, y: minCoord });
+    const lineEnd = worldToScreen({ x: maxCoord, y: maxCoord });
+    
+    return { lineStart, lineEnd };
+  })() : null;
   
-  // Find the bounds of the canvas in world coordinates
-  const viewBounds = {
-    left: viewport.center.x - (canvasSize.width / 2) / viewport.zoom,
-    right: viewport.center.x + (canvasSize.width / 2) / viewport.zoom,
-    top: viewport.center.y + (canvasSize.height / 2) / viewport.zoom,
-    bottom: viewport.center.y - (canvasSize.height / 2) / viewport.zoom
-  };
-  
-  // Calculate start and end points for the y=x line that spans the visible area
-  const minCoord = Math.min(viewBounds.left, viewBounds.bottom);
-  const maxCoord = Math.max(viewBounds.right, viewBounds.top);
-  
-  const lineStart = worldToScreen({ x: minCoord, y: minCoord });
-  const lineEnd = worldToScreen({ x: maxCoord, y: maxCoord });
+  // Calculate lattice points if enabled - with performance optimization
+  const latticePoints = visualSettings.showLatticePoints ? (() => {
+    const viewBounds = {
+      left: viewport.center.x - (canvasSize.width / 2) / viewport.zoom,
+      right: viewport.center.x + (canvasSize.width / 2) / viewport.zoom,
+      top: viewport.center.y + (canvasSize.height / 2) / viewport.zoom,
+      bottom: viewport.center.y - (canvasSize.height / 2) / viewport.zoom
+    };
+    
+    const points = [];
+    const startX = Math.max(-20, Math.floor(viewBounds.left));
+    const endX = Math.min(20, Math.ceil(viewBounds.right));
+    const startY = Math.max(-20, Math.floor(viewBounds.bottom));
+    const endY = Math.min(20, Math.ceil(viewBounds.top));
+    
+    // Limit total points for performance (max ~200 points)
+    const totalPointsEstimate = (endX - startX + 1) * (endY - startY + 1);
+    if (totalPointsEstimate > 200) {
+      // Skip points at higher zoom out levels
+      const skipFactor = Math.ceil(Math.sqrt(totalPointsEstimate / 200));
+      for (let x = startX; x <= endX; x += skipFactor) {
+        for (let y = startY; y <= endY; y += skipFactor) {
+          const screenPos = worldToScreen({ x, y });
+          if (screenPos.x >= -20 && screenPos.x <= canvasSize.width + 20 &&
+              screenPos.y >= -20 && screenPos.y <= canvasSize.height + 20) {
+            points.push(screenPos);
+          }
+        }
+      }
+    } else {
+      for (let x = startX; x <= endX; x++) {
+        for (let y = startY; y <= endY; y++) {
+          const screenPos = worldToScreen({ x, y });
+          if (screenPos.x >= -20 && screenPos.x <= canvasSize.width + 20 &&
+              screenPos.y >= -20 && screenPos.y <= canvasSize.height + 20) {
+            points.push(screenPos);
+          }
+        }
+      }
+    }
+    return points;
+  })() : [];
 
   return (
     <g className="grid">
       {verticalLines}
       {horizontalLines}
       
+      {/* Lattice points */}
+      {latticePoints.map((point, index) => (
+        <circle
+          key={`lattice-${index}`}
+          cx={point.x}
+          cy={point.y}
+          r="1.5"
+          fill="#9CA3AF"
+          opacity="0.3"
+        />
+      ))}
+      
       {/* 45-degree reference line (y=x) */}
-      <line
-        x1={lineStart.x}
-        y1={lineStart.y}
-        x2={lineEnd.x}
-        y2={lineEnd.y}
-        stroke="#A78BFA"
-        strokeWidth="1.5"
-        opacity="0.6"
-        strokeDasharray="5,5"
-      />
+      {yEqualsXLine && (
+        <line
+          x1={yEqualsXLine.lineStart.x}
+          y1={yEqualsXLine.lineStart.y}
+          x2={yEqualsXLine.lineEnd.x}
+          y2={yEqualsXLine.lineEnd.y}
+          stroke="#A78BFA"
+          strokeWidth="1.5"
+          opacity="0.6"
+          strokeDasharray="5,5"
+        />
+      )}
       
       {/* Coordinate labels */}
       {gridSystem.shouldShowLabels && (
@@ -184,7 +248,7 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
           </text>
 
           {/* Ray intersection labels and dots on x=1 line */}
-          {rayIntersections.map((intersection, index) => {
+          {visualSettings.showDivisionAnswer && rayIntersections.map((intersection, index) => {
             const xOneScreenX = worldToScreen({ x: 1, y: 0 }).x;
             return (
               <g key={`ray-intersection-${index}`}>

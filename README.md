@@ -9,6 +9,7 @@ _A playground‑first math grid that scales from 3rd‑grade fractions to profes
 ## ✨ What is Grix?
 
 **Grix** turns the Cartesian plane into an open‑ended sandbox where learners drag rays, rectangles, vectors and more—discovering math concepts by pure exploration.
+
 The same engine later powers professional features like matrix warps, eigen‑vectors and complex rotations.
 
 - Worlds are additive:

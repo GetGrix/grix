@@ -1,6 +1,6 @@
 // Object rendering component for better modularity
 import React, { useState } from 'react';
-import { formatCoordinate, calculateSnapSize } from '../utils/gridUtils.js';
+import { formatCoordinate, formatMathValue, calculateSnapSize } from '../utils/gridUtils.js';
 import { useVisualizationStore } from '../store/visualizationStore.js';
 import type { MathObject, Point, Viewport } from '@getgrix/core';
 
@@ -502,14 +502,14 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                             fill={isSelected ? "#1D4ED8" : "#2563eb"}
                             opacity="0.7"
                           />
-                          {/* Distance label - positioned to the left of arrow, above x-axis */}
+                          {/* Distance label - positioned to the right of arrow, above x-axis */}
                           <text
-                            x={distancePointScreen.x - 15}
+                            x={distancePointScreen.x + 15}
                             y={originScreen.y - 8}
                             fontSize={scaledFontSize(8)}
                             fontWeight="600"
                             fill={isSelected ? "#1D4ED8" : "#2563eb"}
-                            textAnchor="end"
+                            textAnchor="start"
                             opacity="0.8"
                           >
                             d = {lineLength.toFixed(2)}
@@ -1103,6 +1103,193 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
               
               return educationalElements;
             })()}
+          </g>
+        );
+      
+      case 'circle':
+        const center = worldToScreen(obj.properties.center);
+        const radius = obj.properties.radius * viewport.zoom;
+        
+        return (
+          <g key={obj.id}>
+            {/* Selection glow effect */}
+            {isSelected && (
+              <circle
+                cx={center.x}
+                cy={center.y}
+                r={radius + 3}
+                fill="none"
+                stroke="#60A5FA"
+                strokeWidth={4}
+                opacity={0.5}
+              />
+            )}
+            <circle
+              cx={center.x}
+              cy={center.y}
+              r={radius}
+              fill={isSelected ? "rgba(168, 85, 247, 0.15)" : "rgba(168, 85, 247, 0.1)"}
+              stroke={isSelected ? "#7C3AED" : "#A855F7"}
+              strokeWidth={isSelected ? 3 : 2}
+              style={{ cursor: 'pointer' }}
+            />
+            
+            {/* Center handle */}
+            <circle
+              cx={center.x}
+              cy={center.y}
+              r={touchTargetSize / 6}
+              fill={isSelected ? "#7C3AED" : "#A855F7"}
+              stroke={isSelected ? "#60A5FA" : "none"}
+              strokeWidth={isSelected ? 2 : 0}
+              style={{ cursor: 'move' }}
+            />
+            
+            {/* Radius handle */}
+            <circle
+              cx={center.x + radius}
+              cy={center.y}
+              r={touchTargetSize / 6}
+              fill={isSelected ? "#7C3AED" : "#A855F7"}
+              stroke={isSelected ? "#60A5FA" : "none"}
+              strokeWidth={isSelected ? 2 : 0}
+              style={{ cursor: 'ew-resize' }}
+            />
+            
+            {/* Radius line */}
+            <line
+              x1={center.x}
+              y1={center.y}
+              x2={center.x + radius}
+              y2={center.y}
+              stroke={isSelected ? "#7C3AED" : "#A855F7"}
+              strokeWidth="1"
+              opacity="0.6"
+              strokeDasharray="2,2"
+            />
+            
+            {/* Properties labels - positioned outside the circle */}
+            <text
+              x={center.x}
+              y={center.y - radius - 25}
+              fontSize={scaledFontSize(10)}
+              fontWeight="500"
+              fill={isSelected ? "#7C3AED" : "#A855F7"}
+              textAnchor="middle"
+              opacity="0.8"
+            >
+              r = {formatMathValue(obj.properties.radius)}
+            </text>
+            <text
+              x={center.x}
+              y={center.y - radius - 15}
+              fontSize={scaledFontSize(9)}
+              fontWeight="400"
+              fill={isSelected ? "#7C3AED" : "#A855F7"}
+              textAnchor="middle"
+              opacity="0.7"
+            >
+              A = {formatMathValue(obj.properties.area)}
+            </text>
+            <text
+              x={center.x}
+              y={center.y - radius - 5}
+              fontSize={scaledFontSize(9)}
+              fontWeight="400"
+              fill={isSelected ? "#7C3AED" : "#A855F7"}
+              textAnchor="middle"
+              opacity="0.7"
+            >
+              C = {formatMathValue(obj.properties.circumference)}
+            </text>
+          </g>
+        );
+      
+      case 'triangle':
+        const vertices = obj.properties.vertices.map(worldToScreen);
+        const [v0, v1, v2] = vertices;
+        
+        return (
+          <g key={obj.id}>
+            {/* Selection glow effect */}
+            {isSelected && (
+              <path
+                d={`M ${v0.x},${v0.y} L ${v1.x},${v1.y} L ${v2.x},${v2.y} Z`}
+                fill="none"
+                stroke="#60A5FA"
+                strokeWidth={6}
+                opacity={0.4}
+              />
+            )}
+            <path
+              d={`M ${v0.x},${v0.y} L ${v1.x},${v1.y} L ${v2.x},${v2.y} Z`}
+              fill={isSelected ? "rgba(245, 101, 101, 0.15)" : "rgba(245, 101, 101, 0.1)"}
+              stroke={isSelected ? "#DC2626" : "#F56565"}
+              strokeWidth={isSelected ? 3 : 2}
+              style={{ cursor: 'pointer' }}
+            />
+            
+            {/* Vertex handles */}
+            {vertices.map((vertex, index) => (
+              <circle
+                key={`vertex-${index}`}
+                cx={vertex.x}
+                cy={vertex.y}
+                r={touchTargetSize / 6}
+                fill={isSelected ? "#DC2626" : "#F56565"}
+                stroke={isSelected ? "#60A5FA" : "none"}
+                strokeWidth={isSelected ? 2 : 0}
+                style={{ cursor: 'move' }}
+              />
+            ))}
+            
+            {/* Area label at centroid */}
+            <text
+              x={(v0.x + v1.x + v2.x) / 3}
+              y={(v0.y + v1.y + v2.y) / 3}
+              fontSize={scaledFontSize(10)}
+              fontWeight="500"
+              fill={isSelected ? "#DC2626" : "#F56565"}
+              textAnchor="middle"
+              opacity="0.8"
+            >
+              A = {formatMathValue(obj.properties.area)}
+            </text>
+            
+            {/* Side length labels */}
+            <text
+              x={(v0.x + v1.x) / 2}
+              y={(v0.y + v1.y) / 2 - 10}
+              fontSize={scaledFontSize(8)}
+              fontWeight="400"
+              fill={isSelected ? "#DC2626" : "#F56565"}
+              textAnchor="middle"
+              opacity="0.6"
+            >
+              {formatMathValue(obj.properties.sideC)}
+            </text>
+            <text
+              x={(v1.x + v2.x) / 2 + 10}
+              y={(v1.y + v2.y) / 2}
+              fontSize={scaledFontSize(8)}
+              fontWeight="400"
+              fill={isSelected ? "#DC2626" : "#F56565"}
+              textAnchor="middle"
+              opacity="0.6"
+            >
+              {formatMathValue(obj.properties.sideA)}
+            </text>
+            <text
+              x={(v0.x + v2.x) / 2 - 10}
+              y={(v0.y + v2.y) / 2}
+              fontSize={scaledFontSize(8)}
+              fontWeight="400"
+              fill={isSelected ? "#DC2626" : "#F56565"}
+              textAnchor="middle"
+              opacity="0.6"
+            >
+              {formatMathValue(obj.properties.sideB)}
+            </text>
           </g>
         );
       

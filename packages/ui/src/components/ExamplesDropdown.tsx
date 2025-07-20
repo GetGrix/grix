@@ -159,7 +159,7 @@ export function ExamplesDropdown() {
           )}
 
           {/* Examples List */}
-          <div className="overflow-y-auto max-h-80">
+          <div className="overflow-y-auto max-h-80 examples-scrollable">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <div className="text-sm text-gray-500">Loading examples...</div>

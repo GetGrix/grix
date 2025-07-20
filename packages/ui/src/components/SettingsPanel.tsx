@@ -81,8 +81,8 @@ export function SettingsPanel() {
       settings: [
         {
           key: 'showDivisionAnswer',
-          label: 'Division Answer (x=1 line)',
-          description: 'Blue dot showing y-value at x=1',
+          label: 'Slope/Division Answer (x=1)',
+          description: 'Blue dot showing slope value and division answer at x=1',
         },
       ],
     },

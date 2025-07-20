@@ -164,6 +164,37 @@ class ExamplesManager {
           }
         } as MathObject;
 
+      case 'circle':
+        return {
+          ...baseObject,
+          type: 'circle',
+          properties: {
+            center: exampleObj.properties.center,
+            radius: exampleObj.properties.radius,
+            diameter: exampleObj.properties.diameter,
+            circumference: exampleObj.properties.circumference,
+            area: exampleObj.properties.area
+          }
+        } as MathObject;
+
+      case 'triangle':
+        return {
+          ...baseObject,
+          type: 'triangle',
+          properties: {
+            vertices: exampleObj.properties.vertices,
+            sideA: exampleObj.properties.sideA,
+            sideB: exampleObj.properties.sideB,
+            sideC: exampleObj.properties.sideC,
+            angleA: exampleObj.properties.angleA,
+            angleB: exampleObj.properties.angleB,
+            angleC: exampleObj.properties.angleC,
+            area: exampleObj.properties.area,
+            perimeter: exampleObj.properties.perimeter,
+            type: exampleObj.properties.type
+          }
+        } as MathObject;
+
       default:
         throw new Error(`Unknown object type: ${exampleObj.type}`);
     }

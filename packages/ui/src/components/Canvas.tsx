@@ -198,6 +198,55 @@ export function Canvas({
           selectObject(obj.id);
           break;
         }
+      } else if (obj.type === 'circle') {
+        // Check if clicking inside circle or near handles
+        const center = worldToScreen(obj.properties.center);
+        const radius = obj.properties.radius * viewport.zoom;
+        
+        // Check if inside circle
+        const distance = Math.sqrt(
+          Math.pow(screenPoint.x - center.x, 2) + 
+          Math.pow(screenPoint.y - center.y, 2)
+        );
+        
+        if (distance <= radius + tolerance) {
+          // Store selection info but still allow tool to handle the event for manipulation
+          objectClicked = true;
+          pointerStateRef.current.pendingSelection = { objectId: obj.id, type: 'circle' };
+          // Select object but don't activate tool - keep selection separate from build mode
+          selectObject(obj.id);
+          break;
+        }
+      } else if (obj.type === 'triangle') {
+        // Check if clicking inside triangle or near vertices
+        const vertices = obj.properties.vertices.map(worldToScreen);
+        const [v0, v1, v2] = vertices;
+        
+        // Check if inside triangle using barycentric coordinates
+        const denominator = (v1.y - v2.y) * (v0.x - v2.x) + (v2.x - v1.x) * (v0.y - v2.y);
+        const alpha = ((v1.y - v2.y) * (screenPoint.x - v2.x) + (v2.x - v1.x) * (screenPoint.y - v2.y)) / denominator;
+        const beta = ((v2.y - v0.y) * (screenPoint.x - v2.x) + (v0.x - v2.x) * (screenPoint.y - v2.y)) / denominator;
+        const gamma = 1 - alpha - beta;
+        
+        const insideTriangle = alpha >= 0 && beta >= 0 && gamma >= 0;
+        
+        // Check if near any vertex
+        const nearVertex = vertices.some(vertex => {
+          const distance = Math.sqrt(
+            Math.pow(screenPoint.x - vertex.x, 2) + 
+            Math.pow(screenPoint.y - vertex.y, 2)
+          );
+          return distance <= tolerance;
+        });
+        
+        if (insideTriangle || nearVertex) {
+          // Store selection info but still allow tool to handle the event for manipulation
+          objectClicked = true;
+          pointerStateRef.current.pendingSelection = { objectId: obj.id, type: 'triangle' };
+          // Select object but don't activate tool - keep selection separate from build mode
+          selectObject(obj.id);
+          break;
+        }
       }
     }
     

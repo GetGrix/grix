@@ -20,6 +20,18 @@ const buildTools: Tool[] = [
     name: 'Rectangle Builder',
     icon: '⬜',
     description: 'Create rectangles to explore area and multiplication'
+  },
+  {
+    id: 'circle-tool',
+    name: 'Circle Builder',
+    icon: '⭕',
+    description: 'Create circles to explore circumference and area'
+  },
+  {
+    id: 'triangle-tool',
+    name: 'Triangle Builder',
+    icon: '🔺',
+    description: 'Create triangles to explore angles and trigonometry'
   }
 ];
 
@@ -69,7 +81,37 @@ export function ToolBar({ className = '' }: ToolBarProps) {
     <div className={`flex items-center gap-2 p-2 bg-white border-b border-gray-200 ${className}`}>
       {/* Logo/Title */}
       <div className="flex items-center gap-2 mr-4">
-        <div className="text-2xl">🟦</div>
+        <svg width="24" height="24" viewBox="0 0 32 32" className="flex-shrink-0">
+          {/* Background */}
+          <rect width="32" height="32" fill="#2563eb" rx="6"/>
+          
+          {/* Grid lines */}
+          <g stroke="#60A5FA" strokeWidth="0.5" opacity="0.6">
+            {/* Vertical lines */}
+            <line x1="8" y1="4" x2="8" y2="28"/>
+            <line x1="16" y1="4" x2="16" y2="28"/>
+            <line x1="24" y1="4" x2="24" y2="28"/>
+            {/* Horizontal lines */}
+            <line x1="4" y1="8" x2="28" y2="8"/>
+            <line x1="4" y1="16" x2="28" y2="16"/>
+            <line x1="4" y1="24" x2="28" y2="24"/>
+          </g>
+          
+          {/* Axes (highlighted) */}
+          <g stroke="#FFFFFF" strokeWidth="1">
+            <line x1="16" y1="4" x2="16" y2="28"/>
+            <line x1="4" y1="16" x2="28" y2="16"/>
+          </g>
+          
+          {/* Mathematical line from origin */}
+          <line x1="16" y1="16" x2="24" y2="8" stroke="#22C55E" strokeWidth="2"/>
+          
+          {/* Origin point */}
+          <circle cx="16" cy="16" r="2" fill="#FFFFFF"/>
+          
+          {/* Endpoint */}
+          <circle cx="24" cy="8" r="1.5" fill="#22C55E"/>
+        </svg>
         <h1 className="text-lg font-semibold text-gray-800">Grix</h1>
       </div>
 

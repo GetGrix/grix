@@ -84,10 +84,11 @@ button:disabled {
   transform: scale(1.05);
 }
 
-/* Settings panel mobile scrolling fix */
+/* Mobile scrolling fixes */
 .settings-panel, 
 .settings-panel *,
-.settings-scrollable {
+.settings-scrollable,
+.examples-scrollable {
   touch-action: auto !important;
   -webkit-overflow-scrolling: touch;
 }

@@ -148,8 +148,11 @@ export function generateGridLines(
     verticalLines.push({ x: screenX, isAxis, isMajor, isInteger: false, value: x });
   }
   
-  // Generate faint integer lines if grid size >= 2 and setting is enabled  
-  if (gridSize >= 2 && showIntegerLines) {
+  // Generate faint integer lines if setting is enabled and it's useful
+  // Show integer lines when:
+  // 1. Grid size is >= 2 (normal spacing), OR
+  // 2. Grid size is smaller (zoomed in) and integer lines would be helpful
+  if (showIntegerLines && (gridSize >= 2 || gridSize < 1)) {
     const intStartX = Math.floor(viewBounds.left);
     const intEndX = Math.ceil(viewBounds.right);
     
@@ -176,8 +179,11 @@ export function generateGridLines(
     horizontalLines.push({ y: screenY, isAxis, isMajor, isInteger: false, value: y });
   }
   
-  // Generate faint integer lines if grid size >= 2 and setting is enabled  
-  if (gridSize >= 2 && showIntegerLines) {
+  // Generate faint integer lines if setting is enabled and it's useful
+  // Show integer lines when:
+  // 1. Grid size is >= 2 (normal spacing), OR
+  // 2. Grid size is smaller (zoomed in) and integer lines would be helpful
+  if (showIntegerLines && (gridSize >= 2 || gridSize < 1)) {
     const intStartY = Math.floor(viewBounds.bottom);
     const intEndY = Math.ceil(viewBounds.top);
     
@@ -193,6 +199,18 @@ export function generateGridLines(
   }
   
   return { verticalLines, horizontalLines };
+}
+
+export function formatMathValue(value: number, maxDecimals: number = 3): string {
+  // Format a mathematical value with smart precision
+  // Remove trailing zeros and use up to maxDecimals places
+  if (Number.isInteger(value)) {
+    return value.toString();
+  }
+  
+  // Use toFixed then remove trailing zeros
+  const fixed = value.toFixed(maxDecimals);
+  return parseFloat(fixed).toString();
 }
 
 export function formatCoordinate(value: number, gridSize: number): string {

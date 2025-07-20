@@ -130,7 +130,7 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
                         line.isMajor ? 1 : 0.5;
     const opacity = line.isAxis ? 1 : 
                     isXOne ? 0.8 :
-                    line.isInteger ? Math.max(0.6, 0.4 * gridSystem.opacity) : // Ensure minimum visibility
+                    line.isInteger ? 0.4 : // Fixed visibility for integer lines
                     line.isMajor ? 0.6 * gridSystem.opacity : 0.3 * gridSystem.opacity;
     
     return (
@@ -161,7 +161,7 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
                    line.isInteger ? Math.max(1.0, viewport.zoom * 0.05) :
                    line.isMajor ? 1 : 0.5}
       opacity={line.isAxis ? 1 : 
-               line.isInteger ? Math.max(0.6, 0.4 * gridSystem.opacity) : // Ensure minimum visibility
+               line.isInteger ? 0.4 : // Fixed visibility for integer lines
                line.isMajor ? 0.6 * gridSystem.opacity : 0.3 * gridSystem.opacity}
     />
   ));

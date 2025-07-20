@@ -225,6 +225,174 @@
         "center": { "x": 3.5, "y": 2.5 },
         "zoom": 28
       }
+    },
+    {
+      "id": "circle-basics",
+      "title": "Circle Properties",
+      "description": "Explore radius, diameter, circumference, and area",
+      "difficulty": "beginner", 
+      "category": "geometry",
+      "objects": [
+        {
+          "type": "circle",
+          "properties": {
+            "center": { "x": 3, "y": 2 },
+            "radius": 2,
+            "diameter": 4,
+            "circumference": 12.566,
+            "area": 12.566
+          }
+        }
+      ],
+      "settings": {
+        "showIntegerGridLines": true
+      },
+      "viewport": {
+        "center": { "x": 3, "y": 2 },
+        "zoom": 25
+      }
+    },
+    {
+      "id": "pi-exploration",
+      "title": "Pi Exploration",
+      "description": "Understand π through circles and squares",
+      "difficulty": "intermediate",
+      "category": "geometry", 
+      "objects": [
+        {
+          "type": "circle",
+          "properties": {
+            "center": { "x": 0, "y": 0 },
+            "radius": 3,
+            "diameter": 6,
+            "circumference": 18.849,
+            "area": 28.274
+          }
+        },
+        {
+          "type": "rectangle",
+          "properties": {
+            "x": -3,
+            "y": -3,
+            "width": 6,
+            "height": 6,
+            "area": 36
+          }
+        }
+      ],
+      "settings": {
+        "showIntegerGridLines": true
+      },
+      "viewport": {
+        "center": { "x": 0, "y": 0 },
+        "zoom": 20
+      }
+    },
+    {
+      "id": "triangle-types",
+      "title": "Triangle Types",
+      "description": "Explore different triangle classifications",
+      "difficulty": "beginner",
+      "category": "geometry",
+      "objects": [
+        {
+          "type": "triangle",
+          "properties": {
+            "vertices": [
+              { "x": 1, "y": 1 },
+              { "x": 4, "y": 1 },
+              { "x": 4, "y": 4 }
+            ],
+            "sideA": 3,
+            "sideB": 3,
+            "sideC": 4.24,
+            "angleA": 45,
+            "angleB": 45,
+            "angleC": 90,
+            "area": 4.5,
+            "perimeter": 10.24,
+            "type": "right"
+          }
+        }
+      ],
+      "settings": {
+        "showIntegerGridLines": true
+      },
+      "viewport": {
+        "center": { "x": 2.5, "y": 2.5 },
+        "zoom": 25
+      }
+    },
+    {
+      "id": "pythagorean-theorem",
+      "title": "Pythagorean Theorem",
+      "description": "a² + b² = c² visualized with squares on triangle sides",
+      "difficulty": "intermediate",
+      "category": "geometry",
+      "objects": [
+        {
+          "type": "triangle",
+          "properties": {
+            "vertices": [
+              { "x": 2, "y": 1 },
+              { "x": 5, "y": 1 },
+              { "x": 5, "y": 5 }
+            ],
+            "sideA": 4,
+            "sideB": 3,
+            "sideC": 5,
+            "angleA": 53.13,
+            "angleB": 36.87,
+            "angleC": 90,
+            "area": 6,
+            "perimeter": 12,
+            "type": "right"
+          }
+        }
+      ],
+      "settings": {
+        "showIntegerGridLines": true
+      },
+      "viewport": {
+        "center": { "x": 3.5, "y": 3 },
+        "zoom": 22
+      }
+    },
+    {
+      "id": "area-vs-perimeter",
+      "title": "Area vs Perimeter",
+      "description": "Compare different shapes with same area or perimeter",
+      "difficulty": "intermediate",
+      "category": "geometry",
+      "objects": [
+        {
+          "type": "rectangle",
+          "properties": {
+            "x": 1,
+            "y": 1,
+            "width": 4,
+            "height": 3,
+            "area": 12
+          }
+        },
+        {
+          "type": "circle",
+          "properties": {
+            "center": { "x": 8, "y": 2.5 },
+            "radius": 1.95,
+            "diameter": 3.9,
+            "circumference": 12.25,
+            "area": 11.95
+          }
+        }
+      ],
+      "settings": {
+        "showIntegerGridLines": true
+      },
+      "viewport": {
+        "center": { "x": 5, "y": 2.5 },
+        "zoom": 18
+      }
     }
   ],
   "categories": [

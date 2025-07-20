@@ -148,6 +148,10 @@ export function PluginManagerProvider({ children }: PluginManagerProviderProps) 
               targetTool = plugins.get('ray-tool');
             } else if (selectedObj?.type === 'rectangle') {
               targetTool = plugins.get('rectangle-tool');
+            } else if (selectedObj?.type === 'circle') {
+              targetTool = plugins.get('circle-tool');
+            } else if (selectedObj?.type === 'triangle') {
+              targetTool = plugins.get('triangle-tool');
             }
           }
           

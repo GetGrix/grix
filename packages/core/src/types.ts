@@ -73,6 +73,33 @@ export interface Rectangle extends MathObject {
   };
 }
 
+export interface Circle extends MathObject {
+  type: 'circle';
+  properties: {
+    center: Point;
+    radius: number;
+    diameter: number;
+    circumference: number;
+    area: number;
+  };
+}
+
+export interface Triangle extends MathObject {
+  type: 'triangle';
+  properties: {
+    vertices: [Point, Point, Point];
+    sideA: number;
+    sideB: number;
+    sideC: number;
+    angleA: number; // in degrees
+    angleB: number;
+    angleC: number;
+    area: number;
+    perimeter: number;
+    type: 'scalene' | 'isosceles' | 'equilateral' | 'right' | 'obtuse' | 'acute';
+  };
+}
+
 // Canvas and viewport
 export interface Viewport {
   center: Point;

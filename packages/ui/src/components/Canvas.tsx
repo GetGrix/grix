@@ -10,6 +10,7 @@ import { ContextMenu } from './ContextMenu.js';
 import { SettingsPanel } from './SettingsPanel.js';
 import { TutorialOverlay } from './TutorialOverlay.js';
 import { InfoModal } from './InfoModal.js';
+import { ActionMenu } from './ActionMenu.js';
 import { useTransformationStore } from '../store/transformationStore.js';
 import type { UnifiedPointerEvent, Point } from '@getgrix/core';
 import type { GestureEvent } from '../hooks/useInputSystem.js';
@@ -831,6 +832,9 @@ export function Canvas({
 
       {/* Info modal */}
       <InfoModal />
+
+      {/* Action menu */}
+      <ActionMenu />
     </div>
   );
 }

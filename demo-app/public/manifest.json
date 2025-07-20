@@ -1,16 +1,55 @@
 {
-  "name": "Grix - Mathematical Playground",
+  "name": "Grix - Mathematical Visualization Playground",
   "short_name": "Grix",
-  "description": "Interactive mathematical visualization platform",
+  "description": "Interactive mathematical grid system for exploring fractions, geometry, and algebra - works offline!",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#2563eb",
+  "orientation": "any",
+  "scope": "/",
+  "lang": "en-US",
+  "categories": ["education", "utilities"],
+  "prefer_related_applications": false,
   "icons": [
+    {
+      "src": "/grix-favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
     {
       "src": "/vite.svg",
       "sizes": "32x32",
       "type": "image/svg+xml"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Mathematical Exploration",
+      "short_name": "New Session",
+      "description": "Start fresh mathematical exploration",
+      "url": "/?action=new",
+      "icons": [
+        {
+          "src": "/grix-favicon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Examples Library",
+      "short_name": "Examples",
+      "description": "Browse mathematical examples",
+      "url": "/?action=examples",
+      "icons": [
+        {
+          "src": "/grix-favicon.svg", 
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
     }
   ]
 }

@@ -3,6 +3,7 @@ import { PluginManagerProvider, usePluginManager } from '../plugins/PluginManage
 import { Canvas } from './Canvas.js';
 import { ToolBar } from './ToolBar.js';
 import { ErrorBoundary } from './ErrorBoundary.js';
+import { PWAManager } from './PWAManager.js';
 import { createRayTool } from '../plugins/RayTool.js';
 import { createRectangleTool } from '../plugins/RectangleTool.js';
 import { createCircleTool } from '../plugins/CircleTool.js';
@@ -56,11 +57,13 @@ function GrixAppContent() {
 export function GrixApp() {
   return (
     <ErrorBoundary>
-      <PluginManagerProvider>
-        <ErrorBoundary>
-          <GrixAppContent />
-        </ErrorBoundary>
-      </PluginManagerProvider>
+      <PWAManager>
+        <PluginManagerProvider>
+          <ErrorBoundary>
+            <GrixAppContent />
+          </ErrorBoundary>
+        </PluginManagerProvider>
+      </PWAManager>
     </ErrorBoundary>
   );
 }

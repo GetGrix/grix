@@ -2,7 +2,7 @@
 
 _A playground‑first mathematical visualization system that scales from 3rd‑grade fractions to professional linear algebra._
 
-> **🎯 Live Demo**: [https://grix.dev](https://grix.dev) | **📖 Docs**: [docs.grix.dev](https://docs.grix.dev) | **💬 Community**: [github.com/getgrix/grix/discussions](https://github.com/getgrix/grix/discussions)
+> **🎯 Live Demo**: [https://grix.app](https://grix.app) | **💬 Community**: [github.com/getgrix/grix/discussions](https://github.com/getgrix/grix/discussions)
 
 ---
 
@@ -14,23 +14,21 @@ _A playground‑first mathematical visualization system that scales from 3rd‑g
 
 📱 **Works everywhere**: Desktop browsers, tablets with stylus support, smartphones, and large classroom touchscreens.
 
-### ✅ **World A — Number Playground** (IMPLEMENTED)
+### 🧮 **Mathematical Tools**
 
-Interactive tools for foundational math concepts:
-
-- **🔷 Line Builder**: Create lines to explore slopes, fractions, and linear relationships
-- **🔸 Rectangle Builder**: Build rectangles to understand area, multiplication, and factors
+- **🔷 Line Builder**: Create draggable lines to explore slopes, fractions, and linear relationships
+- **🔸 Rectangle Builder**: Build rectangles to understand area, multiplication, and factors  
 - **⭕ Circle Builder**: Draw circles to learn about radius, diameter, area, and circumference
 - **🔺 Triangle Builder**: Construct triangles for geometry, trigonometry, and angle relationships
 - **📈 Function Grapher**: Plot mathematical functions like parabolas, sine waves, and polynomials
 
-### 🎯 **Educational Features**
+### 🎯 **Educational Visualizations**
 
-- **Fraction Visualization**: See equivalent fractions and division concepts through interactive lines
-- **Geometry Learning**: Explore triangle classifications, Pythagorean theorem with visual squares
+- **Fraction Concepts**: Equivalent fractions, division multiples, rise/run triangles
+- **Geometry Features**: Triangle classifications, Pythagorean theorem with visual squares
 - **Function Analysis**: Hover coordinates, equation editing, domain extensions
 - **Real-time Calculations**: Live area, perimeter, slope, and angle measurements
-- **Adaptive Learning**: Progressive complexity from elementary to advanced concepts
+- **Advanced Features**: Tangent lines, trigonometric values, special triangle detection
 
 ---
 
@@ -52,7 +50,7 @@ grix/
 
 ### 🎮 Try It Now
 
-Visit [grix.dev](https://grix.dev) for the live demo - no installation required!
+Visit [grix.app](https://grix.app) for the live demo - no installation required!
 
 ### 💻 Local Development
 
@@ -112,24 +110,23 @@ import { vectorMagnitude, calculateTriangleArea } from "@getgrix/core";
 
 ## 🧰 Features
 
-### 🎯 **Core Mathematical Tools**
+### 🎯 **Mathematical Tools & Features**
 
-| Tool | Description | Educational Value |
-|------|-------------|-------------------|
-| **Line Builder** | Create draggable lines with slope/fraction display | Linear relationships, fractions, ratios |
-| **Rectangle Builder** | Build rectangles with area calculations | Multiplication, factors, geometry |
-| **Circle Builder** | Draw circles with measurements | Pi, circumference, area relationships |
-| **Triangle Builder** | Construct triangles with angle/side data | Trigonometry, geometry, Pythagorean theorem |
-| **Function Grapher** | Plot mathematical functions | Algebra, calculus, function analysis |
+| Tool | Capabilities | Mathematical Concepts |
+|------|-------------|----------------------|
+| **Line Builder** | Slopes, fractions, equivalent fractions, rise/run triangles | Linear relationships, ratios, division |
+| **Rectangle Builder** | Area calculations, factor visualization, dimensions | Multiplication, area, factors |
+| **Circle Builder** | Radius, diameter, area, circumference, tangent lines | Pi relationships, geometry |
+| **Triangle Builder** | Angles, sides, classification, Pythagorean squares | Trigonometry, geometry, special triangles |
+| **Function Grapher** | Equation plotting, hover coordinates, domain extensions | Algebra, function behavior |
 
-### 📐 **Educational Visualizations**
+### 📐 **Advanced Mathematical Features**
 
-- **Equivalent Fractions**: Green dots showing fraction relationships
-- **Division Multiples**: Horizontal lines demonstrating repeated subtraction
-- **Area Calculations**: Real-time area and perimeter for all shapes
-- **Angle Measurements**: Live angle calculations with degree values
-- **Trigonometry**: SOH-CAH-TOA visualizations and special triangles
-- **Function Analysis**: Hover coordinates and equation exploration
+- **25+ Visualization Options**: Toggle features by mathematical concept
+- **Real-time Calculations**: Live measurements for all geometric properties  
+- **Educational Labels**: Smart positioning with mathematical notation
+- **Interactive Exploration**: Drag, resize, and manipulate all objects
+- **Snap-to-Grid**: Precise placement with configurable precision
 
 ### 📱 **Cross-Platform Support**
 
@@ -138,26 +135,16 @@ import { vectorMagnitude, calculateTriangleArea } from "@getgrix/core";
 - **Mobile**: Touch-optimized with gesture support
 - **Classroom**: Large display support with multiple simultaneous users
 
-### ⚙️ **Advanced Features**
+### ⚙️ **Professional Features**
 
-- **Settings Panel**: 25+ visualization options organized by mathematical concept
+- **PWA Support**: Works offline, install as native app  
+- **Auto-Save**: Never lose your mathematical work
+- **Settings Panel**: 25+ visualization options organized by concept
 - **Examples Library**: Pre-built mathematical scenarios and templates
 - **Context Menus**: Object details, measurements, and editing options
+- **Action Menu**: Export/import sessions, clear board, storage management
 - **Keyboard Shortcuts**: Arrow key movement, rotation, scaling
 - **Accessibility**: WCAG 2.2 AA compliant with screen reader support
-
----
-
-## 📚 Educational Worlds
-
-| World | Status | Focus Area | Features |
-|-------|--------|------------|----------|
-| **A — Number Playground** | ✅ **Complete** | Fractions, Areas, Basic Algebra | 5 tools, 25+ visualizations |
-| **B — Lines & Shapes** | 🔄 **In Development** | Slopes, Trigonometry, Geometry | Enhanced angle/distance tools |
-| **C — Vectors & Motion** | 📋 **Planned** | Vector Math, Physics | Vector operations, polar coordinates |
-| **D — Advanced** | 📋 **Planned** | Linear Algebra, Calculus | Matrix transforms, derivatives |
-
-Each world builds upon the previous, allowing educators to scale complexity as students advance.
 
 ---
 
@@ -166,10 +153,12 @@ Each world builds upon the previous, allowing educators to scale complexity as s
 We welcome contributions from educators, developers, and math enthusiasts!
 
 ### 🐛 **Bug Reports & Feature Requests**
+
 - [Open an issue](https://github.com/getgrix/grix/issues) with detailed reproduction steps
 - [Join discussions](https://github.com/getgrix/grix/discussions) for feature ideas
 
 ### 💻 **Code Contributions**
+
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/your-idea`
 3. Install dependencies: `npm install`
@@ -177,11 +166,13 @@ We welcome contributions from educators, developers, and math enthusiasts!
 5. Submit a pull request with clear description
 
 ### 📖 **Documentation & Educational Content**
+
 - Improve tutorials and examples
 - Create lesson plans and curriculum guides
 - Add mathematical scenarios to the examples library
 
 ### 🧪 **Testing**
+
 ```bash
 npm run test          # Run unit tests
 npm run lint          # Code style checks
@@ -190,31 +181,11 @@ npm run build         # Production build test
 
 ---
 
-## 📋 Roadmap
-
-### 🎯 **Current Focus (Q1 2025)**
-- [ ] Complete World B implementation (slopes, trigonometry)
-- [ ] Enhanced mobile experience
-- [ ] Teacher dashboard features
-- [ ] Performance optimizations
-
-### 🚀 **Coming Soon (Q2 2025)**
-- [ ] World C: Vector mathematics and physics
-- [ ] Real-time collaboration for classrooms
-- [ ] Plugin marketplace for community extensions
-- [ ] Advanced accessibility features
-
-### 🔮 **Future Vision**
-- [ ] AR/VR support for immersive mathematics
-- [ ] AI-powered tutoring assistance
-- [ ] Advanced assessment and analytics tools
-- [ ] Integration with popular learning management systems
-
----
 
 ## 📊 Technical Specifications
 
 ### 🏗️ **Architecture**
+
 - **Frontend**: React 18+ with TypeScript
 - **Rendering**: SVG-based for crisp mathematical graphics
 - **State**: Zustand for performance and simplicity
@@ -222,12 +193,14 @@ npm run build         # Production build test
 - **Build**: Vite for fast development and optimized production
 
 ### ⚡ **Performance**
+
 - **Target**: 60 FPS with 200+ mathematical objects
 - **Mobile**: Optimized touch response <100ms
 - **Memory**: Efficient rendering with object pooling
 - **Bundle**: <500KB gzipped for fast loading
 
 ### 🌐 **Browser Support**
+
 - Chrome/Edge 90+
 - Firefox 88+
 - Safari 14+

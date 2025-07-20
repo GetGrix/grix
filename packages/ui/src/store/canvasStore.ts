@@ -8,6 +8,7 @@ import type {
   StateManager 
 } from '@getgrix/core';
 import { MathUtils } from '@getgrix/core';
+import { storageManager } from '../utils/storageManager.js';
 
 interface CanvasStore extends CanvasState {
   // Actions
@@ -36,6 +37,11 @@ interface CanvasStore extends CanvasState {
   sendToBack: (id: string) => void;
   bringForward: (id: string) => void;
   sendBackward: (id: string) => void;
+  
+  // State persistence
+  clearObjects: () => void;
+  loadState: () => void;
+  saveState: () => void;
 }
 
 export const useCanvasStore = create<CanvasStore>((set, get) => ({
@@ -56,6 +62,7 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
       set((state) => ({
         viewport: { ...state.viewport, ...updates }
       }));
+      storageManager.scheduleSave();
     },
 
     // Object management
@@ -63,6 +70,7 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
       set((state) => ({
         objects: [...state.objects, object]
       }));
+      storageManager.scheduleSave();
     },
 
     removeObject: (id) => {
@@ -70,6 +78,7 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
         objects: state.objects.filter(obj => obj.id !== id),
         selectedObjects: state.selectedObjects.filter(objId => objId !== id)
       }));
+      storageManager.scheduleSave();
     },
 
     updateObject: (id, updates) => {
@@ -78,6 +87,7 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
           obj.id === id ? { ...obj, ...updates } : obj
         )
       }));
+      storageManager.scheduleSave();
     },
 
     // Selection management
@@ -192,6 +202,32 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
             obj.id === id ? { ...obj, zIndex: nextZIndex - 0.1 } : obj
           )
         };
+      });
+    },
+
+    // State persistence methods
+    clearObjects: () => {
+      set({ objects: [], selectedObjects: [] });
+      storageManager.scheduleSave();
+    },
+
+    loadState: () => {
+      const savedState = storageManager.loadState();
+      if (savedState) {
+        set({
+          objects: savedState.objects,
+          selectedObjects: savedState.selectedObjects,
+          viewport: savedState.viewport
+        });
+      }
+    },
+
+    saveState: () => {
+      const state = get();
+      storageManager.saveState({
+        objects: state.objects,
+        selectedObjects: state.selectedObjects,
+        viewport: state.viewport
       });
     }
   }));

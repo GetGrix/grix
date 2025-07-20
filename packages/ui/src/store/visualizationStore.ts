@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { storageManager } from '../utils/storageManager.js';
 
 interface VisualizationSettings {
   // Origin line enhancements
@@ -126,29 +127,36 @@ export const useVisualizationStore = create<VisualizationStore>((set) => ({
     set((state) => ({
       [setting]: !state[setting]
     }));
+    storageManager.scheduleSave();
   },
 
   setFontScale: (scale) => {
     set({ fontScale: scale });
+    storageManager.scheduleSave();
   },
 
   setGridScale: (scale) => {
     set({ gridScale: scale });
+    storageManager.scheduleSave();
   },
 
   setSnapPrecision: (precision) => {
     set({ snapPrecision: precision });
+    storageManager.scheduleSave();
   },
 
   setCoordinateSystem: (system) => {
     set({ coordinateSystem: system });
+    storageManager.scheduleSave();
   },
 
   setCustomOrigin: (origin) => {
     set({ customOrigin: origin });
+    storageManager.scheduleSave();
   },
 
   resetToDefaults: () => {
     set(defaultSettings);
+    storageManager.scheduleSave();
   },
 }));

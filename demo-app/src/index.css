@@ -88,9 +88,26 @@ button:disabled {
 .settings-panel, 
 .settings-panel *,
 .settings-scrollable,
-.examples-scrollable {
+.examples-scrollable,
+.examples-scrollable *,
+.overflow-y-auto,
+.overflow-auto {
   touch-action: auto !important;
-  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain;
+}
+
+/* Additional mobile scrolling fixes for dropdown containers */
+[class*="dropdown"],
+[class*="menu"],
+[class*="select"] {
+  touch-action: auto !important;
+}
+
+/* Specific fix for examples dropdown scrolling container */
+.max-h-80 {
+  touch-action: auto !important;
+  -webkit-overflow-scrolling: touch !important;
 }
 
 /* Canvas-specific styles */

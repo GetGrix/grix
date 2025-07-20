@@ -71,7 +71,7 @@ const defaultSettings: VisualizationSettings = {
   showCommutativeProperty: false,
   showDistributiveProperty: false,
   showPrimeComposite: false,
-  showGCF: false,
+  showGCF: true,
   showLCM: false,
   
   // Display settings

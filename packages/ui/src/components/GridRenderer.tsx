@@ -122,15 +122,15 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
     const isXOne = Math.abs(line.value - 1) < 0.001;
     const stroke = line.isAxis ? '#374151' : 
                    isXOne ? '#60A5FA' : // Light blue for x=1
-                   line.isInteger ? '#E5E7EB' : // Very faint for integer lines
+                   line.isInteger ? '#D1D5DB' : // Darker gray for better visibility
                    line.isMajor ? '#9CA3AF' : '#E5E7EB';
     const strokeWidth = line.isAxis ? 2 : 
                         isXOne ? 1.5 :
-                        line.isInteger ? Math.max(1.0, viewport.zoom * 0.05) :
+                        line.isInteger ? 1 : // Fixed width for integer lines
                         line.isMajor ? 1 : 0.5;
     const opacity = line.isAxis ? 1 : 
                     isXOne ? 0.8 :
-                    line.isInteger ? 0.4 : // Fixed visibility for integer lines
+                    line.isInteger ? 0.5 : // Increased visibility for integer lines
                     line.isMajor ? 0.6 * gridSystem.opacity : 0.3 * gridSystem.opacity;
     
     return (
@@ -155,13 +155,13 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
       x2={canvasSize.width}
       y2={line.y}
       stroke={line.isAxis ? '#374151' : 
-              line.isInteger ? '#E5E7EB' : // Very faint for integer lines
+              line.isInteger ? '#D1D5DB' : // Darker gray for better visibility
               line.isMajor ? '#9CA3AF' : '#E5E7EB'}
       strokeWidth={line.isAxis ? 2 : 
-                   line.isInteger ? Math.max(1.0, viewport.zoom * 0.05) :
+                   line.isInteger ? 1 : // Fixed width for integer lines
                    line.isMajor ? 1 : 0.5}
       opacity={line.isAxis ? 1 : 
-               line.isInteger ? 0.4 : // Fixed visibility for integer lines
+               line.isInteger ? 0.5 : // Increased visibility for integer lines
                line.isMajor ? 0.6 * gridSystem.opacity : 0.3 * gridSystem.opacity}
     />
   ));

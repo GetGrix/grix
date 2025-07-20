@@ -30,6 +30,12 @@ interface CanvasStore extends CanvasState {
   getSelectedObjects: () => MathObject[];
   screenToWorld: (point: Point) => Point;
   worldToScreen: (point: Point) => Point;
+  
+  // Layer management
+  bringToFront: (id: string) => void;
+  sendToBack: (id: string) => void;
+  bringForward: (id: string) => void;
+  sendBackward: (id: string) => void;
 }
 
 export const useCanvasStore = create<CanvasStore>((set, get) => ({
@@ -130,6 +136,63 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
     worldToScreen: (point) => {
       const { viewport, canvasSize } = get();
       return MathUtils.worldToScreen(point, viewport, canvasSize);
+    },
+
+    // Layer management
+    bringToFront: (id: string) => {
+      set((state) => {
+        const maxZIndex = Math.max(...state.objects.map(obj => obj.zIndex || 0));
+        return {
+          objects: state.objects.map(obj => 
+            obj.id === id ? { ...obj, zIndex: maxZIndex + 1 } : obj
+          )
+        };
+      });
+    },
+
+    sendToBack: (id: string) => {
+      set((state) => {
+        const minZIndex = Math.min(...state.objects.map(obj => obj.zIndex || 0));
+        return {
+          objects: state.objects.map(obj => 
+            obj.id === id ? { ...obj, zIndex: minZIndex - 1 } : obj
+          )
+        };
+      });
+    },
+
+    bringForward: (id: string) => {
+      set((state) => {
+        const target = state.objects.find(obj => obj.id === id);
+        if (!target) return state;
+        
+        const higherObjects = state.objects.filter(obj => (obj.zIndex || 0) > (target.zIndex || 0));
+        if (higherObjects.length === 0) return state; // Already at front
+        
+        const nextZIndex = Math.min(...higherObjects.map(obj => obj.zIndex || 0));
+        return {
+          objects: state.objects.map(obj => 
+            obj.id === id ? { ...obj, zIndex: nextZIndex + 0.1 } : obj
+          )
+        };
+      });
+    },
+
+    sendBackward: (id: string) => {
+      set((state) => {
+        const target = state.objects.find(obj => obj.id === id);
+        if (!target) return state;
+        
+        const lowerObjects = state.objects.filter(obj => (obj.zIndex || 0) < (target.zIndex || 0));
+        if (lowerObjects.length === 0) return state; // Already at back
+        
+        const nextZIndex = Math.max(...lowerObjects.map(obj => obj.zIndex || 0));
+        return {
+          objects: state.objects.map(obj => 
+            obj.id === id ? { ...obj, zIndex: nextZIndex - 0.1 } : obj
+          )
+        };
+      });
     }
   }));
 

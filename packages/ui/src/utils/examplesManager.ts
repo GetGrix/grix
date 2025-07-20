@@ -3,7 +3,7 @@ import { useCanvasStore } from '../store/canvasStore.js';
 import { useVisualizationStore } from '../store/visualizationStore.js';
 
 export interface ExampleObject {
-  type: 'ray' | 'rectangle';
+  type: 'ray' | 'rectangle' | 'circle' | 'triangle';
   properties: any;
 }
 
@@ -135,7 +135,8 @@ class ExamplesManager {
       id: this.generateObjectId(),
       type: exampleObj.type,
       visible: true,
-      selected: false
+      selected: false,
+      zIndex: 0
     };
 
     switch (exampleObj.type) {

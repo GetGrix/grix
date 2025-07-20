@@ -183,7 +183,19 @@ export class RectangleTool implements Plugin {
       }
     }
 
-    // Create new rectangle (this will only be called when this tool is active due to PluginManager logic)
+    // Only create new rectangle if we're in creation mode (tool is active)
+    // If we're here from pan mode (object manipulation), don't create new objects
+    const selectedObjects = this.context.state.getState().selectedObjects;
+    const hasSelectedRectangle = selectedObjects.some(id => {
+      const obj = this.context.canvas.getObject(id);
+      return obj?.type === 'rectangle';
+    });
+    
+    // If we have a selected rectangle but no handle, we're in pan mode - don't create
+    if (hasSelectedRectangle) {
+      return;
+    }
+    
     this.state.isCreating = true;
     this.state.startPoint = worldPoint;
     
@@ -198,7 +210,8 @@ export class RectangleTool implements Plugin {
         area: 0
       },
       visible: true,
-      selected: false
+      selected: false,
+      zIndex: 0
     };
     
     this.state.currentRectangle = newRectangle;

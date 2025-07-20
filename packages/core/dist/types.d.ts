@@ -40,6 +40,7 @@ export interface MathObject {
     bounds?: Bounds;
     visible: boolean;
     selected: boolean;
+    zIndex: number;
 }
 export interface Ray extends MathObject {
     type: 'ray';
@@ -58,6 +59,31 @@ export interface Rectangle extends MathObject {
         width: number;
         height: number;
         area: number;
+    };
+}
+export interface Circle extends MathObject {
+    type: 'circle';
+    properties: {
+        center: Point;
+        radius: number;
+        diameter: number;
+        circumference: number;
+        area: number;
+    };
+}
+export interface Triangle extends MathObject {
+    type: 'triangle';
+    properties: {
+        vertices: [Point, Point, Point];
+        sideA: number;
+        sideB: number;
+        sideC: number;
+        angleA: number;
+        angleB: number;
+        angleC: number;
+        area: number;
+        perimeter: number;
+        type: 'scalene' | 'isosceles' | 'equilateral' | 'right' | 'obtuse' | 'acute';
     };
 }
 export interface Viewport {

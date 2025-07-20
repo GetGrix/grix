@@ -50,6 +50,7 @@ export interface MathObject {
   bounds?: Bounds;
   visible: boolean;
   selected: boolean;
+  zIndex: number;
 }
 
 export interface Ray extends MathObject {

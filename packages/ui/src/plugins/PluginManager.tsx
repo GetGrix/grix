@@ -188,7 +188,7 @@ export function PluginManagerProvider({ children }: PluginManagerProviderProps) 
       eventBus.off('pointer:move', pointerMoveHandler);
       eventBus.off('pointer:up', pointerUpHandler);
     };
-  }, [activeTool, plugins, eventBus]);
+  }, [activeTool, plugins, eventBus, stateManager, canvasAPI]);
 
   const value: PluginManagerContextType = {
     eventBus,

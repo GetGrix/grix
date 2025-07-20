@@ -213,6 +213,38 @@ export function formatMathValue(value: number, maxDecimals: number = 3): string 
   return parseFloat(fixed).toString();
 }
 
+// Shape selection utilities
+export function distanceToLineSegment(point: Point, start: Point, end: Point): number {
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+  const length = Math.sqrt(dx * dx + dy * dy);
+  
+  if (length === 0) return Math.sqrt((point.x - start.x) ** 2 + (point.y - start.y) ** 2);
+  
+  const t = Math.max(0, Math.min(1, ((point.x - start.x) * dx + (point.y - start.y) * dy) / (length * length)));
+  const projection = {
+    x: start.x + t * dx,
+    y: start.y + t * dy
+  };
+  
+  return Math.sqrt((point.x - projection.x) ** 2 + (point.y - projection.y) ** 2);
+}
+
+export function pointInTriangle(point: Point, vertices: [Point, Point, Point]): boolean {
+  const [a, b, c] = vertices;
+  const denominator = (b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y);
+  const alpha = ((b.y - c.y) * (point.x - c.x) + (c.x - b.x) * (point.y - c.y)) / denominator;
+  const beta = ((c.y - a.y) * (point.x - c.x) + (a.x - c.x) * (point.y - c.y)) / denominator;
+  const gamma = 1 - alpha - beta;
+  
+  return alpha >= 0 && beta >= 0 && gamma >= 0;
+}
+
+export function distanceToCircleEdge(point: Point, center: Point, radius: number): number {
+  const distance = Math.sqrt((point.x - center.x) ** 2 + (point.y - center.y) ** 2);
+  return Math.abs(distance - radius);
+}
+
 export function formatCoordinate(value: number, gridSize: number): string {
   // Smart formatting based on grid size
   if (gridSize >= 1) {

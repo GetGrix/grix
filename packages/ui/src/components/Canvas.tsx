@@ -13,6 +13,7 @@ import { TutorialOverlay } from './TutorialOverlay.js';
 import { useTransformationStore } from '../store/transformationStore.js';
 import type { UnifiedPointerEvent, Point } from '@getgrix/core';
 import type { GestureEvent } from '../hooks/useInputSystem.js';
+import { distanceToLineSegment, pointInTriangle, distanceToCircleEdge } from '../utils/gridUtils.js';
 
 interface CanvasProps {
   width?: number;
@@ -96,6 +97,131 @@ export function Canvas({
   
   // Track context menu state
   const [showContextMenu, setShowContextMenu] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  
+  // Track overlapping selection cycling
+  const lastClickRef = useRef({ 
+    worldPoint: { x: 0, y: 0 }, 
+    timestamp: 0, 
+    overlappingObjects: [] as string[],
+    currentIndex: 0 
+  });
+
+  // Find all objects at a point with priority scoring
+  const findObjectsAtPoint = useCallback((worldPoint: Point, tolerance: number = 0.5) => {
+    const candidates: Array<{ object: any; priority: number; distance: number }> = [];
+    
+    for (const obj of objects) {
+      let priority = 0;
+      let distance = Infinity;
+      let isHit = false;
+      
+      switch (obj.type) {
+        case 'ray':
+          // Check edge hit first (highest priority)
+          const edgeDistance = distanceToLineSegment(
+            worldPoint, 
+            obj.properties.startPoint, 
+            obj.properties.endPoint
+          );
+          if (edgeDistance <= tolerance) {
+            priority = 100;
+            distance = edgeDistance;
+            isHit = true;
+          }
+          break;
+          
+        case 'rectangle':
+          const { x, y, width, height } = obj.properties;
+          // Check if near edges (high priority)
+          const edges = [
+            { start: { x, y }, end: { x: x + width, y } }, // bottom
+            { start: { x: x + width, y }, end: { x: x + width, y: y + height } }, // right
+            { start: { x: x + width, y: y + height }, end: { x, y: y + height } }, // top
+            { start: { x, y: y + height }, end: { x, y } }, // left
+          ];
+          
+          let minEdgeDistance = Infinity;
+          for (const edge of edges) {
+            const edgeDist = distanceToLineSegment(worldPoint, edge.start, edge.end);
+            minEdgeDistance = Math.min(minEdgeDistance, edgeDist);
+          }
+          
+          if (minEdgeDistance <= tolerance) {
+            priority = 100;
+            distance = minEdgeDistance;
+            isHit = true;
+          } else if (worldPoint.x >= x && worldPoint.x <= x + width && 
+                     worldPoint.y >= y && worldPoint.y <= y + height) {
+            // Inside area (lower priority)
+            priority = 50;
+            distance = 0;
+            isHit = true;
+          }
+          break;
+          
+        case 'circle':
+          const { center, radius } = obj.properties;
+          const centerDistance = Math.sqrt(
+            (worldPoint.x - center.x) ** 2 + (worldPoint.y - center.y) ** 2
+          );
+          
+          // Check if near edge (high priority)
+          const edgeDist = distanceToCircleEdge(worldPoint, center, radius);
+          if (edgeDist <= tolerance) {
+            priority = 100;
+            distance = edgeDist;
+            isHit = true;
+          } else if (centerDistance <= radius) {
+            // Inside area (lower priority)
+            priority = 50;
+            distance = radius - centerDistance;
+            isHit = true;
+          }
+          break;
+          
+        case 'triangle':
+          const { vertices } = obj.properties;
+          // Check edge hits first
+          const triangleEdges = [
+            [vertices[0], vertices[1]],
+            [vertices[1], vertices[2]],
+            [vertices[2], vertices[0]]
+          ];
+          
+          let minTriangleEdgeDistance = Infinity;
+          for (const [start, end] of triangleEdges) {
+            const edgeDist = distanceToLineSegment(worldPoint, start, end);
+            minTriangleEdgeDistance = Math.min(minTriangleEdgeDistance, edgeDist);
+          }
+          
+          if (minTriangleEdgeDistance <= tolerance) {
+            priority = 100;
+            distance = minTriangleEdgeDistance;
+            isHit = true;
+          } else if (pointInTriangle(worldPoint, vertices)) {
+            // Inside area (lower priority)
+            priority = 50;
+            distance = 0;
+            isHit = true;
+          }
+          break;
+      }
+      
+      if (isHit) {
+        candidates.push({ object: obj, priority, distance });
+      }
+    }
+    
+    // Sort by priority (higher first), then by distance (closer first), then by zIndex (higher first)
+    candidates.sort((a, b) => {
+      if (a.priority !== b.priority) return b.priority - a.priority;
+      if (a.distance !== b.distance) return a.distance - b.distance;
+      return (b.object.zIndex || 0) - (a.object.zIndex || 0);
+    });
+    
+    return candidates.map(c => c.object);
+  }, [objects, distanceToLineSegment, pointInTriangle, distanceToCircleEdge]);
 
   // Handle pointer events
   const handlePointerDown = useCallback((event: UnifiedPointerEvent) => {
@@ -110,144 +236,65 @@ export function Canvas({
       pendingSelection: null
     };
     
-    // Always check if clicking on an object (regardless of active tool)
-    const tolerance = 22; // Use fixed tolerance for now
+    // Smart object selection with edge priority and click cycling
     const worldPoint = screenToWorld(screenPoint);
+    const tolerance = 0.5; // World units tolerance
     
+    // Find all objects at this point
+    const overlappingObjects = findObjectsAtPoint(worldPoint, tolerance);
     let objectClicked = false;
+    let selectedObject = null;
     
-    for (const obj of objects) {
-      if (obj.type === 'ray') {
-        // Check if clicking near ray handles
-        const startScreen = worldToScreen(obj.properties.startPoint);
-        const endScreen = worldToScreen(obj.properties.endPoint);
+    if (overlappingObjects.length > 0) {
+      objectClicked = true;
+      
+      // Check if this is a repeated click in the same location (for cycling)
+      const currentTime = Date.now();
+      const lastClick = lastClickRef.current;
+      const isSameLocation = Math.abs(worldPoint.x - lastClick.worldPoint.x) < 0.1 && 
+                            Math.abs(worldPoint.y - lastClick.worldPoint.y) < 0.1;
+      const isRecentClick = currentTime - lastClick.timestamp < 500; // 500ms window
+      
+      if (isSameLocation && isRecentClick && lastClick.overlappingObjects.length > 1) {
+        // Cycle through overlapping objects
+        const nextIndex = (lastClick.currentIndex + 1) % lastClick.overlappingObjects.length;
+        const targetId = lastClick.overlappingObjects[nextIndex];
+        selectedObject = overlappingObjects.find(obj => obj.id === targetId) || overlappingObjects[0];
         
-        const startDistance = Math.sqrt(
-          Math.pow(screenPoint.x - startScreen.x, 2) + 
-          Math.pow(screenPoint.y - startScreen.y, 2)
-        );
-        const endDistance = Math.sqrt(
-          Math.pow(screenPoint.x - endScreen.x, 2) + 
-          Math.pow(screenPoint.y - endScreen.y, 2)
-        );
+        lastClickRef.current = {
+          worldPoint,
+          timestamp: currentTime,
+          overlappingObjects: lastClick.overlappingObjects,
+          currentIndex: nextIndex
+        };
+      } else {
+        // First click or different location - select the highest priority object
+        selectedObject = overlappingObjects[0];
         
-        // Check line endpoints first
-        if (startDistance <= tolerance || endDistance <= tolerance) {
-          // Store selection info but still allow tool to handle the event for manipulation
-          objectClicked = true;
-          pointerStateRef.current.pendingSelection = { objectId: obj.id, type: 'ray' };
-          // Select object but don't activate tool - keep selection separate from build mode
-          selectObject(obj.id);
-          break;
-        }
-        
-        // Check if clicking anywhere on the line
-        const lineDistanceThreshold = 8; // pixels
-        const lineDistance = distanceFromPointToLine(screenPoint, startScreen, endScreen);
-        if (lineDistance <= lineDistanceThreshold) {
-          // Store selection info but still allow tool to handle the event for manipulation
-          objectClicked = true;
-          pointerStateRef.current.pendingSelection = { objectId: obj.id, type: 'ray' };
-          // Select object but don't activate tool - keep selection separate from build mode
-          selectObject(obj.id);
-          break;
-        }
-      } else if (obj.type === 'rectangle') {
-        // Check if clicking inside rectangle or near handles
-        const topLeft = worldToScreen({ 
-          x: obj.properties.x, 
-          y: obj.properties.y + obj.properties.height 
-        });
-        const rectWidth = obj.properties.width * viewport.zoom;
-        const rectHeight = obj.properties.height * viewport.zoom;
-        
-        // Check if inside rectangle
-        if (screenPoint.x >= topLeft.x && 
-            screenPoint.x <= topLeft.x + rectWidth &&
-            screenPoint.y >= topLeft.y && 
-            screenPoint.y <= topLeft.y + rectHeight) {
-          // Store selection info but still allow tool to handle the event for manipulation
-          objectClicked = true;
-          pointerStateRef.current.pendingSelection = { objectId: obj.id, type: 'rectangle' };
-          // Select object but don't activate tool - keep selection separate from build mode
-          selectObject(obj.id);
-          break;
-        }
-        
-        // Check all four corner handles
-        const corners = [
-          { x: topLeft.x, y: topLeft.y }, // top-left
-          { x: topLeft.x + rectWidth, y: topLeft.y }, // top-right  
-          { x: topLeft.x, y: topLeft.y + rectHeight }, // bottom-left
-          { x: topLeft.x + rectWidth, y: topLeft.y + rectHeight } // bottom-right
-        ];
-        
-        const nearCorner = corners.some(corner => {
-          const distance = Math.sqrt(
-            Math.pow(screenPoint.x - corner.x, 2) + 
-            Math.pow(screenPoint.y - corner.y, 2)
-          );
-          return distance <= tolerance;
-        });
-        
-        if (nearCorner) {
-          // Store selection info but still allow tool to handle the event for manipulation
-          objectClicked = true;
-          pointerStateRef.current.pendingSelection = { objectId: obj.id, type: 'rectangle' };
-          // Select object but don't activate tool - keep selection separate from build mode
-          selectObject(obj.id);
-          break;
-        }
-      } else if (obj.type === 'circle') {
-        // Check if clicking inside circle or near handles
-        const center = worldToScreen(obj.properties.center);
-        const radius = obj.properties.radius * viewport.zoom;
-        
-        // Check if inside circle
-        const distance = Math.sqrt(
-          Math.pow(screenPoint.x - center.x, 2) + 
-          Math.pow(screenPoint.y - center.y, 2)
-        );
-        
-        if (distance <= radius + tolerance) {
-          // Store selection info but still allow tool to handle the event for manipulation
-          objectClicked = true;
-          pointerStateRef.current.pendingSelection = { objectId: obj.id, type: 'circle' };
-          // Select object but don't activate tool - keep selection separate from build mode
-          selectObject(obj.id);
-          break;
-        }
-      } else if (obj.type === 'triangle') {
-        // Check if clicking inside triangle or near vertices
-        const vertices = obj.properties.vertices.map(worldToScreen);
-        const [v0, v1, v2] = vertices;
-        
-        // Check if inside triangle using barycentric coordinates
-        const denominator = (v1.y - v2.y) * (v0.x - v2.x) + (v2.x - v1.x) * (v0.y - v2.y);
-        const alpha = ((v1.y - v2.y) * (screenPoint.x - v2.x) + (v2.x - v1.x) * (screenPoint.y - v2.y)) / denominator;
-        const beta = ((v2.y - v0.y) * (screenPoint.x - v2.x) + (v0.x - v2.x) * (screenPoint.y - v2.y)) / denominator;
-        const gamma = 1 - alpha - beta;
-        
-        const insideTriangle = alpha >= 0 && beta >= 0 && gamma >= 0;
-        
-        // Check if near any vertex
-        const nearVertex = vertices.some(vertex => {
-          const distance = Math.sqrt(
-            Math.pow(screenPoint.x - vertex.x, 2) + 
-            Math.pow(screenPoint.y - vertex.y, 2)
-          );
-          return distance <= tolerance;
-        });
-        
-        if (insideTriangle || nearVertex) {
-          // Store selection info but still allow tool to handle the event for manipulation
-          objectClicked = true;
-          pointerStateRef.current.pendingSelection = { objectId: obj.id, type: 'triangle' };
-          // Select object but don't activate tool - keep selection separate from build mode
-          selectObject(obj.id);
-          break;
-        }
+        lastClickRef.current = {
+          worldPoint,
+          timestamp: currentTime,
+          overlappingObjects: overlappingObjects.map(obj => obj.id),
+          currentIndex: 0
+        };
       }
+      
+      // Store selection info for plugin system
+      pointerStateRef.current.pendingSelection = { 
+        objectId: selectedObject.id, 
+        type: selectedObject.type 
+      };
+      
+      // Select the object
+      selectObject(selectedObject.id);
+    } else {
+      // Reset click cycling when clicking empty space
+      lastClickRef.current = {
+        worldPoint: { x: 0, y: 0 },
+        timestamp: 0,
+        overlappingObjects: [],
+        currentIndex: 0
+      };
     }
     
     // If no object was clicked but we have an active tool, keep the tool active for creation
@@ -293,6 +340,7 @@ export function Canvas({
       
       if (distance >= pointerStateRef.current.dragThreshold) {
         pointerStateRef.current.hasMoved = true;
+        setIsDragging(true);
         // Clear pending selection since this is a drag operation
         pointerStateRef.current.pendingSelection = null;
       }
@@ -317,6 +365,9 @@ export function Canvas({
 
   const handlePointerUp = useCallback((event: UnifiedPointerEvent) => {
     // Selection mode is now separate from build mode, so no need to clear tools on click
+    
+    // Reset dragging state
+    setIsDragging(false);
     
     // Reset pointer tracking
     pointerStateRef.current = {
@@ -345,8 +396,8 @@ export function Canvas({
           // Dampen zoom for touch devices to prevent aggressive scaling
           let adjustedScale = gesture.scale;
           if (gesture.touches && gesture.touches > 1) {
-            // Multi-touch indicates mobile/tablet - apply dampening
-            adjustedScale = 1 + (gesture.scale - 1) * 0.4; // 40% of original scale change
+            // Multi-touch indicates mobile/tablet - apply more aggressive dampening
+            adjustedScale = 1 + (gesture.scale - 1) * 0.25; // 25% of original scale change (reduced from 40%)
           }
           
           // Performance-based zoom limits (stricter when many objects)
@@ -489,14 +540,14 @@ export function Canvas({
     };
   }, [activeTool, setActiveTool, eventBus, selectedObjects, removeObject, clearSelection]);
 
-  // Show context menu when an object is selected
+  // Show context menu when an object is selected and not dragging
   useEffect(() => {
-    if (selectedObjects.length === 1) {
+    if (selectedObjects.length === 1 && !isDragging) {
       setShowContextMenu(true);
     } else {
       setShowContextMenu(false);
     }
-  }, [selectedObjects]);
+  }, [selectedObjects, isDragging]);
 
   const handleContextMenuClose = useCallback(() => {
     setShowContextMenu(false);

@@ -164,8 +164,22 @@ export class RayTool implements Plugin {
       }
     }
 
-    // Create new ray (this will only be called when this tool is active due to PluginManager logic)
+    // Only create new ray if we're in creation mode (tool is active)
+    // Check if this tool is called for manipulation vs creation
     if (!this.state.isCreating) {
+      // If we're here from pan mode (object manipulation), don't create new objects
+      // We can detect this by checking if we have an active ray but no valid handle
+      const selectedObjects = this.context.state.getState().selectedObjects;
+      const hasSelectedRay = selectedObjects.some(id => {
+        const obj = this.context.canvas.getObject(id);
+        return obj?.type === 'ray';
+      });
+      
+      // If we have a selected ray but no handle, we're in pan mode - don't create
+      if (hasSelectedRay) {
+        return;
+      }
+      
       this.state.isCreating = true;
       this.state.startPoint = worldPoint;
       
@@ -179,7 +193,8 @@ export class RayTool implements Plugin {
           yIntercept: worldPoint.y
         },
         visible: true,
-        selected: false
+        selected: false,
+        zIndex: 0
       };
       
       this.state.currentRay = newRay;

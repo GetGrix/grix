@@ -214,8 +214,20 @@ export class TriangleTool implements Plugin {
       }
     }
 
-    // Create new triangle or continue creation
+    // Only create new triangle if we're in creation mode (tool is active)
+    // If we're here from pan mode (object manipulation), don't create new objects
     if (!this.state.isCreating) {
+      const selectedObjects = this.context.state.getState().selectedObjects;
+      const hasSelectedTriangle = selectedObjects.some(id => {
+        const obj = this.context.canvas.getObject(id);
+        return obj?.type === 'triangle';
+      });
+      
+      // If we have a selected triangle but no handle, we're in pan mode - don't create
+      if (hasSelectedTriangle) {
+        return;
+      }
+      
       // Start creating new triangle
       this.state.isCreating = true;
       this.state.creationStep = 0;
@@ -236,7 +248,8 @@ export class TriangleTool implements Plugin {
           area: 0, perimeter: 0, type: 'scalene'
         },
         visible: true,
-        selected: false
+        selected: false,
+        zIndex: 0
       };
       
       this.state.currentTriangle = newTriangle;

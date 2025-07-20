@@ -17,7 +17,7 @@ export function SettingsPanel() {
   const [isOpen, setIsOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const visualizationStore = useVisualizationStore();
-  const { toggleSetting, setFontScale, resetToDefaults } = visualizationStore;
+  const { toggleSetting, setFontScale, setGridScale, setSnapPrecision, setCoordinateSystem, resetToDefaults } = visualizationStore;
 
   // Close panel when clicking outside
   useEffect(() => {
@@ -28,9 +28,12 @@ export function SettingsPanel() {
     }
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      // Use capture phase to ensure we get the event before canvas handlers
+      document.addEventListener('mousedown', handleClickOutside, true);
+      document.addEventListener('click', handleClickOutside, true);
       return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener('mousedown', handleClickOutside, true);
+        document.removeEventListener('click', handleClickOutside, true);
       };
     }
   }, [isOpen]);
@@ -201,6 +204,105 @@ export function SettingsPanel() {
                       </div>
                       <div className="text-xs text-gray-500 leading-relaxed">
                         Increase font size for better visibility on TVs and projectors
+                      </div>
+                      
+                      {/* Grid Scale Control */}
+                      <div className="space-y-3 pt-4 border-t border-gray-100">
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium text-gray-700">
+                            Grid Density
+                          </label>
+                          <span className="text-xs text-gray-500 font-mono">
+                            {Math.round(visualizationStore.gridScale * 100)}%
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs text-gray-400">Sparse</span>
+                          <input
+                            type="range"
+                            min="0.2"
+                            max="5.0"
+                            step="0.1"
+                            value={visualizationStore.gridScale}
+                            onChange={(e) => setGridScale(parseFloat(e.target.value))}
+                            className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                          />
+                          <span className="text-xs text-gray-600">Dense</span>
+                        </div>
+                        <div className="text-xs text-gray-500 leading-relaxed">
+                          Adjust grid line spacing for different zoom levels and detail needs
+                        </div>
+                      </div>
+                      
+                      {/* Coordinate System Control */}
+                      <div className="space-y-3 pt-4 border-t border-gray-100">
+                        <label className="text-sm font-medium text-gray-700">
+                          Coordinate System
+                        </label>
+                        <div className="space-y-2">
+                          {[
+                            { value: 'cartesian', label: 'Cartesian Only', desc: 'Standard x-y grid' },
+                            { value: 'polar', label: 'Polar Only', desc: 'Circular coordinate system' },
+                            { value: 'both', label: 'Both Systems', desc: 'Overlay polar on Cartesian' }
+                          ].map(option => (
+                            <label key={option.value} className="flex items-start gap-3 cursor-pointer group">
+                              <input
+                                type="radio"
+                                name="coordinateSystem"
+                                value={option.value}
+                                checked={visualizationStore.coordinateSystem === option.value}
+                                onChange={(e) => setCoordinateSystem(e.target.value as any)}
+                                className="mt-0.5 w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <div className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                                  {option.label}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {option.desc}
+                                </div>
+                              </div>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Snap Precision Control */}
+                      <div className="space-y-3 pt-4 border-t border-gray-100">
+                        <label className="text-sm font-medium text-gray-700">
+                          Snap Precision
+                        </label>
+                        <div className="space-y-2">
+                          {[
+                            { value: 'adaptive', label: 'Adaptive', desc: 'Automatically adjusts based on zoom level' },
+                            { value: 'whole', label: 'Whole Numbers', desc: 'Snap to 1, 2, 3, etc.' },
+                            { value: 'half', label: 'Half Units', desc: 'Snap to 0.5, 1.0, 1.5, etc.' },
+                            { value: 'quarter', label: 'Quarter Units', desc: 'Snap to 0.25, 0.5, 0.75, etc.' },
+                            { value: 'tenth', label: 'Tenth Units', desc: 'Snap to 0.1, 0.2, 0.3, etc.' }
+                          ].map(option => (
+                            <label key={option.value} className="flex items-start gap-3 cursor-pointer group">
+                              <input
+                                type="radio"
+                                name="snapPrecision"
+                                value={option.value}
+                                checked={visualizationStore.snapPrecision === option.value}
+                                onChange={(e) => setSnapPrecision(e.target.value as any)}
+                                className="mt-0.5 w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <div className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                                  {option.label}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {option.desc}
+                                </div>
+                              </div>
+                            </label>
+                          ))}
+                        </div>
+                        <div className="text-xs text-gray-500 leading-relaxed">
+                          Controls where objects can be placed when snap-to-grid is enabled
+                        </div>
                       </div>
                     </div>
                   )}

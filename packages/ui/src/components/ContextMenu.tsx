@@ -45,7 +45,6 @@ export function ContextMenu({ selectedObject, onDelete, onClose }: ContextMenuPr
             <div className="space-y-1 text-xs text-gray-600">
               <div>Position: ({formatCoordinate(x, 1)}, {formatCoordinate(y, 1)})</div>
               <div>Size: {formatCoordinate(width, 1)} × {formatCoordinate(height, 1)}</div>
-              <div>Area: {formatCoordinate(area, 1)}</div>
             </div>
           </div>
         );

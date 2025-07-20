@@ -1,4 +1,6 @@
 import type { Plugin, PluginContext, UnifiedPointerEvent, Ray, Point } from '@getgrix/core';
+import { calculateSnapSize } from '../utils/gridUtils.js';
+import { useVisualizationStore } from '../store/visualizationStore.js';
 
 interface RayState {
   isCreating: boolean;
@@ -68,8 +70,23 @@ export class RayTool implements Plugin {
   private snapPoint(point: Point): Point {
     const canvasState = this.context.state.getState();
     if (canvasState.snapToGrid) {
-      const gridSize = canvasState.gridDensity === 'fine' ? 1 : 10;
-      return this.context.math.snapToGrid(point, gridSize);
+      // Special case: stronger snap to origin (0,0) for easier line starting
+      const distanceToOrigin = Math.sqrt(point.x * point.x + point.y * point.y);
+      const originSnapThreshold = 0.75; // Snap to origin within 0.75 units
+      
+      if (distanceToOrigin <= originSnapThreshold) {
+        return { x: 0, y: 0 };
+      }
+      
+      // Get current visualization settings for snap precision
+      const visualSettings = useVisualizationStore.getState();
+      const snapSize = calculateSnapSize(
+        canvasState.viewport,
+        visualSettings.gridScale,
+        visualSettings.snapPrecision
+      );
+      
+      return this.context.math.snapToGrid(point, snapSize);
     }
     return point;
   }

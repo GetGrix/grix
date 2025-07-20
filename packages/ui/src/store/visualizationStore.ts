@@ -19,12 +19,25 @@ interface VisualizationSettings {
   
   // Display settings
   fontScale: number; // 1.0 = normal, 1.5 = 50% bigger, etc.
+  gridScale: number; // 1.0 = normal, 2.0 = 2x denser, 0.5 = 2x sparser
+  
+  // Snapping settings
+  snapPrecision: 'adaptive' | 'whole' | 'half' | 'quarter' | 'tenth'; // Controls snapping granularity
+  
+  // Coordinate system settings
+  coordinateSystem: 'cartesian' | 'polar' | 'both';
+  showPolarGrid: boolean;
+  customOrigin: { x: number; y: number } | null; // null = default (0,0)
 }
 
 interface VisualizationStore extends VisualizationSettings {
   // Actions
   toggleSetting: (setting: keyof VisualizationSettings) => void;
   setFontScale: (scale: number) => void;
+  setGridScale: (scale: number) => void;
+  setSnapPrecision: (precision: 'adaptive' | 'whole' | 'half' | 'quarter' | 'tenth') => void;
+  setCoordinateSystem: (system: 'cartesian' | 'polar' | 'both') => void;
+  setCustomOrigin: (origin: { x: number; y: number } | null) => void;
   resetToDefaults: () => void;
 }
 
@@ -47,6 +60,15 @@ const defaultSettings: VisualizationSettings = {
   
   // Display settings
   fontScale: 1.0,
+  gridScale: 1.0,
+  
+  // Snapping settings
+  snapPrecision: 'whole',
+  
+  // Coordinate system settings
+  coordinateSystem: 'cartesian',
+  showPolarGrid: false,
+  customOrigin: null,
 };
 
 export const useVisualizationStore = create<VisualizationStore>((set) => ({
@@ -60,6 +82,22 @@ export const useVisualizationStore = create<VisualizationStore>((set) => ({
 
   setFontScale: (scale) => {
     set({ fontScale: scale });
+  },
+
+  setGridScale: (scale) => {
+    set({ gridScale: scale });
+  },
+
+  setSnapPrecision: (precision) => {
+    set({ snapPrecision: precision });
+  },
+
+  setCoordinateSystem: (system) => {
+    set({ coordinateSystem: system });
+  },
+
+  setCustomOrigin: (origin) => {
+    set({ customOrigin: origin });
   },
 
   resetToDefaults: () => {

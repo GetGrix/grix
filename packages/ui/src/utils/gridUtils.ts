@@ -207,3 +207,41 @@ export function formatCoordinate(value: number, gridSize: number): string {
     return value.toFixed(3);
   }
 }
+
+export function calculateSnapSize(
+  viewport: Viewport,
+  gridScale: number,
+  snapPrecision: 'adaptive' | 'whole' | 'half' | 'quarter' | 'tenth'
+): number {
+  if (snapPrecision !== 'adaptive') {
+    // Fixed precision modes
+    switch (snapPrecision) {
+      case 'whole': return 1;
+      case 'half': return 0.5;
+      case 'quarter': return 0.25;
+      case 'tenth': return 0.1;
+      default: return 1;
+    }
+  }
+  
+  // Adaptive mode: calculate snap size based on current grid system
+  const adaptiveGrid = calculateAdaptiveGrid(viewport, {
+    minSpacing: 8,
+    maxSpacing: 80,
+    labelMinSpacing: 40
+  });
+  
+  // Apply grid scale to the adaptive grid size
+  const effectiveGridSize = adaptiveGrid.gridSize / gridScale;
+  
+  // For very fine grids (high zoom), allow sub-unit snapping
+  if (effectiveGridSize <= 0.1) {
+    return effectiveGridSize; // Allow snapping to 0.05, 0.02, etc.
+  } else if (effectiveGridSize <= 0.5) {
+    return 0.1; // Snap to tenths
+  } else if (effectiveGridSize <= 2) {
+    return 0.25; // Snap to quarters
+  } else {
+    return 1; // Snap to whole numbers
+  }
+}

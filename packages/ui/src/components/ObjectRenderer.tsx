@@ -1,6 +1,6 @@
 // Object rendering component for better modularity
 import React, { useState } from 'react';
-import { formatCoordinate } from '../utils/gridUtils.js';
+import { formatCoordinate, calculateSnapSize } from '../utils/gridUtils.js';
 import { useVisualizationStore } from '../store/visualizationStore.js';
 import type { MathObject, Point, Viewport } from '@getgrix/core';
 
@@ -20,8 +20,9 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
   // Helper function to scale font sizes
   const scaledFontSize = (baseSize: number) => Math.round(baseSize * visualSettings.fontScale);
   
-  // Determine grid size for coordinate formatting (shared across all objects)
-  const gridSize = viewport.zoom > 50 ? 0.1 : viewport.zoom > 10 ? 1 : 10;
+  // Calculate proper snap size for coordinate formatting (shared across all objects)
+  const snapSize = calculateSnapSize(viewport, visualSettings.gridScale, visualSettings.snapPrecision);
+  const gridSize = snapSize; // Use snap size for coordinate formatting
   
   // Track hover state for ray endpoints
   const [hoveredEndpoint, setHoveredEndpoint] = useState<string | null>(null);
@@ -137,10 +138,10 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                   const endX = obj.properties.endPoint.x;
                   const endY = obj.properties.endPoint.y;
                   
-                  // Use actual coordinates without simplification for the fraction display
-                  // Round to integers for clean display
-                  const numerator = Math.round(endY);
-                  const denominator = Math.round(endX);
+                  // Use actual coordinates for the fraction display
+                  // Format to appropriate precision based on grid size
+                  const numerator = formatCoordinate(endY, gridSize);
+                  const denominator = formatCoordinate(endX, gridSize);
                   
                   // Always render as fraction for origin lines using actual coordinates
                   return (
@@ -229,37 +230,39 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
               
               const extendedEndScreen = worldToScreen(extendedEnd);
               
-              // Find all integer intersections along the extended line
+              // Find reasonable points along the extended line
               const equivalentPoints = [];
               
-              // We'll check multiples of the original fraction
-              const gcd = (a: number, b: number): number => b === 0 ? Math.abs(a) : gcd(b, a % b);
-              const originalGCD = gcd(Math.abs(Math.round(endY)), Math.abs(Math.round(endX)));
-              
-              if (originalGCD > 0) {
-                const baseY = Math.round(endY) / originalGCD;
-                const baseX = Math.round(endX) / originalGCD;
+              // Find equivalent fractions using the current snap precision
+              if (Math.abs(endX) > 0.001 && Math.abs(endY) > 0.001) {
+                // Find multiples of the slope ratio
+                const slope = endY / endX;
                 
-                // Find multiples that are within reasonable bounds and have integer coordinates
-                for (let multiplier = 1; multiplier <= 20; multiplier++) {
-                  const pointX = baseX * multiplier;
-                  const pointY = baseY * multiplier;
+                // Generate points at intervals matching the current snap size
+                for (let x = snapSize; x <= Math.min(20, Math.abs(maxExtent)); x += snapSize) {
+                  const y = slope * x;
                   
-                  // Check if this point is within a reasonable distance and has integer coordinates
-                  if (Math.abs(pointX - Math.round(pointX)) < 0.001 && 
-                      Math.abs(pointY - Math.round(pointY)) < 0.001 &&
-                      Math.abs(pointX) <= maxExtent && 
-                      Math.abs(pointY) <= maxExtent) {
+                  // Snap to the current snap precision
+                  const snapX = Math.round(x / snapSize) * snapSize;
+                  const snapY = Math.round(y / snapSize) * snapSize;
+                  
+                  // Check if the calculated point is close to a snap-aligned point
+                  if (Math.abs(x - snapX) < snapSize / 10 && Math.abs(y - snapY) < snapSize / 10 &&
+                      Math.abs(snapX) <= maxExtent && Math.abs(snapY) <= maxExtent &&
+                      snapX > 0 && snapY > 0) { // Only positive coordinates for equivalent fractions
                     
-                    const screenPos = worldToScreen({ x: pointX, y: pointY });
+                    const screenPos = worldToScreen({ x: snapX, y: snapY });
                     
                     // Only include if within visible area (with some padding)
                     if (screenPos.x >= -100 && screenPos.x <= canvasSize.width + 100 &&
                         screenPos.y >= -100 && screenPos.y <= canvasSize.height + 100) {
                       equivalentPoints.push({
-                        world: { x: pointX, y: pointY },
+                        world: { x: snapX, y: snapY },
                         screen: screenPos,
-                        fraction: { num: Math.round(pointY), den: Math.round(pointX) }
+                        fraction: { 
+                          num: formatCoordinate(snapY, snapSize), 
+                          den: formatCoordinate(snapX, snapSize) 
+                        }
                       });
                     }
                   }
@@ -331,16 +334,11 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                   
                   {/* Soft area rectangle for multiplication visualization */}
                   {visualSettings.showAreaRectangle && (() => {
-                    // Only show if endpoint has positive integer-ish coordinates
-                    const roundedX = Math.round(endX);
-                    const roundedY = Math.round(endY);
-                    
-                    if (roundedX > 0 && roundedY > 0 && 
-                        Math.abs(endX - roundedX) < 0.1 && 
-                        Math.abs(endY - roundedY) < 0.1) {
+                    // Show for any positive coordinates (including fractional)
+                    if (endX > 0 && endY > 0) {
                       
                       const originScreen = worldToScreen({ x: 0, y: 0 });
-                      const endpointScreen = worldToScreen({ x: roundedX, y: roundedY });
+                      const endpointScreen = worldToScreen({ x: endX, y: endY });
                       
                       const rectWidth = Math.abs(endpointScreen.x - originScreen.x);
                       const rectHeight = Math.abs(endpointScreen.y - originScreen.y);
@@ -349,7 +347,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                       const rectX = Math.min(originScreen.x, endpointScreen.x);
                       const rectY = Math.min(originScreen.y, endpointScreen.y);
                       
-                      const area = roundedX * roundedY;
+                      const area = endX * endY;
                       
                       return (
                         <g>
@@ -376,7 +374,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                             textAnchor="middle"
                             opacity="0.6"
                           >
-                            {roundedY} × {roundedX} = {area}
+                            {formatCoordinate(endY, gridSize)} × {formatCoordinate(endX, gridSize)} = {formatCoordinate(area, gridSize)}
                           </text>
                         </g>
                       );
@@ -386,16 +384,12 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                   
                   {/* Rise/Run Triangle for slope visualization */}
                   {visualSettings.showRiseRunTriangle && (() => {
-                    const roundedX = Math.round(endX);
-                    const roundedY = Math.round(endY);
-                    
-                    if (roundedX > 0 && roundedY > 0 && 
-                        Math.abs(endX - roundedX) < 0.1 && 
-                        Math.abs(endY - roundedY) < 0.1) {
+                    // Show for any positive coordinates (including fractional)
+                    if (endX > 0 && endY > 0) {
                       
                       const originScreen = worldToScreen({ x: 0, y: 0 });
-                      const rightScreen = worldToScreen({ x: roundedX, y: 0 });
-                      const topScreen = worldToScreen({ x: roundedX, y: roundedY });
+                      const rightScreen = worldToScreen({ x: endX, y: 0 });
+                      const topScreen = worldToScreen({ x: endX, y: endY });
                       
                       return (
                         <g>
@@ -419,7 +413,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                             textAnchor="start"
                             opacity="0.7"
                           >
-                            rise: {roundedY}
+                            rise: {formatCoordinate(endY, gridSize)}
                           </text>
                           
                           {/* Run label */}
@@ -432,7 +426,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                             textAnchor="middle"
                             opacity="0.7"
                           >
-                            run: {roundedX}
+                            run: {formatCoordinate(endX, gridSize)}
                           </text>
                         </g>
                       );

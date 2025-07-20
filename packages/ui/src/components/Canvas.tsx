@@ -8,6 +8,7 @@ import { ObjectRenderer } from './ObjectRenderer.js';
 import { DebugInfo } from './DebugInfo.js';
 import { ContextMenu } from './ContextMenu.js';
 import { SettingsPanel } from './SettingsPanel.js';
+import { useTransformationStore } from '../store/transformationStore.js';
 import type { UnifiedPointerEvent } from '@getgrix/core';
 import type { GestureEvent } from '../hooks/useInputSystem.js';
 
@@ -61,6 +62,9 @@ export function Canvas({
   // Connect to plugin system
   const pluginHandlers = useCanvasPluginIntegration();
   const { activeTool, setActiveTool, eventBus } = usePluginManager();
+  
+  // Connect to transformation system
+  const { rotate90, rotate180, rotate270, scaleObject, setSelectedObject } = useTransformationStore();
 
   // Update canvas size when dimensions change
   useEffect(() => {
@@ -331,6 +335,54 @@ export function Canvas({
             clearSelection();
             // Deactivate any active tool after deletion
             setActiveTool(null);
+          }
+          break;
+        case 'r':
+        case 'R':
+          // Rotate selected objects
+          if (selectedObjects.length > 0 && !event.ctrlKey) {
+            event.preventDefault();
+            const canvasAPI = { getObject, updateObject };
+            selectedObjects.forEach(objectId => {
+              if (event.shiftKey) {
+                rotate270(objectId, canvasAPI); // Shift+R = counter-clockwise
+              } else {
+                rotate90(objectId, canvasAPI); // R = clockwise
+              }
+            });
+          }
+          break;
+        case 'f':
+        case 'F':
+          // Flip (180-degree rotation)
+          if (selectedObjects.length > 0 && !event.ctrlKey) {
+            event.preventDefault();
+            const canvasAPI = { getObject, updateObject };
+            selectedObjects.forEach(objectId => {
+              rotate180(objectId, canvasAPI);
+            });
+          }
+          break;
+        case '=':
+        case '+':
+          // Scale up
+          if (selectedObjects.length > 0 && !event.ctrlKey) {
+            event.preventDefault();
+            const canvasAPI = { getObject, updateObject };
+            selectedObjects.forEach(objectId => {
+              scaleObject(objectId, 2.0, canvasAPI);
+            });
+          }
+          break;
+        case '-':
+        case '_':
+          // Scale down
+          if (selectedObjects.length > 0 && !event.ctrlKey) {
+            event.preventDefault();
+            const canvasAPI = { getObject, updateObject };
+            selectedObjects.forEach(objectId => {
+              scaleObject(objectId, 0.5, canvasAPI);
+            });
           }
           break;
       }

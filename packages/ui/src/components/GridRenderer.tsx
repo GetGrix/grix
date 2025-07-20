@@ -18,18 +18,79 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
   // Helper function to scale font sizes
   const scaledFontSize = (baseSize: number) => Math.round(baseSize * visualSettings.fontScale);
   
-  // Calculate adaptive grid system
-  const gridSystem = calculateAdaptiveGrid(viewport);
+  // Calculate adaptive grid system with scaling
+  const gridSystem = calculateAdaptiveGrid(viewport, {
+    minSpacing: 8,
+    maxSpacing: 80,
+    labelMinSpacing: 40
+  });
+  
+  // Apply grid scale
+  const scaledGridSystem = {
+    ...gridSystem,
+    gridSize: gridSystem.gridSize / visualSettings.gridScale,
+    labelStep: gridSystem.labelStep / visualSettings.gridScale
+  };
+  
   const { verticalLines: vLines, horizontalLines: hLines } = generateGridLines(
     viewport,
     canvasSize,
-    gridSystem,
+    scaledGridSystem,
     worldToScreen,
     visualSettings.showIntegerGridLines
   );
 
   if (!gridSystem.shouldShowGrid) {
     return null;
+  }
+
+  // Calculate polar grid elements
+  const polarElements = [];
+  if (visualSettings.coordinateSystem === 'polar' || visualSettings.coordinateSystem === 'both') {
+    const originScreen = worldToScreen({ x: 0, y: 0 });
+    const maxRadius = Math.max(
+      Math.abs(viewport.center.x) + canvasSize.width / (2 * viewport.zoom),
+      Math.abs(viewport.center.y) + canvasSize.height / (2 * viewport.zoom)
+    );
+    
+    // Concentric circles at unit intervals
+    for (let r = scaledGridSystem.gridSize; r <= maxRadius; r += scaledGridSystem.gridSize) {
+      const radiusInScreen = r * viewport.zoom;
+      if (radiusInScreen >= 10) {
+        polarElements.push(
+          <circle
+            key={`polar-circle-${r}`}
+            cx={originScreen.x}
+            cy={originScreen.y}
+            r={radiusInScreen}
+            fill="none"
+            stroke="#9CA3AF"
+            strokeWidth="0.5"
+            opacity={0.4}
+          />
+        );
+      }
+    }
+    
+    // Radial lines at 30-degree intervals
+    for (let angle = 0; angle < 360; angle += 30) {
+      const radians = (angle * Math.PI) / 180;
+      const endX = originScreen.x + maxRadius * viewport.zoom * Math.cos(radians);
+      const endY = originScreen.y - maxRadius * viewport.zoom * Math.sin(radians);
+      
+      polarElements.push(
+        <line
+          key={`polar-line-${angle}`}
+          x1={originScreen.x}
+          y1={originScreen.y}
+          x2={endX}
+          y2={endY}
+          stroke="#9CA3AF"
+          strokeWidth="0.5"
+          opacity={0.3}
+        />
+      );
+    }
   }
 
   // Find ray intersections with x=1 line (rays starting from origin)
@@ -170,8 +231,20 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
 
   return (
     <g className="grid">
-      {verticalLines}
-      {horizontalLines}
+      {/* Polar coordinate system */}
+      {(visualSettings.coordinateSystem === 'polar' || visualSettings.coordinateSystem === 'both') && (
+        <g className="polar-grid">
+          {polarElements}
+        </g>
+      )}
+      
+      {/* Cartesian coordinate system */}
+      {(visualSettings.coordinateSystem === 'cartesian' || visualSettings.coordinateSystem === 'both') && (
+        <g className="cartesian-grid">
+          {verticalLines}
+          {horizontalLines}
+        </g>
+      )}
       
       {/* Lattice points */}
       {latticePoints.map((point, index) => (
@@ -204,7 +277,19 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
         <g className="labels" fontSize="12" fill="#374151">
           {/* X-axis labels */}
           {vLines
-            .filter(line => Math.abs(line.value % gridSystem.labelStep) < gridSystem.gridSize / 2 && Math.abs(line.value) >= gridSystem.labelStep / 2)
+            .filter(line => {
+              // Only show labels for values that are multiples of labelStep
+              const isLabelValue = Math.abs(line.value % scaledGridSystem.labelStep) < scaledGridSystem.gridSize / 10;
+              // Skip values too close to origin to avoid overcrowding
+              const notTooCloseToOrigin = Math.abs(line.value) >= scaledGridSystem.labelStep / 2;
+              return isLabelValue && notTooCloseToOrigin;
+            })
+            // Remove duplicates by grouping nearby values (within 0.001 tolerance)
+            .filter((line, index, array) => {
+              return !array.slice(0, index).some(prevLine => 
+                Math.abs(prevLine.value - line.value) < 0.001
+              );
+            })
             .map(line => (
               <text
                 key={`xlabel${line.value}`}
@@ -222,7 +307,19 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
           
           {/* Y-axis labels */}
           {hLines
-            .filter(line => Math.abs(line.value % gridSystem.labelStep) < gridSystem.gridSize / 2 && Math.abs(line.value) >= gridSystem.labelStep / 2)
+            .filter(line => {
+              // Only show labels for values that are multiples of labelStep
+              const isLabelValue = Math.abs(line.value % scaledGridSystem.labelStep) < scaledGridSystem.gridSize / 10;
+              // Skip values too close to origin to avoid overcrowding
+              const notTooCloseToOrigin = Math.abs(line.value) >= scaledGridSystem.labelStep / 2;
+              return isLabelValue && notTooCloseToOrigin;
+            })
+            // Remove duplicates by grouping nearby values (within 0.001 tolerance)
+            .filter((line, index, array) => {
+              return !array.slice(0, index).some(prevLine => 
+                Math.abs(prevLine.value - line.value) < 0.001
+              );
+            })
             .map(line => (
               <text
                 key={`ylabel${line.value}`}
@@ -238,17 +335,29 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
             ))
           }
           
-          {/* Origin label - positioned to the left of y-axis */}
-          <text
-            x={worldToScreen({ x: 0, y: 0 }).x - 25}
-            y={worldToScreen({ x: 0, y: 0 }).y - 10}
-            fontSize={scaledFontSize(11)}
-            fontWeight="600"
-            fill="#374151"
-            opacity={Math.max(0.8, gridSystem.opacity)}
-          >
-            (0,0)
-          </text>
+          {/* Origin label and visual marker */}
+          <g>
+            {/* Origin marker - small circle to make (0,0) more visible */}
+            <circle
+              cx={worldToScreen({ x: 0, y: 0 }).x}
+              cy={worldToScreen({ x: 0, y: 0 }).y}
+              r="3"
+              fill="#374151"
+              opacity="0.6"
+            />
+            
+            {/* Origin label - positioned to the left of y-axis */}
+            <text
+              x={worldToScreen({ x: 0, y: 0 }).x - 25}
+              y={worldToScreen({ x: 0, y: 0 }).y - 10}
+              fontSize={scaledFontSize(11)}
+              fontWeight="600"
+              fill="#374151"
+              opacity={Math.max(0.8, gridSystem.opacity)}
+            >
+              (0,0)
+            </text>
+          </g>
 
           {/* Ray intersection labels and dots on x=1 line */}
           {visualSettings.showDivisionAnswer && rayIntersections.map((intersection, index) => {

@@ -108,6 +108,42 @@ export function SettingsPanel() {
       ],
     },
     {
+      title: 'Rectangle Concepts',
+      subtitle: 'Educational features for rectangles and areas',
+      settings: [
+        {
+          key: 'showFactorPairs',
+          label: 'Factor Pairs',
+          description: 'Show all rectangles with the same area',
+        },
+        {
+          key: 'showCommutativeProperty',
+          label: 'Commutative Property',
+          description: 'Show flipped rectangle (w×h = h×w)',
+        },
+        {
+          key: 'showDistributiveProperty',
+          label: 'Distributive Property',
+          description: 'Split rectangle to show a(b+c) = ab+ac',
+        },
+        {
+          key: 'showPrimeComposite',
+          label: 'Prime vs Composite',
+          description: 'Badge showing if area is prime or composite',
+        },
+        {
+          key: 'showGCF',
+          label: 'Greatest Common Factor',
+          description: 'Largest square tiling both dimensions',
+        },
+        {
+          key: 'showLCM',
+          label: 'Least Common Multiple',
+          description: 'Smallest rectangle fitting both dimensions',
+        },
+      ],
+    },
+    {
       title: 'Display',
       subtitle: 'Adjust visibility for classrooms and large screens',
       settings: [], // No checkboxes for this section

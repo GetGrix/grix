@@ -1,7 +1,17 @@
 {
   "name": "@getgrix/core",
   "version": "0.1.0",
+  "description": "Core mathematical utilities and types for Grix mathematical visualization system",
   "type": "module",
+  "license": "MIT",
+  "author": "GetGrix",
+  "homepage": "https://grix.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/getgrix/grix.git",
+    "directory": "packages/core"
+  },
+  "keywords": ["math", "education", "visualization", "geometry", "algebra"],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

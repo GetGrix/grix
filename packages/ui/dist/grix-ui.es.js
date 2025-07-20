@@ -1561,7 +1561,7 @@ function tt({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: i, sel
                     /* @__PURE__ */ n.jsxs(
                       "text",
                       {
-                        x: w.x + 10,
+                        x: w.x + 12,
                         y: (w.y + T.y) / 2,
                         fontSize: d(9),
                         fontWeight: "500",

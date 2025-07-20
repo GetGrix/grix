@@ -233,23 +233,27 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
               // Find reasonable points along the extended line
               const equivalentPoints = [];
               
-              // Find equivalent fractions using the current snap precision
+              // Find equivalent fractions - only show true multiples of the original fraction
               if (Math.abs(endX) > 0.001 && Math.abs(endY) > 0.001) {
-                // Find multiples of the slope ratio
-                const slope = endY / endX;
+                // Get the original fraction in simplified form
+                const originalX = endX;
+                const originalY = endY;
                 
-                // Generate points at intervals matching the current snap size
-                for (let x = snapSize; x <= Math.min(20, Math.abs(maxExtent)); x += snapSize) {
-                  const y = slope * x;
+                // Generate true equivalent fractions by multiplying the original ratio
+                for (let multiple = 2; multiple <= 8; multiple++) {
+                  const equivX = originalX * multiple;
+                  const equivY = originalY * multiple;
                   
-                  // Snap to the current snap precision
-                  const snapX = Math.round(x / snapSize) * snapSize;
-                  const snapY = Math.round(y / snapSize) * snapSize;
+                  // Only include if both coordinates are integers (or close to snap precision)
+                  const snapX = Math.round(equivX / snapSize) * snapSize;
+                  const snapY = Math.round(equivY / snapSize) * snapSize;
                   
-                  // Check if the calculated point is close to a snap-aligned point
-                  if (Math.abs(x - snapX) < snapSize / 10 && Math.abs(y - snapY) < snapSize / 10 &&
-                      Math.abs(snapX) <= maxExtent && Math.abs(snapY) <= maxExtent &&
-                      snapX > 0 && snapY > 0) { // Only positive coordinates for equivalent fractions
+                  // Check if the multiplied coordinates align with snap grid
+                  if (Math.abs(equivX - snapX) < snapSize / 10 && 
+                      Math.abs(equivY - snapY) < snapSize / 10 &&
+                      snapX > 0 && snapY > 0 && 
+                      snapX <= Math.min(20, Math.abs(maxExtent)) && 
+                      snapY <= Math.min(20, Math.abs(maxExtent))) {
                     
                     const screenPos = worldToScreen({ x: snapX, y: snapY });
                     
@@ -364,18 +368,6 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                             strokeOpacity="0.15"
                           />
                           
-                          {/* Area label at top center */}
-                          <text
-                            x={rectX + rectWidth / 2}
-                            y={rectY + 15}
-                            fontSize={scaledFontSize(10)}
-                            fontWeight="400"
-                            fill={isSelected ? "#1D4ED8" : "#2563eb"}
-                            textAnchor="middle"
-                            opacity="0.6"
-                          >
-                            {formatCoordinate(endY, gridSize)} × {formatCoordinate(endX, gridSize)} = {formatCoordinate(area, gridSize)}
-                          </text>
                         </g>
                       );
                     }
@@ -405,7 +397,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                           
                           {/* Rise label */}
                           <text
-                            x={rightScreen.x + 10}
+                            x={rightScreen.x + 12}
                             y={(rightScreen.y + topScreen.y) / 2}
                             fontSize={scaledFontSize(9)}
                             fontWeight="500"
@@ -757,6 +749,307 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
             >
               {formatCoordinate(obj.properties.height, gridSize)} × {formatCoordinate(obj.properties.width, gridSize)} = {formatCoordinate(obj.properties.area, gridSize)}
             </text>
+            
+            {/* Rectangle-based educational concepts */}
+            {(() => {
+              const width = obj.properties.width;
+              const height = obj.properties.height;
+              const area = obj.properties.area;
+              
+              // Only show for positive integer dimensions to keep it educational
+              if (width <= 0 || height <= 0 || width !== Math.floor(width) || height !== Math.floor(height)) {
+                return null;
+              }
+              
+              const educationalElements = [];
+              
+              // Factor Pairs: Show all rectangles with the same area
+              if (visualSettings.showFactorPairs && area > 1 && area <= 50) {
+                const factorPairs = [];
+                for (let w = 1; w <= Math.sqrt(area); w++) {
+                  if (area % w === 0) {
+                    const h = area / w;
+                    if (w !== width || h !== height) { // Don't show the current rectangle
+                      factorPairs.push({ w, h });
+                    }
+                  }
+                }
+                
+                factorPairs.forEach((pair, index) => {
+                  const offsetX = (index + 1) * (rectWidth + 20);
+                  const ghostRect = {
+                    x: topLeft.x + offsetX,
+                    y: topLeft.y,
+                    width: pair.w * viewport.zoom,
+                    height: pair.h * viewport.zoom
+                  };
+                  
+                  educationalElements.push(
+                    <rect
+                      key={`factor-${index}`}
+                      x={ghostRect.x}
+                      y={ghostRect.y}
+                      width={ghostRect.width}
+                      height={ghostRect.height}
+                      fill="rgba(168, 85, 247, 0.15)"
+                      stroke="#A855F7"
+                      strokeWidth="1"
+                      strokeDasharray="3,3"
+                      opacity="0.7"
+                    />
+                  );
+                });
+              }
+              
+              // Commutative Property: Show flipped version
+              if (visualSettings.showCommutativeProperty && width !== height) {
+                const flippedRect = {
+                  x: topLeft.x - rectHeight - 30,
+                  y: topLeft.y,
+                  width: height * viewport.zoom,
+                  height: width * viewport.zoom
+                };
+                
+                educationalElements.push(
+                  <g key="commutative">
+                    <rect
+                      x={flippedRect.x}
+                      y={flippedRect.y}
+                      width={flippedRect.width}
+                      height={flippedRect.height}
+                      fill="rgba(59, 130, 246, 0.15)"
+                      stroke="#3B82F6"
+                      strokeWidth="1"
+                      strokeDasharray="4,2"
+                      opacity="0.7"
+                    />
+                    {/* Arrow showing equivalence */}
+                    <path
+                      d={`M ${flippedRect.x + flippedRect.width + 5},${flippedRect.y + flippedRect.height / 2} L ${topLeft.x - 5},${topLeft.y + rectHeight / 2}`}
+                      stroke="#3B82F6"
+                      strokeWidth="1"
+                      fill="none"
+                      markerEnd="url(#arrowhead)"
+                      opacity="0.6"
+                    />
+                  </g>
+                );
+              }
+              
+              // Prime vs Composite indicator
+              if (visualSettings.showPrimeComposite && area > 1 && area <= 100) {
+                const isPrime = area > 1 && ![...Array(Math.floor(Math.sqrt(area)) + 1).keys()].slice(2).some(i => area % i === 0);
+                
+                educationalElements.push(
+                  <g key="prime-composite">
+                    <circle
+                      cx={topLeft.x + rectWidth + 15}
+                      cy={topLeft.y - 15}
+                      r="8"
+                      fill={isPrime ? "#10B981" : "#F59E0B"}
+                      opacity="0.8"
+                    />
+                    <text
+                      x={topLeft.x + rectWidth + 15}
+                      y={topLeft.y - 11}
+                      fontSize={scaledFontSize(8)}
+                      fontWeight="600"
+                      fill="white"
+                      textAnchor="middle"
+                    >
+                      {isPrime ? "P" : "C"}
+                    </text>
+                    <text
+                      x={topLeft.x + rectWidth + 30}
+                      y={topLeft.y - 10}
+                      fontSize={scaledFontSize(8)}
+                      fontWeight="500"
+                      fill={isPrime ? "#10B981" : "#F59E0B"}
+                      textAnchor="start"
+                      opacity="0.8"
+                    >
+                      {isPrime ? "Prime" : "Composite"}
+                    </text>
+                  </g>
+                );
+              }
+              
+              // Greatest Common Factor: Show largest square tiling
+              if (visualSettings.showGCF && width > 1 && height > 1) {
+                const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+                const gcf = gcd(width, height);
+                
+                if (gcf > 1) {
+                  // Show grid of GCF squares
+                  const squareSize = gcf * viewport.zoom;
+                  const tilesX = width / gcf;
+                  const tilesY = height / gcf;
+                  
+                  const tileElements = [];
+                  for (let x = 0; x < tilesX; x++) {
+                    for (let y = 0; y < tilesY; y++) {
+                      tileElements.push(
+                        <rect
+                          key={`gcf-${x}-${y}`}
+                          x={topLeft.x + x * squareSize}
+                          y={topLeft.y + y * squareSize}
+                          width={squareSize}
+                          height={squareSize}
+                          fill="none"
+                          stroke="#10B981"
+                          strokeWidth="1.5"
+                          opacity="0.6"
+                        />
+                      );
+                    }
+                  }
+                  
+                  educationalElements.push(
+                    <g key="gcf">
+                      {tileElements}
+                      {/* GCF label */}
+                      <text
+                        x={topLeft.x + rectWidth / 2}
+                        y={topLeft.y - 25}
+                        fontSize={scaledFontSize(10)}
+                        fontWeight="600"
+                        fill="#10B981"
+                        textAnchor="middle"
+                        opacity="0.9"
+                      >
+                        GCF({width}, {height}) = {gcf}
+                      </text>
+                      {/* Square count */}
+                      <text
+                        x={topLeft.x + rectWidth / 2}
+                        y={topLeft.y - 10}
+                        fontSize={scaledFontSize(8)}
+                        fontWeight="500"
+                        fill="#10B981"
+                        textAnchor="middle"
+                        opacity="0.7"
+                      >
+                        {tilesX} × {tilesY} = {tilesX * tilesY} squares
+                      </text>
+                    </g>
+                  );
+                }
+              }
+              
+              // Least Common Multiple: Show smallest rectangle containing both dimensions
+              if (visualSettings.showLCM && width > 1 && height > 1) {
+                const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+                const lcm = (a, b) => (a * b) / gcd(a, b);
+                const lcmValue = lcm(width, height);
+                
+                if (lcmValue > Math.max(width, height) && lcmValue <= 100) {
+                  // Show LCM rectangle outline
+                  const lcmWidth = lcmValue * viewport.zoom;
+                  const lcmHeight = lcmValue * viewport.zoom;
+                  
+                  educationalElements.push(
+                    <g key="lcm">
+                      {/* LCM square outline */}
+                      <rect
+                        x={topLeft.x - 10}
+                        y={topLeft.y - 10}
+                        width={lcmWidth}
+                        height={lcmHeight}
+                        fill="none"
+                        stroke="#F59E0B"
+                        strokeWidth="2"
+                        strokeDasharray="5,5"
+                        opacity="0.7"
+                      />
+                      {/* Show how many of each rectangle fit */}
+                      <text
+                        x={topLeft.x + lcmWidth / 2}
+                        y={topLeft.y - 35}
+                        fontSize={scaledFontSize(10)}
+                        fontWeight="600"
+                        fill="#F59E0B"
+                        textAnchor="middle"
+                        opacity="0.9"
+                      >
+                        LCM({width}, {height}) = {lcmValue}
+                      </text>
+                      <text
+                        x={topLeft.x + lcmWidth / 2}
+                        y={topLeft.y - 20}
+                        fontSize={scaledFontSize(8)}
+                        fontWeight="500"
+                        fill="#F59E0B"
+                        textAnchor="middle"
+                        opacity="0.7"
+                      >
+                        {lcmValue / width} × {width} or {lcmValue / height} × {height}
+                      </text>
+                    </g>
+                  );
+                }
+              }
+              
+              // Distributive Property: Show area breakdown
+              if (visualSettings.showDistributiveProperty && width > 2 && height > 1) {
+                // Split the rectangle to show a(b + c) = ab + ac
+                const split = Math.floor(width / 2);
+                const leftWidth = split * viewport.zoom;
+                const rightWidth = (width - split) * viewport.zoom;
+                
+                educationalElements.push(
+                  <g key="distributive">
+                    {/* Vertical divider */}
+                    <line
+                      x1={topLeft.x + leftWidth}
+                      y1={topLeft.y}
+                      x2={topLeft.x + leftWidth}
+                      y2={topLeft.y + rectHeight}
+                      stroke="#EF4444"
+                      strokeWidth="2"
+                      opacity="0.8"
+                    />
+                    {/* Left area label */}
+                    <text
+                      x={topLeft.x + leftWidth / 2}
+                      y={topLeft.y + rectHeight + 20}
+                      fontSize={scaledFontSize(9)}
+                      fontWeight="500"
+                      fill="#EF4444"
+                      textAnchor="middle"
+                      opacity="0.8"
+                    >
+                      {height} × {split} = {height * split}
+                    </text>
+                    {/* Right area label */}
+                    <text
+                      x={topLeft.x + leftWidth + rightWidth / 2}
+                      y={topLeft.y + rectHeight + 20}
+                      fontSize={scaledFontSize(9)}
+                      fontWeight="500"
+                      fill="#EF4444"
+                      textAnchor="middle"
+                      opacity="0.8"
+                    >
+                      {height} × {width - split} = {height * (width - split)}
+                    </text>
+                    {/* Distributive equation */}
+                    <text
+                      x={topLeft.x + rectWidth / 2}
+                      y={topLeft.y + rectHeight + 40}
+                      fontSize={scaledFontSize(10)}
+                      fontWeight="600"
+                      fill="#EF4444"
+                      textAnchor="middle"
+                      opacity="0.9"
+                    >
+                      {height} × ({split} + {width - split}) = {height * split} + {height * (width - split)} = {area}
+                    </text>
+                  </g>
+                );
+              }
+              
+              return educationalElements;
+            })()}
           </g>
         );
       
@@ -767,8 +1060,22 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
 
   return (
     <>
-      {/* No arrow markers needed for lines */}
+      {/* Arrow markers for educational concepts */}
       <defs>
+        <marker
+          id="arrowhead"
+          markerWidth="10"
+          markerHeight="7"
+          refX="9"
+          refY="3.5"
+          orient="auto"
+        >
+          <polygon
+            points="0 0, 10 3.5, 0 7"
+            fill="#3B82F6"
+            opacity="0.6"
+          />
+        </marker>
       </defs>
 
       {/* Mathematical objects */}

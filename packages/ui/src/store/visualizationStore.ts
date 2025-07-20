@@ -17,6 +17,14 @@ interface VisualizationSettings {
   showIntegerGridLines: boolean;
   showReferenceLineY_equals_X: boolean;
   
+  // Rectangle-based educational concepts
+  showFactorPairs: boolean;
+  showCommutativeProperty: boolean;
+  showDistributiveProperty: boolean;
+  showPrimeComposite: boolean;
+  showGCF: boolean;
+  showLCM: boolean;
+  
   // Display settings
   fontScale: number; // 1.0 = normal, 1.5 = 50% bigger, etc.
   gridScale: number; // 1.0 = normal, 2.0 = 2x denser, 0.5 = 2x sparser
@@ -57,6 +65,14 @@ const defaultSettings: VisualizationSettings = {
   showLatticePoints: false,
   showIntegerGridLines: true,
   showReferenceLineY_equals_X: true,
+  
+  // Rectangle-based educational concepts
+  showFactorPairs: false,
+  showCommutativeProperty: false,
+  showDistributiveProperty: false,
+  showPrimeComposite: false,
+  showGCF: false,
+  showLCM: false,
   
   // Display settings
   fontScale: 1.0,

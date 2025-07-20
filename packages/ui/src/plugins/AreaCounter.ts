@@ -160,36 +160,13 @@ export class AreaCounter implements Plugin {
     element.style.left = `${screenPos.x - rect.width / 2}px`;
     element.style.top = `${screenPos.y - rect.height / 2}px`;
 
-    // Show/hide based on rectangle visibility and size
-    const state = this.context.state.getState();
-    const minBadgeSize = 30; // Minimum screen size to show badge
-    const screenWidth = badge.width * state.viewport.zoom;
-    const screenHeight = badge.height * state.viewport.zoom;
-    
-    element.style.display = (screenWidth >= minBadgeSize && screenHeight >= minBadgeSize) 
-      ? 'block' 
-      : 'none';
+    // Hide all badges since we show area labels in SVG instead
+    element.style.display = 'none';
   }
 
   private formatArea(area: number, width: number, height: number): string {
-    // For integer dimensions, show the multiplication - HEIGHT × WIDTH = AREA
-    const isIntegerWidth = Math.abs(width - Math.round(width)) < 0.001;
-    const isIntegerHeight = Math.abs(height - Math.round(height)) < 0.001;
-    
-    if (isIntegerWidth && isIntegerHeight) {
-      const w = Math.round(width);
-      const h = Math.round(height);
-      return `${h} × ${w} = ${h * w}`;
-    }
-    
-    // For non-integer dimensions, show decimal area
-    if (area >= 1000) {
-      return `${area.toFixed(0)} sq units`;
-    } else if (area >= 10) {
-      return `${area.toFixed(1)} sq units`;
-    } else {
-      return `${area.toFixed(2)} sq units`;
-    }
+    // Return empty string to disable area badges since we show area labels in SVG
+    return '';
   }
 
   private updateBadgePositions(): void {

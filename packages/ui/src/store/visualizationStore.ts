@@ -13,6 +13,15 @@ interface VisualizationSettings {
   // Circle enhancements
   showTangentLines: boolean;
   
+  // Triangle enhancements
+  showTriangleAngles: boolean;
+  showSOHCAHTOA: boolean;
+  showTrigValues: boolean;
+  showTriangleClassification: boolean;
+  showTriangleAltitudes: boolean;
+  showSpecialTriangles: boolean;
+  showPythagoreanSquares: boolean;
+  
   // Division visualization
   showDivisionAnswer: boolean;
   
@@ -65,6 +74,15 @@ const defaultSettings: VisualizationSettings = {
   
   // Circle enhancements
   showTangentLines: false,
+  
+  // Triangle enhancements
+  showTriangleAngles: true,
+  showSOHCAHTOA: false,
+  showTrigValues: false,
+  showTriangleClassification: true,
+  showTriangleAltitudes: false,
+  showSpecialTriangles: true,
+  showPythagoreanSquares: false,
   
   // Division visualization
   showDivisionAnswer: true,

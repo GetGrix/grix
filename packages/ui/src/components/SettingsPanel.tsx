@@ -124,6 +124,47 @@ export function SettingsPanel() {
       ],
     },
     {
+      title: 'Triangle Concepts',
+      subtitle: 'Trigonometry and geometry learning features',
+      settings: [
+        {
+          key: 'showTriangleAngles',
+          label: 'Angle Measurements',
+          description: 'Show all three angles with degree values',
+        },
+        {
+          key: 'showTriangleClassification',
+          label: 'Triangle Classification',
+          description: 'Label triangle type (scalene, isosceles, etc.)',
+        },
+        {
+          key: 'showSpecialTriangles',
+          label: 'Special Triangles',
+          description: 'Highlight 30-60-90 and 45-45-90 triangles',
+        },
+        {
+          key: 'showSOHCAHTOA',
+          label: 'SOH-CAH-TOA Visualization',
+          description: 'Highlight opposite, adjacent, hypotenuse sides',
+        },
+        {
+          key: 'showTrigValues',
+          label: 'Trigonometric Values',
+          description: 'Show sin, cos, tan values on hover',
+        },
+        {
+          key: 'showTriangleAltitudes',
+          label: 'Altitude Lines',
+          description: 'Show perpendicular height lines',
+        },
+        {
+          key: 'showPythagoreanSquares',
+          label: 'Pythagorean Squares',
+          description: 'Show a² + b² = c² with actual squares (right triangles)',
+        },
+      ],
+    },
+    {
       title: 'Rectangle Concepts',
       subtitle: 'Educational features for rectangles and areas',
       settings: [

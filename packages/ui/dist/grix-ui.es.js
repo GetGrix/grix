@@ -1,8 +1,8 @@
-var Te = Object.defineProperty;
-var Re = (t, e, s) => e in t ? Te(t, e, { enumerable: !0, configurable: !0, writable: !0, value: s }) : t[e] = s;
-var J = (t, e, s) => Re(t, typeof e != "symbol" ? e + "" : e, s);
-import xe, { createContext as Ne, useState as Q, useRef as se, useEffect as te, useContext as De, useCallback as K } from "react";
-var ue = { exports: {} }, le = {};
+var ze = Object.defineProperty;
+var Fe = (t, e, s) => e in t ? ze(t, e, { enumerable: !0, configurable: !0, writable: !0, value: s }) : t[e] = s;
+var J = (t, e, s) => Fe(t, typeof e != "symbol" ? e + "" : e, s);
+import ye, { createContext as $e, useState as Q, useRef as ne, useEffect as se, useContext as Ie, useCallback as K } from "react";
+var ge = { exports: {} }, he = {};
 /**
  * @license React
  * react-jsx-runtime.production.js
@@ -12,29 +12,29 @@ var ue = { exports: {} }, le = {};
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var be;
-function ze() {
-  if (be) return le;
-  be = 1;
+var Me;
+function Le() {
+  if (Me) return he;
+  Me = 1;
   var t = Symbol.for("react.transitional.element"), e = Symbol.for("react.fragment");
-  function s(r, o, i) {
+  function s(i, o, r) {
     var c = null;
-    if (i !== void 0 && (c = "" + i), o.key !== void 0 && (c = "" + o.key), "key" in o) {
-      i = {};
-      for (var l in o)
-        l !== "key" && (i[l] = o[l]);
-    } else i = o;
-    return o = i.ref, {
+    if (r !== void 0 && (c = "" + r), o.key !== void 0 && (c = "" + o.key), "key" in o) {
+      r = {};
+      for (var d in o)
+        d !== "key" && (r[d] = o[d]);
+    } else r = o;
+    return o = r.ref, {
       $$typeof: t,
-      type: r,
+      type: i,
       key: c,
       ref: o !== void 0 ? o : null,
-      props: i
+      props: r
     };
   }
-  return le.Fragment = e, le.jsx = s, le.jsxs = s, le;
+  return he.Fragment = e, he.jsx = s, he.jsxs = s, he;
 }
-var de = {};
+var ue = {};
 /**
  * @license React
  * react-jsx-runtime.development.js
@@ -44,257 +44,257 @@ var de = {};
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var je;
-function Fe() {
-  return je || (je = 1, process.env.NODE_ENV !== "production" && function() {
-    function t(x) {
-      if (x == null) return null;
-      if (typeof x == "function")
-        return x.$$typeof === _ ? null : x.displayName || x.name || null;
-      if (typeof x == "string") return x;
-      switch (x) {
-        case M:
+var Pe;
+function We() {
+  return Pe || (Pe = 1, process.env.NODE_ENV !== "production" && function() {
+    function t(u) {
+      if (u == null) return null;
+      if (typeof u == "function")
+        return u.$$typeof === k ? null : u.displayName || u.name || null;
+      if (typeof u == "string") return u;
+      switch (u) {
+        case P:
           return "Fragment";
-        case p:
+        case h:
           return "Profiler";
         case a:
           return "StrictMode";
-        case C:
+        case M:
           return "Suspense";
-        case $:
+        case R:
           return "SuspenseList";
-        case S:
+        case E:
           return "Activity";
       }
-      if (typeof x == "object")
-        switch (typeof x.tag == "number" && console.error(
+      if (typeof u == "object")
+        switch (typeof u.tag == "number" && console.error(
           "Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue."
-        ), x.$$typeof) {
-          case O:
+        ), u.$$typeof) {
+          case p:
             return "Portal";
-          case f:
-            return (x.displayName || "Context") + ".Provider";
+          case m:
+            return (u.displayName || "Context") + ".Provider";
           case y:
-            return (x._context.displayName || "Context") + ".Consumer";
-          case v:
-            var A = x.render;
-            return x = x.displayName, x || (x = A.displayName || A.name || "", x = x !== "" ? "ForwardRef(" + x + ")" : "ForwardRef"), x;
-          case E:
-            return A = x.displayName || null, A !== null ? A : t(x.type) || "Memo";
-          case P:
-            A = x._payload, x = x._init;
+            return (u._context.displayName || "Context") + ".Consumer";
+          case b:
+            var O = u.render;
+            return u = u.displayName, u || (u = O.displayName || O.name || "", u = u !== "" ? "ForwardRef(" + u + ")" : "ForwardRef"), u;
+          case S:
+            return O = u.displayName || null, O !== null ? O : t(u.type) || "Memo";
+          case W:
+            O = u._payload, u = u._init;
             try {
-              return t(x(A));
+              return t(u(O));
             } catch {
             }
         }
       return null;
     }
-    function e(x) {
-      return "" + x;
+    function e(u) {
+      return "" + u;
     }
-    function s(x) {
+    function s(u) {
       try {
-        e(x);
-        var A = !1;
+        e(u);
+        var O = !1;
       } catch {
-        A = !0;
+        O = !0;
       }
-      if (A) {
-        A = console;
-        var g = A.error, b = typeof Symbol == "function" && Symbol.toStringTag && x[Symbol.toStringTag] || x.constructor.name || "Object";
-        return g.call(
-          A,
+      if (O) {
+        O = console;
+        var _ = O.error, f = typeof Symbol == "function" && Symbol.toStringTag && u[Symbol.toStringTag] || u.constructor.name || "Object";
+        return _.call(
+          O,
           "The provided key is an unsupported type %s. This value must be coerced to a string before using it here.",
-          b
-        ), e(x);
+          f
+        ), e(u);
       }
     }
-    function r(x) {
-      if (x === M) return "<>";
-      if (typeof x == "object" && x !== null && x.$$typeof === P)
+    function i(u) {
+      if (u === P) return "<>";
+      if (typeof u == "object" && u !== null && u.$$typeof === W)
         return "<...>";
       try {
-        var A = t(x);
-        return A ? "<" + A + ">" : "<...>";
+        var O = t(u);
+        return O ? "<" + O + ">" : "<...>";
       } catch {
         return "<...>";
       }
     }
     function o() {
-      var x = G.A;
-      return x === null ? null : x.getOwner();
+      var u = B.A;
+      return u === null ? null : u.getOwner();
     }
-    function i() {
+    function r() {
       return Error("react-stack-top-frame");
     }
-    function c(x) {
-      if (R.call(x, "key")) {
-        var A = Object.getOwnPropertyDescriptor(x, "key").get;
-        if (A && A.isReactWarning) return !1;
+    function c(u) {
+      if (X.call(u, "key")) {
+        var O = Object.getOwnPropertyDescriptor(u, "key").get;
+        if (O && O.isReactWarning) return !1;
       }
-      return x.key !== void 0;
+      return u.key !== void 0;
     }
-    function l(x, A) {
-      function g() {
-        B || (B = !0, console.error(
+    function d(u, O) {
+      function _() {
+        U || (U = !0, console.error(
           "%s: `key` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://react.dev/link/special-props)",
-          A
+          O
         ));
       }
-      g.isReactWarning = !0, Object.defineProperty(x, "key", {
-        get: g,
+      _.isReactWarning = !0, Object.defineProperty(u, "key", {
+        get: _,
         configurable: !0
       });
     }
-    function h() {
-      var x = t(this.type);
-      return Z[x] || (Z[x] = !0, console.error(
+    function x() {
+      var u = t(this.type);
+      return re[u] || (re[u] = !0, console.error(
         "Accessing element.ref was removed in React 19. ref is now a regular prop. It will be removed from the JSX Element type in a future release."
-      )), x = this.props.ref, x !== void 0 ? x : null;
+      )), u = this.props.ref, u !== void 0 ? u : null;
     }
-    function m(x, A, g, b, N, D, q, U) {
-      return g = D.ref, x = {
-        $$typeof: d,
-        type: x,
-        key: A,
-        props: D,
-        _owner: N
-      }, (g !== void 0 ? g : null) !== null ? Object.defineProperty(x, "ref", {
+    function g(u, O, _, f, w, T, L, G) {
+      return _ = T.ref, u = {
+        $$typeof: l,
+        type: u,
+        key: O,
+        props: T,
+        _owner: w
+      }, (_ !== void 0 ? _ : null) !== null ? Object.defineProperty(u, "ref", {
         enumerable: !1,
-        get: h
-      }) : Object.defineProperty(x, "ref", { enumerable: !1, value: null }), x._store = {}, Object.defineProperty(x._store, "validated", {
+        get: x
+      }) : Object.defineProperty(u, "ref", { enumerable: !1, value: null }), u._store = {}, Object.defineProperty(u._store, "validated", {
         configurable: !1,
         enumerable: !1,
         writable: !0,
         value: 0
-      }), Object.defineProperty(x, "_debugInfo", {
+      }), Object.defineProperty(u, "_debugInfo", {
         configurable: !1,
         enumerable: !1,
         writable: !0,
         value: null
-      }), Object.defineProperty(x, "_debugStack", {
+      }), Object.defineProperty(u, "_debugStack", {
         configurable: !1,
         enumerable: !1,
         writable: !0,
-        value: q
-      }), Object.defineProperty(x, "_debugTask", {
+        value: L
+      }), Object.defineProperty(u, "_debugTask", {
         configurable: !1,
         enumerable: !1,
         writable: !0,
-        value: U
-      }), Object.freeze && (Object.freeze(x.props), Object.freeze(x)), x;
+        value: G
+      }), Object.freeze && (Object.freeze(u.props), Object.freeze(u)), u;
     }
-    function j(x, A, g, b, N, D, q, U) {
-      var Y = A.children;
-      if (Y !== void 0)
-        if (b)
-          if (X(Y)) {
-            for (b = 0; b < Y.length; b++)
-              k(Y[b]);
-            Object.freeze && Object.freeze(Y);
+    function v(u, O, _, f, w, T, L, G) {
+      var z = O.children;
+      if (z !== void 0)
+        if (f)
+          if (q(z)) {
+            for (f = 0; f < z.length; f++)
+              j(z[f]);
+            Object.freeze && Object.freeze(z);
           } else
             console.error(
               "React.jsx: Static children should always be an array. You are likely explicitly calling React.jsxs or React.jsxDEV. Use the Babel transform instead."
             );
-        else k(Y);
-      if (R.call(A, "key")) {
-        Y = t(x);
-        var w = Object.keys(A).filter(function(T) {
-          return T !== "key";
+        else j(z);
+      if (X.call(O, "key")) {
+        z = t(u);
+        var H = Object.keys(O).filter(function(C) {
+          return C !== "key";
         });
-        b = 0 < w.length ? "{key: someKey, " + w.join(": ..., ") + ": ...}" : "{key: someKey}", ie[Y + b] || (w = 0 < w.length ? "{" + w.join(": ..., ") + ": ...}" : "{}", console.error(
+        f = 0 < H.length ? "{key: someKey, " + H.join(": ..., ") + ": ...}" : "{key: someKey}", oe[z + f] || (H = 0 < H.length ? "{" + H.join(": ..., ") + ": ...}" : "{}", console.error(
           `A props object containing a "key" prop is being spread into JSX:
   let props = %s;
   <%s {...props} />
 React keys must be passed directly to JSX without using spread:
   let props = %s;
   <%s key={someKey} {...props} />`,
-          b,
-          Y,
-          w,
-          Y
-        ), ie[Y + b] = !0);
+          f,
+          z,
+          H,
+          z
+        ), oe[z + f] = !0);
       }
-      if (Y = null, g !== void 0 && (s(g), Y = "" + g), c(A) && (s(A.key), Y = "" + A.key), "key" in A) {
-        g = {};
-        for (var I in A)
-          I !== "key" && (g[I] = A[I]);
-      } else g = A;
-      return Y && l(
-        g,
-        typeof x == "function" ? x.displayName || x.name || "Unknown" : x
-      ), m(
-        x,
-        Y,
-        D,
-        N,
+      if (z = null, _ !== void 0 && (s(_), z = "" + _), c(O) && (s(O.key), z = "" + O.key), "key" in O) {
+        _ = {};
+        for (var V in O)
+          V !== "key" && (_[V] = O[V]);
+      } else _ = O;
+      return z && d(
+        _,
+        typeof u == "function" ? u.displayName || u.name || "Unknown" : u
+      ), g(
+        u,
+        z,
+        T,
+        w,
         o(),
-        g,
-        q,
-        U
+        _,
+        L,
+        G
       );
     }
-    function k(x) {
-      typeof x == "object" && x !== null && x.$$typeof === d && x._store && (x._store.validated = 1);
+    function j(u) {
+      typeof u == "object" && u !== null && u.$$typeof === l && u._store && (u._store.validated = 1);
     }
-    var u = xe, d = Symbol.for("react.transitional.element"), O = Symbol.for("react.portal"), M = Symbol.for("react.fragment"), a = Symbol.for("react.strict_mode"), p = Symbol.for("react.profiler"), y = Symbol.for("react.consumer"), f = Symbol.for("react.context"), v = Symbol.for("react.forward_ref"), C = Symbol.for("react.suspense"), $ = Symbol.for("react.suspense_list"), E = Symbol.for("react.memo"), P = Symbol.for("react.lazy"), S = Symbol.for("react.activity"), _ = Symbol.for("react.client.reference"), G = u.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, R = Object.prototype.hasOwnProperty, X = Array.isArray, W = console.createTask ? console.createTask : function() {
+    var N = ye, l = Symbol.for("react.transitional.element"), p = Symbol.for("react.portal"), P = Symbol.for("react.fragment"), a = Symbol.for("react.strict_mode"), h = Symbol.for("react.profiler"), y = Symbol.for("react.consumer"), m = Symbol.for("react.context"), b = Symbol.for("react.forward_ref"), M = Symbol.for("react.suspense"), R = Symbol.for("react.suspense_list"), S = Symbol.for("react.memo"), W = Symbol.for("react.lazy"), E = Symbol.for("react.activity"), k = Symbol.for("react.client.reference"), B = N.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, X = Object.prototype.hasOwnProperty, q = Array.isArray, A = console.createTask ? console.createTask : function() {
       return null;
     };
-    u = {
-      "react-stack-bottom-frame": function(x) {
-        return x();
+    N = {
+      "react-stack-bottom-frame": function(u) {
+        return u();
       }
     };
-    var B, Z = {}, ne = u["react-stack-bottom-frame"].bind(
-      u,
-      i
-    )(), re = W(r(i)), ie = {};
-    de.Fragment = M, de.jsx = function(x, A, g, b, N) {
-      var D = 1e4 > G.recentlyCreatedOwnerStacks++;
-      return j(
-        x,
-        A,
-        g,
+    var U, re = {}, ce = N["react-stack-bottom-frame"].bind(
+      N,
+      r
+    )(), ie = A(i(r)), oe = {};
+    ue.Fragment = P, ue.jsx = function(u, O, _, f, w) {
+      var T = 1e4 > B.recentlyCreatedOwnerStacks++;
+      return v(
+        u,
+        O,
+        _,
         !1,
-        b,
-        N,
-        D ? Error("react-stack-top-frame") : ne,
-        D ? W(r(x)) : re
+        f,
+        w,
+        T ? Error("react-stack-top-frame") : ce,
+        T ? A(i(u)) : ie
       );
-    }, de.jsxs = function(x, A, g, b, N) {
-      var D = 1e4 > G.recentlyCreatedOwnerStacks++;
-      return j(
-        x,
-        A,
-        g,
+    }, ue.jsxs = function(u, O, _, f, w) {
+      var T = 1e4 > B.recentlyCreatedOwnerStacks++;
+      return v(
+        u,
+        O,
+        _,
         !0,
-        b,
-        N,
-        D ? Error("react-stack-top-frame") : ne,
-        D ? W(r(x)) : re
+        f,
+        w,
+        T ? Error("react-stack-top-frame") : ce,
+        T ? A(i(u)) : ie
       );
     };
-  }()), de;
+  }()), ue;
 }
-var ve;
-function $e() {
-  return ve || (ve = 1, process.env.NODE_ENV === "production" ? ue.exports = ze() : ue.exports = Fe()), ue.exports;
+var we;
+function _e() {
+  return we || (we = 1, process.env.NODE_ENV === "production" ? ge.exports = Le() : ge.exports = We()), ge.exports;
 }
-var n = $e();
-const ce = {
+var n = _e();
+const de = {
   // Vector operations
   distance(t, e) {
-    const s = e.x - t.x, r = e.y - t.y;
-    return Math.sqrt(s * s + r * r);
+    const s = e.x - t.x, i = e.y - t.y;
+    return Math.sqrt(s * s + i * i);
   },
   slope(t, e) {
-    const s = e.x - t.x, r = e.y - t.y;
-    return Math.abs(s) < Number.EPSILON ? s === 0 || s > 0 ? 1 / 0 : -1 / 0 : r / s;
+    const s = e.x - t.x, i = e.y - t.y;
+    return Math.abs(s) < Number.EPSILON ? s === 0 || s > 0 ? 1 / 0 : -1 / 0 : i / s;
   },
   angle(t, e) {
-    const s = e.x - t.x, r = e.y - t.y;
-    return Math.atan2(r, s);
+    const s = e.x - t.x, i = e.y - t.y;
+    return Math.atan2(i, s);
   },
   magnitude(t) {
     return Math.sqrt(t.x * t.x + t.y * t.y);
@@ -336,29 +336,29 @@ const ce = {
   },
   // Coordinate transformations
   worldToScreen(t, e, s) {
-    const r = s.width / 2, o = s.height / 2, i = (t.x - e.center.x) * e.zoom, c = (t.y - e.center.y) * e.zoom;
+    const i = s.width / 2, o = s.height / 2, r = (t.x - e.center.x) * e.zoom, c = (t.y - e.center.y) * e.zoom;
     return {
-      x: r + i,
+      x: i + r,
       y: o - c
       // Flip Y axis for mathematical coordinates
     };
   },
   screenToWorld(t, e, s) {
-    const r = s.width / 2, o = s.height / 2, i = (t.x - r) / e.zoom, c = (o - t.y) / e.zoom;
+    const i = s.width / 2, o = s.height / 2, r = (t.x - i) / e.zoom, c = (o - t.y) / e.zoom;
     return {
-      x: e.center.x + i,
+      x: e.center.x + r,
       y: e.center.y + c
     };
   }
-}, ae = {
+}, le = {
   // Detect device capabilities
   detectCapabilities() {
-    const t = "ontouchstart" in window || navigator.maxTouchPoints > 0, e = t && navigator.maxTouchPoints > 1, s = !0, r = window.matchMedia("(hover: hover)").matches;
+    const t = "ontouchstart" in window || navigator.maxTouchPoints > 0, e = t && navigator.maxTouchPoints > 1, s = !0, i = window.matchMedia("(hover: hover)").matches;
     return {
       hasTouch: t,
       hasPencil: e,
       hasKeyboard: s,
-      hasHover: r,
+      hasHover: i,
       maxTouchPoints: navigator.maxTouchPoints || 0,
       supportsPressure: "force" in Touch.prototype,
       supportsTilt: "altitudeAngle" in Touch.prototype
@@ -396,7 +396,7 @@ const ce = {
     }
   }
 };
-class Ie {
+class Ye {
   constructor() {
     this.listeners = /* @__PURE__ */ new Map();
   }
@@ -404,19 +404,19 @@ class Ie {
     this.listeners.has(e) || this.listeners.set(e, []), this.listeners.get(e).push(s);
   }
   off(e, s) {
-    const r = this.listeners.get(e);
-    if (r) {
-      const o = r.indexOf(s);
-      o > -1 && r.splice(o, 1);
+    const i = this.listeners.get(e);
+    if (i) {
+      const o = i.indexOf(s);
+      o > -1 && i.splice(o, 1);
     }
   }
   emit(e, s) {
-    const r = this.listeners.get(e);
-    r && r.forEach((o) => {
+    const i = this.listeners.get(e);
+    i && i.forEach((o) => {
       try {
         o(s);
-      } catch (i) {
-        console.error(`Error in event handler for ${e}:`, i);
+      } catch (r) {
+        console.error(`Error in event handler for ${e}:`, r);
       }
     });
   }
@@ -433,29 +433,29 @@ class Ie {
     return ((s = this.listeners.get(e)) == null ? void 0 : s.length) || 0;
   }
 }
-const Me = (t) => {
+const Se = (t) => {
   let e;
-  const s = /* @__PURE__ */ new Set(), r = (m, j) => {
-    const k = typeof m == "function" ? m(e) : m;
-    if (!Object.is(k, e)) {
-      const u = e;
-      e = j ?? (typeof k != "object" || k === null) ? k : Object.assign({}, e, k), s.forEach((d) => d(e, u));
+  const s = /* @__PURE__ */ new Set(), i = (g, v) => {
+    const j = typeof g == "function" ? g(e) : g;
+    if (!Object.is(j, e)) {
+      const N = e;
+      e = v ?? (typeof j != "object" || j === null) ? j : Object.assign({}, e, j), s.forEach((l) => l(e, N));
     }
-  }, o = () => e, l = { setState: r, getState: o, getInitialState: () => h, subscribe: (m) => (s.add(m), () => s.delete(m)) }, h = e = t(r, o, l);
-  return l;
-}, We = (t) => t ? Me(t) : Me, Le = (t) => t;
-function Ye(t, e = Le) {
-  const s = xe.useSyncExternalStore(
+  }, o = () => e, d = { setState: i, getState: o, getInitialState: () => x, subscribe: (g) => (s.add(g), () => s.delete(g)) }, x = e = t(i, o, d);
+  return d;
+}, Ge = (t) => t ? Se(t) : Se, Be = (t) => t;
+function Xe(t, e = Be) {
+  const s = ye.useSyncExternalStore(
     t.subscribe,
     () => e(t.getState()),
     () => e(t.getInitialState())
   );
-  return xe.useDebugValue(s), s;
+  return ye.useDebugValue(s), s;
 }
-const Pe = (t) => {
-  const e = We(t), s = (r) => Ye(e, r);
+const Ee = (t) => {
+  const e = Ge(t), s = (i) => Xe(e, i);
   return Object.assign(s, e), s;
-}, fe = (t) => t ? Pe(t) : Pe, V = fe((t, e) => ({
+}, je = (t) => t ? Ee(t) : Ee, ee = je((t, e) => ({
   // Initial state
   viewport: {
     center: { x: 0, y: 0 },
@@ -470,32 +470,32 @@ const Pe = (t) => {
   canvasSize: { width: 800, height: 600 },
   // Viewport actions
   setViewport: (s) => {
-    t((r) => ({
-      viewport: { ...r.viewport, ...s }
+    t((i) => ({
+      viewport: { ...i.viewport, ...s }
     }));
   },
   // Object management
   addObject: (s) => {
-    t((r) => ({
-      objects: [...r.objects, s]
+    t((i) => ({
+      objects: [...i.objects, s]
     }));
   },
   removeObject: (s) => {
-    t((r) => ({
-      objects: r.objects.filter((o) => o.id !== s),
-      selectedObjects: r.selectedObjects.filter((o) => o !== s)
+    t((i) => ({
+      objects: i.objects.filter((o) => o.id !== s),
+      selectedObjects: i.selectedObjects.filter((o) => o !== s)
     }));
   },
-  updateObject: (s, r) => {
+  updateObject: (s, i) => {
     t((o) => ({
       objects: o.objects.map(
-        (i) => i.id === s ? { ...i, ...r } : i
+        (r) => r.id === s ? { ...r, ...i } : r
       )
     }));
   },
   // Selection management
-  selectObject: (s, r = !1) => {
-    t((o) => r ? {
+  selectObject: (s, i = !1) => {
+    t((o) => i ? {
       selectedObjects: o.selectedObjects.includes(s) ? o.selectedObjects.filter((c) => c !== s) : [...o.selectedObjects, s]
     } : { selectedObjects: [s] });
   },
@@ -514,31 +514,31 @@ const Pe = (t) => {
     t({ canvasSize: s });
   },
   // Helper methods
-  getObject: (s) => e().objects.find((r) => r.id === s),
+  getObject: (s) => e().objects.find((i) => i.id === s),
   getAllObjects: () => e().objects,
   getSelectedObjects: () => {
     const s = e();
-    return s.objects.filter((r) => s.selectedObjects.includes(r.id));
+    return s.objects.filter((i) => s.selectedObjects.includes(i.id));
   },
   screenToWorld: (s) => {
-    const { viewport: r, canvasSize: o } = e();
-    return ce.screenToWorld(s, r, o);
+    const { viewport: i, canvasSize: o } = e();
+    return de.screenToWorld(s, i, o);
   },
   worldToScreen: (s) => {
-    const { viewport: r, canvasSize: o } = e();
-    return ce.worldToScreen(s, r, o);
+    const { viewport: i, canvasSize: o } = e();
+    return de.worldToScreen(s, i, o);
   }
-})), _e = () => ({
-  addObject: (t) => V.getState().addObject(t),
-  removeObject: (t) => V.getState().removeObject(t),
-  updateObject: (t, e) => V.getState().updateObject(t, e),
-  getObject: (t) => V.getState().getObject(t),
-  getAllObjects: () => V.getState().getAllObjects(),
-  screenToWorld: (t) => V.getState().screenToWorld(t),
-  worldToScreen: (t) => V.getState().worldToScreen(t)
-}), Ge = () => ({
+})), qe = () => ({
+  addObject: (t) => ee.getState().addObject(t),
+  removeObject: (t) => ee.getState().removeObject(t),
+  updateObject: (t, e) => ee.getState().updateObject(t, e),
+  getObject: (t) => ee.getState().getObject(t),
+  getAllObjects: () => ee.getState().getAllObjects(),
+  screenToWorld: (t) => ee.getState().screenToWorld(t),
+  worldToScreen: (t) => ee.getState().worldToScreen(t)
+}), Ue = () => ({
   getState: () => {
-    const t = V.getState();
+    const t = ee.getState();
     return {
       viewport: t.viewport,
       objects: t.objects,
@@ -548,9 +548,9 @@ const Pe = (t) => {
     };
   },
   setState: (t) => {
-    V.setState(t);
+    ee.setState(t);
   },
-  subscribe: (t) => V.subscribe((e) => {
+  subscribe: (t) => ee.subscribe((e) => {
     t({
       viewport: e.viewport,
       objects: e.objects,
@@ -559,113 +559,113 @@ const Pe = (t) => {
       gridDensity: e.gridDensity
     });
   })
-}), Ae = Ne(null);
-function pe() {
-  const t = De(Ae);
+}), De = $e(null);
+function fe() {
+  const t = Ie(De);
   if (!t)
     throw new Error("usePluginManager must be used within PluginManagerProvider");
   return t;
 }
-function Be({ children: t }) {
-  const [e] = Q(() => new Ie()), [s] = Q(() => /* @__PURE__ */ new Map()), [r] = Q(() => /* @__PURE__ */ new Map()), [o, i] = Q(null), c = se(), l = se(), h = se();
-  c.current || (c.current = _e()), l.current || (l.current = Ge()), h.current || (h.current = {
-    distance: ce.distance,
-    slope: ce.slope,
-    snapToGrid: ce.snapToGrid,
-    calculateArea: ce.calculateArea
+function He({ children: t }) {
+  const [e] = Q(() => new Ye()), [s] = Q(() => /* @__PURE__ */ new Map()), [i] = Q(() => /* @__PURE__ */ new Map()), [o, r] = Q(null), c = ne(), d = ne(), x = ne();
+  c.current || (c.current = qe()), d.current || (d.current = Ue()), x.current || (x.current = {
+    distance: de.distance,
+    slope: de.slope,
+    snapToGrid: de.snapToGrid,
+    calculateArea: de.calculateArea
   });
-  const m = c.current, j = l.current, k = h.current, u = (a) => {
+  const g = c.current, v = d.current, j = x.current, N = (a) => {
     if (s.has(a.id)) {
       console.warn(`Plugin ${a.id} is already registered`);
       return;
     }
-    const p = {
-      canvas: m,
+    const h = {
+      canvas: g,
       events: e,
-      state: j,
-      math: k
+      state: v,
+      math: j
     };
-    s.set(a.id, a), r.set(a.id, p);
+    s.set(a.id, a), i.set(a.id, h);
     try {
-      a.init(p), console.log(`Plugin ${a.id} initialized successfully`);
+      a.init(h), console.log(`Plugin ${a.id} initialized successfully`);
     } catch (y) {
-      console.error(`Failed to initialize plugin ${a.id}:`, y), s.delete(a.id), r.delete(a.id);
+      console.error(`Failed to initialize plugin ${a.id}:`, y), s.delete(a.id), i.delete(a.id);
     }
-  }, d = (a) => {
+  }, l = (a) => {
     var y;
-    const p = s.get(a);
-    if (p) {
+    const h = s.get(a);
+    if (h) {
       try {
-        (y = p.destroy) == null || y.call(p);
-      } catch (f) {
-        console.error(`Error destroying plugin ${a}:`, f);
+        (y = h.destroy) == null || y.call(h);
+      } catch (m) {
+        console.error(`Error destroying plugin ${a}:`, m);
       }
-      s.delete(a), r.delete(a), o === a && i(null);
+      s.delete(a), i.delete(a), o === a && r(null);
     }
-  }, O = () => Array.from(s.values());
-  te(() => {
+  }, p = () => Array.from(s.values());
+  se(() => {
     e.emit("tool:changed", { previous: null, current: o });
-  }, [o, e]), te(() => {
-    const a = (v) => (C) => {
-      var E, P, S, _, G, R;
-      const $ = o ? s.get(o) : null;
-      if ($)
+  }, [o, e]), se(() => {
+    const a = (b) => (M) => {
+      var S, W, E, k, B, X;
+      const R = o ? s.get(o) : null;
+      if (R)
         try {
-          switch (v) {
+          switch (b) {
             case "pointer:down":
-              (E = $.onPointerDown) == null || E.call($, C);
+              (S = R.onPointerDown) == null || S.call(R, M);
               break;
             case "pointer:move":
-              (P = $.onPointerMove) == null || P.call($, C);
+              (W = R.onPointerMove) == null || W.call(R, M);
               break;
             case "pointer:up":
-              (S = $.onPointerUp) == null || S.call($, C);
+              (E = R.onPointerUp) == null || E.call(R, M);
               break;
           }
-        } catch (X) {
-          console.error(`Error in plugin ${o} handling ${v}:`, X);
+        } catch (q) {
+          console.error(`Error in plugin ${o} handling ${b}:`, q);
         }
       else {
-        const X = j.getState().selectedObjects;
+        const q = v.getState().selectedObjects;
         try {
-          let W;
-          if (X.length === 1) {
-            const B = m.getObject(X[0]);
-            (B == null ? void 0 : B.type) === "ray" ? W = s.get("ray-tool") : (B == null ? void 0 : B.type) === "rectangle" && (W = s.get("rectangle-tool"));
+          let A;
+          if (q.length === 1) {
+            const U = g.getObject(q[0]);
+            (U == null ? void 0 : U.type) === "ray" ? A = s.get("ray-tool") : (U == null ? void 0 : U.type) === "rectangle" && (A = s.get("rectangle-tool"));
           }
-          if (W)
-            switch (v) {
+          if (A)
+            switch (b) {
               case "pointer:down":
-                (_ = W.onPointerDown) == null || _.call(W, C);
+                (k = A.onPointerDown) == null || k.call(A, M);
                 break;
               case "pointer:move":
-                (G = W.onPointerMove) == null || G.call(W, C);
+                (B = A.onPointerMove) == null || B.call(A, M);
                 break;
               case "pointer:up":
-                (R = W.onPointerUp) == null || R.call(W, C);
+                (X = A.onPointerUp) == null || X.call(A, M);
                 break;
             }
-        } catch (W) {
-          console.error(`Error in tool handling ${v} for manipulation:`, W);
+        } catch (A) {
+          console.error(`Error in tool handling ${b} for manipulation:`, A);
         }
       }
-    }, p = a("pointer:down"), y = a("pointer:move"), f = a("pointer:up");
-    return e.on("pointer:down", p), e.on("pointer:move", y), e.on("pointer:up", f), () => {
-      e.off("pointer:down", p), e.off("pointer:move", y), e.off("pointer:up", f);
+    }, h = a("pointer:down"), y = a("pointer:move"), m = a("pointer:up");
+    return e.on("pointer:down", h), e.on("pointer:move", y), e.on("pointer:up", m), () => {
+      e.off("pointer:down", h), e.off("pointer:move", y), e.off("pointer:up", m);
     };
   }, [o, s, e]);
-  const M = {
+  const P = {
     eventBus: e,
-    registerPlugin: u,
-    unregisterPlugin: d,
-    getActivePlugins: O,
+    registerPlugin: N,
+    unregisterPlugin: l,
+    getActivePlugins: p,
     activeTool: o,
-    setActiveTool: i
+    setActiveTool: r
   };
-  return /* @__PURE__ */ n.jsx(Ae.Provider, { value: M, children: t });
+  return /* @__PURE__ */ n.jsx(De.Provider, { value: P, children: t });
 }
-function Xe() {
-  const { eventBus: t } = pe();
+function Ze() {
+  const { eventBus: t } = fe();
   return {
     handlePointerDown: (o) => {
       t.emit("pointer:down", o);
@@ -678,150 +678,150 @@ function Xe() {
     }
   };
 }
-function qe(t, e, s = {}) {
-  const [r, o] = Q(null), [i, c] = Q(/* @__PURE__ */ new Map()), l = {
+function Ke(t, e, s = {}) {
+  const [i, o] = Q(null), [r, c] = Q(/* @__PURE__ */ new Map()), d = {
     enableGestures: !0,
     touchTargetSize: 44,
     preventScrolling: !0,
     ...s
   };
-  te(() => {
-    const a = ae.detectCapabilities();
+  se(() => {
+    const a = le.detectCapabilities();
     o(a);
   }, []);
-  const [h, m] = Q({
+  const [x, g] = Q({
     isGesturing: !1,
     startTime: 0,
     startDistance: 0,
     lastTapTime: 0,
     tapCount: 0
-  }), j = K((a) => {
-    const p = Array.from(a.values());
-    if (p.length < 2) return 0;
-    const y = p[0], f = p[1];
-    if (!y || !f) return 0;
-    const v = y.x - f.x, C = y.y - f.y;
-    return Math.sqrt(v * v + C * C);
-  }, []), k = K((a) => {
-    const p = Array.from(a.values());
-    if (p.length === 0) return { x: 0, y: 0 };
-    const y = p.reduce((f, v) => ({ x: f.x + v.x, y: f.y + v.y }), { x: 0, y: 0 });
-    return { x: y.x / p.length, y: y.y / p.length };
-  }, []), u = K((a) => {
-    var C;
+  }), v = K((a) => {
+    const h = Array.from(a.values());
+    if (h.length < 2) return 0;
+    const y = h[0], m = h[1];
+    if (!y || !m) return 0;
+    const b = y.x - m.x, M = y.y - m.y;
+    return Math.sqrt(b * b + M * M);
+  }, []), j = K((a) => {
+    const h = Array.from(a.values());
+    if (h.length === 0) return { x: 0, y: 0 };
+    const y = h.reduce((m, b) => ({ x: m.x + b.x, y: m.y + b.y }), { x: 0, y: 0 });
+    return { x: y.x / h.length, y: y.y / h.length };
+  }, []), N = K((a) => {
+    var M;
     if (!t.current) return;
-    l.preventScrolling && a.preventDefault();
-    const p = t.current.getBoundingClientRect(), y = a.clientX - p.left, f = a.clientY - p.top, v = ae.normalizePointerEvent(a);
-    v.x = y, v.y = f, c(($) => {
-      const E = new Map($);
-      if (E.set(a.pointerId, v), l.enableGestures && E.size >= 2) {
-        const P = j(E);
-        m((S) => ({
-          ...S,
+    d.preventScrolling && a.preventDefault();
+    const h = t.current.getBoundingClientRect(), y = a.clientX - h.left, m = a.clientY - h.top, b = le.normalizePointerEvent(a);
+    b.x = y, b.y = m, c((R) => {
+      const S = new Map(R);
+      if (S.set(a.pointerId, b), d.enableGestures && S.size >= 2) {
+        const W = v(S);
+        g((E) => ({
+          ...E,
           isGesturing: !0,
           startTime: a.timeStamp,
-          startDistance: P
+          startDistance: W
         }));
       }
-      return E;
-    }), t.current.setPointerCapture(a.pointerId), (C = e.onPointerDown) == null || C.call(e, v);
-  }, [t, e, l, j]), d = K((a) => {
-    var C;
+      return S;
+    }), t.current.setPointerCapture(a.pointerId), (M = e.onPointerDown) == null || M.call(e, b);
+  }, [t, e, d, v]), l = K((a) => {
+    var M;
     if (!t.current) return;
-    const p = t.current.getBoundingClientRect(), y = a.clientX - p.left, f = a.clientY - p.top, v = ae.normalizePointerEvent(a);
-    v.x = y, v.y = f, c(($) => {
-      var P, S;
-      const E = new Map($);
-      if (E.set(a.pointerId, v), l.enableGestures && E.size >= 2) {
-        const _ = j(E), G = k(E);
-        if (h.isGesturing && h.startDistance > 0) {
-          const R = _ / h.startDistance;
-          (P = e.onGesture) == null || P.call(e, {
+    const h = t.current.getBoundingClientRect(), y = a.clientX - h.left, m = a.clientY - h.top, b = le.normalizePointerEvent(a);
+    b.x = y, b.y = m, c((R) => {
+      var W, E;
+      const S = new Map(R);
+      if (S.set(a.pointerId, b), d.enableGestures && S.size >= 2) {
+        const k = v(S), B = j(S);
+        if (x.isGesturing && x.startDistance > 0) {
+          const X = k / x.startDistance;
+          (W = e.onGesture) == null || W.call(e, {
             type: "pinch",
-            center: G,
-            scale: R,
-            touches: E.size
+            center: B,
+            scale: X,
+            touches: S.size
           });
         }
-      } else if (E.size === 1 && h.isGesturing) {
-        const _ = k(E);
-        (S = e.onGesture) == null || S.call(e, {
+      } else if (S.size === 1 && x.isGesturing) {
+        const k = j(S);
+        (E = e.onGesture) == null || E.call(e, {
           type: "pan",
-          center: _,
-          touches: E.size
+          center: k,
+          touches: S.size
         });
       }
-      return E;
-    }), (C = e.onPointerMove) == null || C.call(e, v);
-  }, [e, l, j, k, h]), O = K((a) => {
-    var C;
+      return S;
+    }), (M = e.onPointerMove) == null || M.call(e, b);
+  }, [e, d, v, j, x]), p = K((a) => {
+    var M;
     if (!t.current) return;
-    const p = t.current.getBoundingClientRect(), y = a.clientX - p.left, f = a.clientY - p.top, v = ae.normalizePointerEvent(a);
-    v.x = y, v.y = f, c(($) => {
-      var P;
-      const E = new Map($);
-      if (E.delete(a.pointerId), l.enableGestures && E.size === 0) {
-        const _ = a.timeStamp - h.startTime < 200, G = a.timeStamp - h.lastTapTime;
-        _ && !h.isGesturing && (G < 300 ? m((R) => ({ ...R, tapCount: R.tapCount + 1 })) : ((P = e.onGesture) == null || P.call(e, {
+    const h = t.current.getBoundingClientRect(), y = a.clientX - h.left, m = a.clientY - h.top, b = le.normalizePointerEvent(a);
+    b.x = y, b.y = m, c((R) => {
+      var W;
+      const S = new Map(R);
+      if (S.delete(a.pointerId), d.enableGestures && S.size === 0) {
+        const k = a.timeStamp - x.startTime < 200, B = a.timeStamp - x.lastTapTime;
+        k && !x.isGesturing && (B < 300 ? g((X) => ({ ...X, tapCount: X.tapCount + 1 })) : ((W = e.onGesture) == null || W.call(e, {
           type: "tap",
-          center: { x: v.x, y: v.y },
+          center: { x: b.x, y: b.y },
           touches: 1
-        }), m((R) => ({
-          ...R,
+        }), g((X) => ({
+          ...X,
           tapCount: 1,
           lastTapTime: a.timeStamp
-        })))), m((R) => ({ ...R, isGesturing: !1 }));
+        })))), g((X) => ({ ...X, isGesturing: !1 }));
       }
-      return E;
-    }), t.current && t.current.releasePointerCapture(a.pointerId), (C = e.onPointerUp) == null || C.call(e, v);
-  }, [t, e, l, h]), M = K((a) => {
-    var C;
+      return S;
+    }), t.current && t.current.releasePointerCapture(a.pointerId), (M = e.onPointerUp) == null || M.call(e, b);
+  }, [t, e, d, x]), P = K((a) => {
+    var M;
     if (!t.current) return;
-    const p = t.current.getBoundingClientRect(), y = a.clientX - p.left, f = a.clientY - p.top, v = ae.normalizePointerEvent(a);
-    v.x = y, v.y = f, c(($) => {
-      const E = new Map($);
-      return E.delete(a.pointerId), E;
-    }), m(($) => ({ ...$, isGesturing: !1 })), (C = e.onPointerCancel) == null || C.call(e, v);
+    const h = t.current.getBoundingClientRect(), y = a.clientX - h.left, m = a.clientY - h.top, b = le.normalizePointerEvent(a);
+    b.x = y, b.y = m, c((R) => {
+      const S = new Map(R);
+      return S.delete(a.pointerId), S;
+    }), g((R) => ({ ...R, isGesturing: !1 })), (M = e.onPointerCancel) == null || M.call(e, b);
   }, [e]);
-  return te(() => {
+  return se(() => {
     const a = t.current;
     if (!a) return;
-    a.addEventListener("pointerdown", u), a.addEventListener("pointermove", d), a.addEventListener("pointerup", O), a.addEventListener("pointercancel", M);
-    const p = (y) => y.preventDefault();
-    return a.addEventListener("contextmenu", p), () => {
-      a.removeEventListener("pointerdown", u), a.removeEventListener("pointermove", d), a.removeEventListener("pointerup", O), a.removeEventListener("pointercancel", M), a.removeEventListener("contextmenu", p);
+    a.addEventListener("pointerdown", N), a.addEventListener("pointermove", l), a.addEventListener("pointerup", p), a.addEventListener("pointercancel", P);
+    const h = (y) => y.preventDefault();
+    return a.addEventListener("contextmenu", h), () => {
+      a.removeEventListener("pointerdown", N), a.removeEventListener("pointermove", l), a.removeEventListener("pointerup", p), a.removeEventListener("pointercancel", P), a.removeEventListener("contextmenu", h);
     };
-  }, [t, u, d, O, M]), {
-    capabilities: r,
-    activePointers: Array.from(i.values()),
-    isGesturing: h.isGesturing,
-    touchTargetSize: r ? ae.getTouchTargetSize(r.hasTouch ? "touch" : "mouse") : l.touchTargetSize
+  }, [t, N, l, p, P]), {
+    capabilities: i,
+    activePointers: Array.from(r.values()),
+    isGesturing: x.isGesturing,
+    touchTargetSize: i ? le.getTouchTargetSize(i.hasTouch ? "touch" : "mouse") : d.touchTargetSize
   };
 }
-function Ue(t, e = {
+function Ne(t, e = {
   minSpacing: 8,
   maxSpacing: 80,
   labelMinSpacing: 40
 }) {
   const s = t.zoom;
-  let o = 1, i = o * s;
-  for (; i < e.minSpacing && o < 1e4; )
-    o *= we(o), i = o * s;
-  for (; i > e.maxSpacing && o > 1e-4; )
-    o /= He(o), i = o * s;
-  let c = o, l = c * s;
-  for (; l < e.labelMinSpacing && c < o * 100; )
-    c *= we(c), l = c * s;
-  const h = Math.max(0.1, Math.min(1, (i - e.minSpacing) / (e.maxSpacing - e.minSpacing)));
+  let o = 1, r = o * s;
+  for (; r < e.minSpacing && o < 1e4; )
+    o *= ke(o), r = o * s;
+  for (; r > e.maxSpacing && o > 1e-4; )
+    o /= Je(o), r = o * s;
+  let c = o, d = c * s;
+  for (; d < e.labelMinSpacing && c < o * 100; )
+    c *= ke(c), d = c * s;
+  const x = Math.max(0.1, Math.min(1, (r - e.minSpacing) / (e.maxSpacing - e.minSpacing)));
   return {
     gridSize: o,
     labelStep: c,
-    shouldShowGrid: i >= e.minSpacing,
-    shouldShowLabels: l >= e.labelMinSpacing,
-    opacity: h
+    shouldShowGrid: r >= e.minSpacing,
+    shouldShowLabels: d >= e.labelMinSpacing,
+    opacity: x
   };
 }
-function we(t) {
+function ke(t) {
   if (t < 1)
     return t >= 0.5 ? 2 : t >= 0.2 ? 2.5 : (t >= 0.1, 2);
   if (t < 10)
@@ -831,7 +831,7 @@ function we(t) {
     return s >= 5 ? 2 : s >= 2 ? 2.5 : (s >= 1, 2);
   }
 }
-function He(t) {
+function Je(t) {
   if (t <= 1)
     return t <= 0.1 || t <= 0.2 ? 2 : t <= 0.5 ? 2.5 : (t <= 1, 2);
   if (t <= 10)
@@ -841,44 +841,65 @@ function He(t) {
     return s <= 2 ? 2 : s <= 5 ? 2.5 : (s <= 10, 2);
   }
 }
-function Ze(t, e, s, r, o = !0) {
-  const { gridSize: i } = s, c = {
+function Qe(t, e, s, i, o = !0) {
+  const { gridSize: r } = s, c = {
     left: t.center.x - e.width / 2 / t.zoom,
     right: t.center.x + e.width / 2 / t.zoom,
     top: t.center.y + e.height / 2 / t.zoom,
     bottom: t.center.y - e.height / 2 / t.zoom
-  }, l = [], h = [], m = Math.floor(c.left / i) * i, j = Math.ceil(c.right / i) * i;
-  for (let d = m; d <= j; d += i) {
-    const O = r({ x: d, y: 0 }).x, M = Math.abs(d) < i / 2, a = Math.abs(d % (i * 5)) < i / 2;
-    l.push({ x: O, isAxis: M, isMajor: a, isInteger: !1, value: d });
+  }, d = [], x = [], g = Math.floor(c.left / r) * r, v = Math.ceil(c.right / r) * r;
+  for (let l = g; l <= v; l += r) {
+    const p = i({ x: l, y: 0 }).x, P = Math.abs(l) < r / 2, a = Math.abs(l % (r * 5)) < r / 2;
+    d.push({ x: p, isAxis: P, isMajor: a, isInteger: !1, value: l });
   }
-  if (i >= 2 && o) {
-    const d = Math.floor(c.left), O = Math.ceil(c.right);
-    for (let M = d; M <= O; M += 1)
-      if (Math.abs(M % i) > 1e-3) {
-        const a = r({ x: M, y: 0 }).x, p = Math.abs(M) < 0.5;
-        l.push({ x: a, isAxis: p, isMajor: !1, isInteger: !0, value: M });
+  if (r >= 2 && o) {
+    const l = Math.floor(c.left), p = Math.ceil(c.right);
+    for (let P = l; P <= p; P += 1)
+      if (Math.abs(P % r) > 1e-3) {
+        const a = i({ x: P, y: 0 }).x, h = Math.abs(P) < 0.5;
+        d.push({ x: a, isAxis: h, isMajor: !1, isInteger: !0, value: P });
       }
   }
-  const k = Math.floor(c.bottom / i) * i, u = Math.ceil(c.top / i) * i;
-  for (let d = k; d <= u; d += i) {
-    const O = r({ x: 0, y: d }).y, M = Math.abs(d) < i / 2, a = Math.abs(d % (i * 5)) < i / 2;
-    h.push({ y: O, isAxis: M, isMajor: a, isInteger: !1, value: d });
+  const j = Math.floor(c.bottom / r) * r, N = Math.ceil(c.top / r) * r;
+  for (let l = j; l <= N; l += r) {
+    const p = i({ x: 0, y: l }).y, P = Math.abs(l) < r / 2, a = Math.abs(l % (r * 5)) < r / 2;
+    x.push({ y: p, isAxis: P, isMajor: a, isInteger: !1, value: l });
   }
-  if (i >= 2 && o) {
-    const d = Math.floor(c.bottom), O = Math.ceil(c.top);
-    for (let M = d; M <= O; M += 1)
-      if (Math.abs(M % i) > 1e-3) {
-        const a = r({ x: 0, y: M }).y, p = Math.abs(M) < 0.5;
-        h.push({ y: a, isAxis: p, isMajor: !1, isInteger: !0, value: M });
+  if (r >= 2 && o) {
+    const l = Math.floor(c.bottom), p = Math.ceil(c.top);
+    for (let P = l; P <= p; P += 1)
+      if (Math.abs(P % r) > 1e-3) {
+        const a = i({ x: 0, y: P }).y, h = Math.abs(P) < 0.5;
+        x.push({ y: a, isAxis: h, isMajor: !1, isInteger: !0, value: P });
       }
   }
-  return { verticalLines: l, horizontalLines: h };
+  return { verticalLines: d, horizontalLines: x };
 }
-function z(t, e) {
+function I(t, e) {
   return e >= 1 ? t.toFixed(0) : e >= 0.1 ? t.toFixed(1) : e >= 0.01 ? t.toFixed(2) : t.toFixed(3);
 }
-const Se = {
+function ve(t, e, s) {
+  if (s !== "adaptive")
+    switch (s) {
+      case "whole":
+        return 1;
+      case "half":
+        return 0.5;
+      case "quarter":
+        return 0.25;
+      case "tenth":
+        return 0.1;
+      default:
+        return 1;
+    }
+  const o = Ne(t, {
+    minSpacing: 8,
+    maxSpacing: 80,
+    labelMinSpacing: 40
+  }).gridSize / e;
+  return o <= 0.1 ? o : o <= 0.5 ? 0.1 : o <= 2 ? 0.25 : 1;
+}
+const Ce = {
   // Origin line enhancements - start with most basic ones enabled
   showEquivalentFractions: !0,
   showLengthMultiples: !0,
@@ -896,13 +917,13 @@ const Se = {
   fontScale: 1,
   gridScale: 1,
   // Snapping settings
-  snapPrecision: "adaptive",
+  snapPrecision: "whole",
   // Coordinate system settings
   coordinateSystem: "cartesian",
   showPolarGrid: !1,
   customOrigin: null
-}, me = fe((t) => ({
-  ...Se,
+}, xe = je((t) => ({
+  ...Ce,
   toggleSetting: (e) => {
     t((s) => ({
       [e]: !s[e]
@@ -924,41 +945,41 @@ const Se = {
     t({ customOrigin: e });
   },
   resetToDefaults: () => {
-    t(Se);
+    t(Ce);
   }
 }));
-function Ke({ viewport: t, canvasSize: e, worldToScreen: s, objects: r = [] }) {
-  const o = me(), i = (a) => Math.round(a * o.fontScale), c = Ue(t, {
+function Ve({ viewport: t, canvasSize: e, worldToScreen: s, objects: i = [] }) {
+  const o = xe(), r = (a) => Math.round(a * o.fontScale), c = Ne(t, {
     minSpacing: 8,
     maxSpacing: 80,
     labelMinSpacing: 40
-  }), l = {
+  }), d = {
     gridSize: c.gridSize / o.gridScale,
     labelStep: c.labelStep / o.gridScale
-  }, { verticalLines: h, horizontalLines: m } = Ze(
+  }, { verticalLines: x, horizontalLines: g } = Qe(
     t,
     e,
-    l,
+    d,
     s,
     o.showIntegerGridLines
   );
   if (!c.shouldShowGrid)
     return null;
-  const j = [];
+  const v = [];
   if (o.coordinateSystem === "polar" || o.coordinateSystem === "both") {
-    const a = s({ x: 0, y: 0 }), p = Math.max(
+    const a = s({ x: 0, y: 0 }), h = Math.max(
       Math.abs(t.center.x) + e.width / (2 * t.zoom),
       Math.abs(t.center.y) + e.height / (2 * t.zoom)
     );
-    for (let y = l.gridSize; y <= p; y += l.gridSize) {
-      const f = y * t.zoom;
-      f >= 10 && j.push(
+    for (let y = d.gridSize; y <= h; y += d.gridSize) {
+      const m = y * t.zoom;
+      m >= 10 && v.push(
         /* @__PURE__ */ n.jsx(
           "circle",
           {
             cx: a.x,
             cy: a.y,
-            r: f,
+            r: m,
             fill: "none",
             stroke: "#9CA3AF",
             strokeWidth: "0.5",
@@ -969,15 +990,15 @@ function Ke({ viewport: t, canvasSize: e, worldToScreen: s, objects: r = [] }) {
       );
     }
     for (let y = 0; y < 360; y += 30) {
-      const f = y * Math.PI / 180, v = a.x + p * t.zoom * Math.cos(f), C = a.y - p * t.zoom * Math.sin(f);
-      j.push(
+      const m = y * Math.PI / 180, b = a.x + h * t.zoom * Math.cos(m), M = a.y - h * t.zoom * Math.sin(m);
+      v.push(
         /* @__PURE__ */ n.jsx(
           "line",
           {
             x1: a.x,
             y1: a.y,
-            x2: v,
-            y2: C,
+            x2: b,
+            y2: M,
             stroke: "#9CA3AF",
             strokeWidth: "0.5",
             opacity: 0.3
@@ -987,30 +1008,30 @@ function Ke({ viewport: t, canvasSize: e, worldToScreen: s, objects: r = [] }) {
       );
     }
   }
-  const k = [];
-  r.forEach((a) => {
+  const j = [];
+  i.forEach((a) => {
     if (a.type === "ray") {
-      const { startPoint: p, endPoint: y } = a.properties;
-      if (Math.abs(p.x) < 1e-3 && Math.abs(p.y) < 1e-3) {
-        const f = y.x - p.x, v = y.y - p.y;
-        if (Math.abs(f) > 1e-3) {
-          const C = 1 / f;
-          if (C > 0 && C <= 1) {
-            const $ = p.y + C * v, E = s({ x: 1, y: $ });
-            k.push({ y: $, screenY: E.y });
+      const { startPoint: h, endPoint: y } = a.properties;
+      if (Math.abs(h.x) < 1e-3 && Math.abs(h.y) < 1e-3) {
+        const m = y.x - h.x, b = y.y - h.y;
+        if (Math.abs(m) > 1e-3) {
+          const M = 1 / m;
+          if (M > 0 && M <= 1) {
+            const R = h.y + M * b, S = s({ x: 1, y: R });
+            j.push({ y: R, screenY: S.y });
           }
         }
       }
     }
   });
-  const u = h.map((a) => {
-    const p = Math.abs(a.value - 1) < 1e-3, y = a.isAxis ? "#374151" : p ? "#60A5FA" : (
+  const N = x.map((a) => {
+    const h = Math.abs(a.value - 1) < 1e-3, y = a.isAxis ? "#374151" : h ? "#60A5FA" : (
       // Light blue for x=1
       a.isInteger ? "#E5E7EB" : (
         // Very faint for integer lines
         a.isMajor ? "#9CA3AF" : "#E5E7EB"
       )
-    ), f = a.isAxis ? 2 : p ? 1.5 : a.isInteger ? Math.max(1, t.zoom * 0.05) : a.isMajor ? 1 : 0.5, v = a.isAxis ? 1 : p ? 0.8 : a.isInteger ? Math.max(0.6, 0.4 * c.opacity) : (
+    ), m = a.isAxis ? 2 : h ? 1.5 : a.isInteger ? Math.max(1, t.zoom * 0.05) : a.isMajor ? 1 : 0.5, b = a.isAxis ? 1 : h ? 0.8 : a.isInteger ? Math.max(0.6, 0.4 * c.opacity) : (
       // Ensure minimum visibility
       a.isMajor ? 0.6 * c.opacity : 0.3 * c.opacity
     );
@@ -1022,12 +1043,12 @@ function Ke({ viewport: t, canvasSize: e, worldToScreen: s, objects: r = [] }) {
         x2: a.x,
         y2: e.height,
         stroke: y,
-        strokeWidth: f,
-        opacity: v
+        strokeWidth: m,
+        opacity: b
       },
       `v${a.value}`
     );
-  }), d = m.map((a) => /* @__PURE__ */ n.jsx(
+  }), l = g.map((a) => /* @__PURE__ */ n.jsx(
     "line",
     {
       x1: 0,
@@ -1045,43 +1066,43 @@ function Ke({ viewport: t, canvasSize: e, worldToScreen: s, objects: r = [] }) {
       )
     },
     `h${a.value}`
-  )), O = o.showReferenceLineY_equals_X ? (() => {
+  )), p = o.showReferenceLineY_equals_X ? (() => {
     const a = {
       left: t.center.x - e.width / 2 / t.zoom,
       right: t.center.x + e.width / 2 / t.zoom,
       top: t.center.y + e.height / 2 / t.zoom,
       bottom: t.center.y - e.height / 2 / t.zoom
-    }, p = Math.min(a.left, a.bottom), y = Math.max(a.right, a.top), f = s({ x: p, y: p }), v = s({ x: y, y });
-    return { lineStart: f, lineEnd: v };
-  })() : null, M = o.showLatticePoints ? (() => {
+    }, h = Math.min(a.left, a.bottom), y = Math.max(a.right, a.top), m = s({ x: h, y: h }), b = s({ x: y, y });
+    return { lineStart: m, lineEnd: b };
+  })() : null, P = o.showLatticePoints ? (() => {
     const a = {
       left: t.center.x - e.width / 2 / t.zoom,
       right: t.center.x + e.width / 2 / t.zoom,
       top: t.center.y + e.height / 2 / t.zoom,
       bottom: t.center.y - e.height / 2 / t.zoom
-    }, p = [], y = Math.max(-20, Math.floor(a.left)), f = Math.min(20, Math.ceil(a.right)), v = Math.max(-20, Math.floor(a.bottom)), C = Math.min(20, Math.ceil(a.top)), $ = (f - y + 1) * (C - v + 1);
-    if ($ > 200) {
-      const E = Math.ceil(Math.sqrt($ / 200));
-      for (let P = y; P <= f; P += E)
-        for (let S = v; S <= C; S += E) {
-          const _ = s({ x: P, y: S });
-          _.x >= -20 && _.x <= e.width + 20 && _.y >= -20 && _.y <= e.height + 20 && p.push(_);
+    }, h = [], y = Math.max(-20, Math.floor(a.left)), m = Math.min(20, Math.ceil(a.right)), b = Math.max(-20, Math.floor(a.bottom)), M = Math.min(20, Math.ceil(a.top)), R = (m - y + 1) * (M - b + 1);
+    if (R > 200) {
+      const S = Math.ceil(Math.sqrt(R / 200));
+      for (let W = y; W <= m; W += S)
+        for (let E = b; E <= M; E += S) {
+          const k = s({ x: W, y: E });
+          k.x >= -20 && k.x <= e.width + 20 && k.y >= -20 && k.y <= e.height + 20 && h.push(k);
         }
     } else
-      for (let E = y; E <= f; E++)
-        for (let P = v; P <= C; P++) {
-          const S = s({ x: E, y: P });
-          S.x >= -20 && S.x <= e.width + 20 && S.y >= -20 && S.y <= e.height + 20 && p.push(S);
+      for (let S = y; S <= m; S++)
+        for (let W = b; W <= M; W++) {
+          const E = s({ x: S, y: W });
+          E.x >= -20 && E.x <= e.width + 20 && E.y >= -20 && E.y <= e.height + 20 && h.push(E);
         }
-    return p;
+    return h;
   })() : [];
   return /* @__PURE__ */ n.jsxs("g", { className: "grid", children: [
-    (o.coordinateSystem === "polar" || o.coordinateSystem === "both") && /* @__PURE__ */ n.jsx("g", { className: "polar-grid", children: j }),
+    (o.coordinateSystem === "polar" || o.coordinateSystem === "both") && /* @__PURE__ */ n.jsx("g", { className: "polar-grid", children: v }),
     (o.coordinateSystem === "cartesian" || o.coordinateSystem === "both") && /* @__PURE__ */ n.jsxs("g", { className: "cartesian-grid", children: [
-      u,
-      d
+      N,
+      l
     ] }),
-    M.map((a, p) => /* @__PURE__ */ n.jsx(
+    P.map((a, h) => /* @__PURE__ */ n.jsx(
       "circle",
       {
         cx: a.x,
@@ -1090,15 +1111,15 @@ function Ke({ viewport: t, canvasSize: e, worldToScreen: s, objects: r = [] }) {
         fill: "#9CA3AF",
         opacity: "0.3"
       },
-      `lattice-${p}`
+      `lattice-${h}`
     )),
-    O && /* @__PURE__ */ n.jsx(
+    p && /* @__PURE__ */ n.jsx(
       "line",
       {
-        x1: O.lineStart.x,
-        y1: O.lineStart.y,
-        x2: O.lineEnd.x,
-        y2: O.lineEnd.y,
+        x1: p.lineStart.x,
+        y1: p.lineStart.y,
+        x2: p.lineEnd.x,
+        y2: p.lineEnd.y,
         stroke: "#A78BFA",
         strokeWidth: "1.5",
         opacity: "0.6",
@@ -1106,55 +1127,67 @@ function Ke({ viewport: t, canvasSize: e, worldToScreen: s, objects: r = [] }) {
       }
     ),
     c.shouldShowLabels && /* @__PURE__ */ n.jsxs("g", { className: "labels", fontSize: "12", fill: "#374151", children: [
-      h.filter((a) => {
-        const p = Math.abs(a.value % l.labelStep) < l.gridSize / 10, y = Math.abs(a.value) >= l.labelStep / 2;
-        return p && y;
-      }).filter((a, p, y) => !y.slice(0, p).some(
-        (f) => Math.abs(f.value - a.value) < 1e-3
+      x.filter((a) => {
+        const h = Math.abs(a.value % d.labelStep) < d.gridSize / 10, y = Math.abs(a.value) >= d.labelStep / 2;
+        return h && y;
+      }).filter((a, h, y) => !y.slice(0, h).some(
+        (m) => Math.abs(m.value - a.value) < 1e-3
       )).map((a) => /* @__PURE__ */ n.jsx(
         "text",
         {
           x: a.x,
           y: s({ x: 0, y: 0 }).y + 20,
           textAnchor: "middle",
-          fontSize: i(11),
+          fontSize: r(11),
           fontWeight: "500",
           opacity: Math.max(0.7, c.opacity),
-          children: z(a.value, c.gridSize)
+          children: I(a.value, c.gridSize)
         },
         `xlabel${a.value}`
       )),
-      m.filter((a) => {
-        const p = Math.abs(a.value % l.labelStep) < l.gridSize / 10, y = Math.abs(a.value) >= l.labelStep / 2;
-        return p && y;
-      }).filter((a, p, y) => !y.slice(0, p).some(
-        (f) => Math.abs(f.value - a.value) < 1e-3
+      g.filter((a) => {
+        const h = Math.abs(a.value % d.labelStep) < d.gridSize / 10, y = Math.abs(a.value) >= d.labelStep / 2;
+        return h && y;
+      }).filter((a, h, y) => !y.slice(0, h).some(
+        (m) => Math.abs(m.value - a.value) < 1e-3
       )).map((a) => /* @__PURE__ */ n.jsx(
         "text",
         {
           x: s({ x: 0, y: 0 }).x - 15,
           y: a.y + 4,
           textAnchor: "middle",
-          fontSize: i(11),
+          fontSize: r(11),
           fontWeight: "500",
           opacity: Math.max(0.7, c.opacity),
-          children: z(a.value, c.gridSize)
+          children: I(a.value, c.gridSize)
         },
         `ylabel${a.value}`
       )),
-      /* @__PURE__ */ n.jsx(
-        "text",
-        {
-          x: s({ x: 0, y: 0 }).x - 25,
-          y: s({ x: 0, y: 0 }).y - 10,
-          fontSize: i(11),
-          fontWeight: "600",
-          fill: "#374151",
-          opacity: Math.max(0.8, c.opacity),
-          children: "(0,0)"
-        }
-      ),
-      o.showDivisionAnswer && k.map((a, p) => {
+      /* @__PURE__ */ n.jsxs("g", { children: [
+        /* @__PURE__ */ n.jsx(
+          "circle",
+          {
+            cx: s({ x: 0, y: 0 }).x,
+            cy: s({ x: 0, y: 0 }).y,
+            r: "3",
+            fill: "#374151",
+            opacity: "0.6"
+          }
+        ),
+        /* @__PURE__ */ n.jsx(
+          "text",
+          {
+            x: s({ x: 0, y: 0 }).x - 25,
+            y: s({ x: 0, y: 0 }).y - 10,
+            fontSize: r(11),
+            fontWeight: "600",
+            fill: "#374151",
+            opacity: Math.max(0.8, c.opacity),
+            children: "(0,0)"
+          }
+        )
+      ] }),
+      o.showDivisionAnswer && j.map((a, h) => {
         const y = s({ x: 1, y: 0 }).x;
         return /* @__PURE__ */ n.jsxs("g", { children: [
           /* @__PURE__ */ n.jsx(
@@ -1174,7 +1207,7 @@ function Ke({ viewport: t, canvasSize: e, worldToScreen: s, objects: r = [] }) {
             {
               x: y + 15,
               y: a.screenY + 4,
-              fontSize: i(10),
+              fontSize: r(10),
               fontWeight: "600",
               fill: "#60A5FA",
               opacity: "0.9",
@@ -1184,17 +1217,17 @@ function Ke({ viewport: t, canvasSize: e, worldToScreen: s, objects: r = [] }) {
               ]
             }
           )
-        ] }, `ray-intersection-${p}`);
+        ] }, `ray-intersection-${h}`);
       })
     ] })
   ] });
 }
-function Je({ viewport: t, onZoomIn: e, onZoomOut: s, onZoomReset: r, onCenterOnly: o }) {
-  const [i, c] = Q(0), l = se(null), h = () => {
-    const m = Date.now();
-    m - i < 500 ? (l.current && (clearTimeout(l.current), l.current = null), r()) : l.current = window.setTimeout(() => {
-      o(), l.current = null;
-    }, 300), c(m);
+function et({ viewport: t, onZoomIn: e, onZoomOut: s, onZoomReset: i, onCenterOnly: o }) {
+  const [r, c] = Q(0), d = ne(null), x = () => {
+    const g = Date.now();
+    g - r < 500 ? (d.current && (clearTimeout(d.current), d.current = null), i()) : d.current = window.setTimeout(() => {
+      o(), d.current = null;
+    }, 300), c(g);
   };
   return /* @__PURE__ */ n.jsxs("div", { className: "absolute bottom-4 right-4 flex flex-col gap-2", children: [
     /* @__PURE__ */ n.jsx(
@@ -1220,7 +1253,7 @@ function Je({ viewport: t, onZoomIn: e, onZoomOut: s, onZoomReset: r, onCenterOn
     /* @__PURE__ */ n.jsx(
       "button",
       {
-        onClick: h,
+        onClick: x,
         className: "w-10 h-10 bg-white/90 hover:bg-white border border-gray-300 rounded-lg shadow-md flex items-center justify-center text-gray-600 text-xs transition-colors",
         title: "Center view (single click) or Reset zoom (double click)",
         children: "⌂"
@@ -1232,20 +1265,20 @@ function Je({ viewport: t, onZoomIn: e, onZoomOut: s, onZoomReset: r, onCenterOn
     ] })
   ] });
 }
-function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, selectedObjects: o = [], canvasSize: i }) {
-  const c = me(), l = (u) => Math.round(u * c.fontScale), h = e.zoom > 50 ? 0.1 : e.zoom > 10 ? 1 : 10, [m, j] = Q(null), k = (u) => {
-    const d = o.includes(u.id);
-    switch (u.type) {
+function tt({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: i, selectedObjects: o = [], canvasSize: r }) {
+  const c = xe(), d = (l) => Math.round(l * c.fontScale), x = ve(e, c.gridScale, c.snapPrecision), g = x, [v, j] = Q(null), N = (l) => {
+    const p = o.includes(l.id);
+    switch (l.type) {
       case "ray":
-        const O = r(u.properties.startPoint), M = r(u.properties.endPoint);
+        const P = i(l.properties.startPoint), a = i(l.properties.endPoint);
         return /* @__PURE__ */ n.jsxs("g", { children: [
-          d && /* @__PURE__ */ n.jsx(
+          p && /* @__PURE__ */ n.jsx(
             "line",
             {
-              x1: O.x,
-              y1: O.y,
-              x2: M.x,
-              y2: M.y,
+              x1: P.x,
+              y1: P.y,
+              x2: a.x,
+              y2: a.y,
               stroke: "#60A5FA",
               strokeWidth: 6,
               opacity: 0.4
@@ -1254,110 +1287,110 @@ function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, sel
           /* @__PURE__ */ n.jsx(
             "line",
             {
-              x1: O.x,
-              y1: O.y,
-              x2: M.x,
-              y2: M.y,
-              stroke: d ? "#1D4ED8" : "#2563eb",
-              strokeWidth: d ? 3 : 2
+              x1: P.x,
+              y1: P.y,
+              x2: a.x,
+              y2: a.y,
+              stroke: p ? "#1D4ED8" : "#2563eb",
+              strokeWidth: p ? 3 : 2
             }
           ),
           /* @__PURE__ */ n.jsx(
             "circle",
             {
-              cx: O.x,
-              cy: O.y,
+              cx: P.x,
+              cy: P.y,
               r: s / 4,
-              fill: d ? "#1D4ED8" : "#2563eb",
-              stroke: d ? "#60A5FA" : "none",
-              strokeWidth: d ? 2 : 0,
+              fill: p ? "#1D4ED8" : "#2563eb",
+              stroke: p ? "#60A5FA" : "none",
+              strokeWidth: p ? 2 : 0,
               style: { cursor: "move" },
-              onMouseEnter: () => j(`${u.id}-start`),
+              onMouseEnter: () => j(`${l.id}-start`),
               onMouseLeave: () => j(null)
             }
           ),
           /* @__PURE__ */ n.jsx(
             "circle",
             {
-              cx: M.x,
-              cy: M.y,
+              cx: a.x,
+              cy: a.y,
               r: s / 4,
-              fill: d ? "#1D4ED8" : "#2563eb",
-              stroke: d ? "#60A5FA" : "none",
-              strokeWidth: d ? 2 : 0,
+              fill: p ? "#1D4ED8" : "#2563eb",
+              stroke: p ? "#60A5FA" : "none",
+              strokeWidth: p ? 2 : 0,
               style: { cursor: "move" },
-              onMouseEnter: () => j(`${u.id}-end`),
+              onMouseEnter: () => j(`${l.id}-end`),
               onMouseLeave: () => j(null)
             }
           ),
-          !(Math.abs(u.properties.startPoint.x) < 1e-3 && Math.abs(u.properties.startPoint.y) < 1e-3) && m === `${u.id}-start` && /* @__PURE__ */ n.jsxs(
+          !(Math.abs(l.properties.startPoint.x) < 1e-3 && Math.abs(l.properties.startPoint.y) < 1e-3) && v === `${l.id}-start` && /* @__PURE__ */ n.jsxs(
             "text",
             {
-              x: O.x - 5,
-              y: O.y - 10,
-              fontSize: l(10),
+              x: P.x - 5,
+              y: P.y - 10,
+              fontSize: d(10),
               fontWeight: "500",
-              fill: d ? "#1D4ED8" : "#2563eb",
+              fill: p ? "#1D4ED8" : "#2563eb",
               textAnchor: "middle",
               opacity: "0.8",
               children: [
                 "(",
-                z(u.properties.startPoint.x, h),
+                I(l.properties.startPoint.x, g),
                 ", ",
-                z(u.properties.startPoint.y, h),
+                I(l.properties.startPoint.y, g),
                 ")"
               ]
             }
           ),
-          m === `${u.id}-end` && /* @__PURE__ */ n.jsxs(
+          v === `${l.id}-end` && /* @__PURE__ */ n.jsxs(
             "text",
             {
-              x: Math.abs(u.properties.startPoint.x) < 1e-3 && Math.abs(u.properties.startPoint.y) < 1e-3 ? M.x - 60 : M.x + 5,
-              y: Math.abs(u.properties.startPoint.x) < 1e-3 && Math.abs(u.properties.startPoint.y) < 1e-3 ? M.y + 4 : M.y - 10,
-              fontSize: l(10),
+              x: Math.abs(l.properties.startPoint.x) < 1e-3 && Math.abs(l.properties.startPoint.y) < 1e-3 ? a.x - 60 : a.x + 5,
+              y: Math.abs(l.properties.startPoint.x) < 1e-3 && Math.abs(l.properties.startPoint.y) < 1e-3 ? a.y + 4 : a.y - 10,
+              fontSize: d(10),
               fontWeight: "500",
-              fill: d ? "#1D4ED8" : "#2563eb",
-              textAnchor: Math.abs(u.properties.startPoint.x) < 1e-3 && Math.abs(u.properties.startPoint.y) < 1e-3 ? "end" : "middle",
+              fill: p ? "#1D4ED8" : "#2563eb",
+              textAnchor: Math.abs(l.properties.startPoint.x) < 1e-3 && Math.abs(l.properties.startPoint.y) < 1e-3 ? "end" : "middle",
               opacity: "0.8",
               children: [
                 "(",
-                z(u.properties.endPoint.x, h),
+                I(l.properties.endPoint.x, g),
                 ", ",
-                z(u.properties.endPoint.y, h),
+                I(l.properties.endPoint.y, g),
                 ")"
               ]
             }
           ),
           (() => {
-            const E = u.properties.endPoint.x - u.properties.startPoint.x;
-            u.properties.endPoint.y - u.properties.startPoint.y;
-            const P = Math.abs(u.properties.startPoint.x) < 1e-3 && Math.abs(u.properties.startPoint.y) < 1e-3;
-            if (Math.abs(E) > 1e-3) {
-              const S = M.x, _ = M.y;
-              if (P) {
-                const G = u.properties.endPoint.x, R = u.properties.endPoint.y, X = z(R, h), W = z(G, h);
+            const W = l.properties.endPoint.x - l.properties.startPoint.x;
+            l.properties.endPoint.y - l.properties.startPoint.y;
+            const E = Math.abs(l.properties.startPoint.x) < 1e-3 && Math.abs(l.properties.startPoint.y) < 1e-3;
+            if (Math.abs(W) > 1e-3) {
+              const k = a.x, B = a.y;
+              if (E) {
+                const X = l.properties.endPoint.x, q = l.properties.endPoint.y, A = I(q, g), U = I(X, g);
                 return /* @__PURE__ */ n.jsxs("g", { children: [
                   /* @__PURE__ */ n.jsx(
                     "text",
                     {
-                      x: S + 15,
-                      y: _ - 25,
-                      fontSize: l(9),
+                      x: k + 15,
+                      y: B - 25,
+                      fontSize: d(9),
                       fontWeight: "500",
-                      fill: d ? "#1D4ED8" : "#2563eb",
+                      fill: p ? "#1D4ED8" : "#2563eb",
                       textAnchor: "middle",
                       opacity: "0.8",
-                      children: X
+                      children: A
                     }
                   ),
                   /* @__PURE__ */ n.jsx(
                     "line",
                     {
-                      x1: S + 8,
-                      y1: _ - 19,
-                      x2: S + 22,
-                      y2: _ - 19,
-                      stroke: d ? "#1D4ED8" : "#2563eb",
+                      x1: k + 8,
+                      y1: B - 19,
+                      x2: k + 22,
+                      y2: B - 19,
+                      stroke: p ? "#1D4ED8" : "#2563eb",
                       strokeWidth: "1",
                       opacity: "0.8"
                     }
@@ -1365,14 +1398,14 @@ function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, sel
                   /* @__PURE__ */ n.jsx(
                     "text",
                     {
-                      x: S + 15,
-                      y: _ - 9,
-                      fontSize: l(9),
+                      x: k + 15,
+                      y: B - 9,
+                      fontSize: d(9),
                       fontWeight: "500",
-                      fill: d ? "#1D4ED8" : "#2563eb",
+                      fill: p ? "#1D4ED8" : "#2563eb",
                       textAnchor: "middle",
                       opacity: "0.8",
-                      children: W
+                      children: U
                     }
                   )
                 ] });
@@ -1382,107 +1415,107 @@ function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, sel
             return null;
           })(),
           (() => {
-            if (!(Math.abs(u.properties.startPoint.x) < 1e-3 && Math.abs(u.properties.startPoint.y) < 1e-3)) return null;
-            const P = u.properties.endPoint.x, S = u.properties.endPoint.y;
-            if (Math.abs(P) < 1e-3 && Math.abs(S) < 1e-3) return null;
-            const _ = P, G = S, R = {
-              left: e.center.x - i.width / 2 / e.zoom,
-              right: e.center.x + i.width / 2 / e.zoom,
-              top: e.center.y + i.height / 2 / e.zoom,
-              bottom: e.center.y - i.height / 2 / e.zoom
-            }, X = Math.max(
-              Math.abs(R.left),
-              Math.abs(R.right),
-              Math.abs(R.top),
-              Math.abs(R.bottom)
-            ) * 2, W = Math.sqrt(_ * _ + G * G);
-            if (W === 0) return null;
-            const B = _ / W, Z = G / W, ne = {
-              x: X * B,
-              y: X * Z
-            }, re = r(ne), ie = [];
-            if (Math.abs(P) > 1e-3 && Math.abs(S) > 1e-3) {
-              const g = S / P;
-              for (let b = 1; b <= Math.min(20, Math.abs(X)); b++) {
-                const N = g * b, D = Math.round(b / 0.25) * 0.25, q = Math.round(N / 0.25) * 0.25;
-                if (Math.abs(b - D) < 0.1 && Math.abs(N - q) < 0.1 && Math.abs(D) <= X && Math.abs(q) <= X) {
-                  const U = r({ x: D, y: q });
-                  U.x >= -100 && U.x <= i.width + 100 && U.y >= -100 && U.y <= i.height + 100 && ie.push({
-                    world: { x: D, y: q },
-                    screen: U,
+            if (!(Math.abs(l.properties.startPoint.x) < 1e-3 && Math.abs(l.properties.startPoint.y) < 1e-3)) return null;
+            const E = l.properties.endPoint.x, k = l.properties.endPoint.y;
+            if (Math.abs(E) < 1e-3 && Math.abs(k) < 1e-3) return null;
+            const B = E, X = k, q = {
+              left: e.center.x - r.width / 2 / e.zoom,
+              right: e.center.x + r.width / 2 / e.zoom,
+              top: e.center.y + r.height / 2 / e.zoom,
+              bottom: e.center.y - r.height / 2 / e.zoom
+            }, A = Math.max(
+              Math.abs(q.left),
+              Math.abs(q.right),
+              Math.abs(q.top),
+              Math.abs(q.bottom)
+            ) * 2, U = Math.sqrt(B * B + X * X);
+            if (U === 0) return null;
+            const re = B / U, ce = X / U, ie = {
+              x: A * re,
+              y: A * ce
+            }, oe = i(ie), u = [];
+            if (Math.abs(E) > 1e-3 && Math.abs(k) > 1e-3) {
+              const f = k / E;
+              for (let w = x; w <= Math.min(20, Math.abs(A)); w += x) {
+                const T = f * w, L = Math.round(w / x) * x, G = Math.round(T / x) * x;
+                if (Math.abs(w - L) < x / 10 && Math.abs(T - G) < x / 10 && Math.abs(L) <= A && Math.abs(G) <= A && L > 0 && G > 0) {
+                  const z = i({ x: L, y: G });
+                  z.x >= -100 && z.x <= r.width + 100 && z.y >= -100 && z.y <= r.height + 100 && u.push({
+                    world: { x: L, y: G },
+                    screen: z,
                     fraction: {
-                      num: z(q, h),
-                      den: z(D, h)
+                      num: I(G, x),
+                      den: I(L, x)
                     }
                   });
                 }
               }
             }
-            const x = Math.sqrt(P * P + S * S), A = [];
-            if (x > 0 && c.showLengthMultiples)
-              for (let g = 2; g <= 5; g++) {
-                const b = P * g, N = S * g, D = r({ x: b, y: N });
-                D.x >= -50 && D.x <= i.width + 50 && D.y >= -50 && D.y <= i.height + 50 && A.push({
-                  screen: D,
-                  multiple: g
+            const O = Math.sqrt(E * E + k * k), _ = [];
+            if (O > 0 && c.showLengthMultiples)
+              for (let f = 2; f <= 5; f++) {
+                const w = E * f, T = k * f, L = i({ x: w, y: T });
+                L.x >= -50 && L.x <= r.width + 50 && L.y >= -50 && L.y <= r.height + 50 && _.push({
+                  screen: L,
+                  multiple: f
                 });
               }
             return /* @__PURE__ */ n.jsxs("g", { children: [
               c.showEquivalentFractions && /* @__PURE__ */ n.jsx(
                 "line",
                 {
-                  x1: M.x,
-                  y1: M.y,
-                  x2: re.x,
-                  y2: re.y,
-                  stroke: d ? "#1D4ED8" : "#2563eb",
+                  x1: a.x,
+                  y1: a.y,
+                  x2: oe.x,
+                  y2: oe.y,
+                  stroke: p ? "#1D4ED8" : "#2563eb",
                   strokeWidth: "1",
                   opacity: "0.3",
                   strokeDasharray: "3,3"
                 }
               ),
-              A.map((g, b) => /* @__PURE__ */ n.jsxs("g", { children: [
+              _.map((f, w) => /* @__PURE__ */ n.jsxs("g", { children: [
                 /* @__PURE__ */ n.jsx(
                   "circle",
                   {
-                    cx: g.screen.x,
-                    cy: g.screen.y,
+                    cx: f.screen.x,
+                    cy: f.screen.y,
                     r: "2",
-                    fill: d ? "#1D4ED8" : "#2563eb",
+                    fill: p ? "#1D4ED8" : "#2563eb",
                     opacity: "0.4"
                   }
                 ),
                 /* @__PURE__ */ n.jsxs(
                   "text",
                   {
-                    x: g.screen.x + 8,
-                    y: g.screen.y - 8,
-                    fontSize: l(7),
+                    x: f.screen.x + 8,
+                    y: f.screen.y - 8,
+                    fontSize: d(7),
                     fontWeight: "400",
-                    fill: d ? "#1D4ED8" : "#2563eb",
+                    fill: p ? "#1D4ED8" : "#2563eb",
                     textAnchor: "start",
                     opacity: "0.5",
                     children: [
                       "×",
-                      g.multiple
+                      f.multiple
                     ]
                   }
                 )
-              ] }, `length-${b}`)),
+              ] }, `length-${w}`)),
               c.showAreaRectangle && (() => {
-                if (P > 0 && S > 0) {
-                  const g = r({ x: 0, y: 0 }), b = r({ x: P, y: S }), N = Math.abs(b.x - g.x), D = Math.abs(b.y - g.y), q = Math.min(g.x, b.x), U = Math.min(g.y, b.y), Y = P * S;
+                if (E > 0 && k > 0) {
+                  const f = i({ x: 0, y: 0 }), w = i({ x: E, y: k }), T = Math.abs(w.x - f.x), L = Math.abs(w.y - f.y), G = Math.min(f.x, w.x), z = Math.min(f.y, w.y), H = E * k;
                   return /* @__PURE__ */ n.jsxs("g", { children: [
                     /* @__PURE__ */ n.jsx(
                       "rect",
                       {
-                        x: q,
-                        y: U,
-                        width: N,
-                        height: D,
-                        fill: d ? "#1D4ED8" : "#2563eb",
+                        x: G,
+                        y: z,
+                        width: T,
+                        height: L,
+                        fill: p ? "#1D4ED8" : "#2563eb",
                         opacity: "0.08",
-                        stroke: d ? "#1D4ED8" : "#2563eb",
+                        stroke: p ? "#1D4ED8" : "#2563eb",
                         strokeWidth: "0.5",
                         strokeOpacity: "0.15"
                       }
@@ -1490,19 +1523,19 @@ function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, sel
                     /* @__PURE__ */ n.jsxs(
                       "text",
                       {
-                        x: q + N / 2,
-                        y: U + 15,
-                        fontSize: l(10),
+                        x: G + T / 2,
+                        y: z + 15,
+                        fontSize: d(10),
                         fontWeight: "400",
-                        fill: d ? "#1D4ED8" : "#2563eb",
+                        fill: p ? "#1D4ED8" : "#2563eb",
                         textAnchor: "middle",
                         opacity: "0.6",
                         children: [
-                          z(S, h),
+                          I(k, g),
                           " × ",
-                          z(P, h),
+                          I(E, g),
                           " = ",
-                          z(Y, h)
+                          I(H, g)
                         ]
                       }
                     )
@@ -1511,15 +1544,15 @@ function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, sel
                 return null;
               })(),
               c.showRiseRunTriangle && (() => {
-                if (P > 0 && S > 0) {
-                  const g = r({ x: 0, y: 0 }), b = r({ x: P, y: 0 }), N = r({ x: P, y: S });
+                if (E > 0 && k > 0) {
+                  const f = i({ x: 0, y: 0 }), w = i({ x: E, y: 0 }), T = i({ x: E, y: k });
                   return /* @__PURE__ */ n.jsxs("g", { children: [
                     /* @__PURE__ */ n.jsx(
                       "path",
                       {
-                        d: `M ${g.x},${g.y} L ${b.x},${b.y} L ${N.x},${N.y} Z`,
+                        d: `M ${f.x},${f.y} L ${w.x},${w.y} L ${T.x},${T.y} Z`,
                         fill: "none",
-                        stroke: d ? "#1D4ED8" : "#2563eb",
+                        stroke: p ? "#1D4ED8" : "#2563eb",
                         strokeWidth: "1",
                         opacity: "0.4",
                         strokeDasharray: "2,2"
@@ -1528,32 +1561,32 @@ function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, sel
                     /* @__PURE__ */ n.jsxs(
                       "text",
                       {
-                        x: b.x + 10,
-                        y: (b.y + N.y) / 2,
-                        fontSize: l(9),
+                        x: w.x + 10,
+                        y: (w.y + T.y) / 2,
+                        fontSize: d(9),
                         fontWeight: "500",
-                        fill: d ? "#1D4ED8" : "#2563eb",
+                        fill: p ? "#1D4ED8" : "#2563eb",
                         textAnchor: "start",
                         opacity: "0.7",
                         children: [
                           "rise: ",
-                          z(S, h)
+                          I(k, g)
                         ]
                       }
                     ),
                     /* @__PURE__ */ n.jsxs(
                       "text",
                       {
-                        x: (g.x + b.x) / 2,
-                        y: b.y + 8,
-                        fontSize: l(9),
+                        x: (f.x + w.x) / 2,
+                        y: w.y + 8,
+                        fontSize: d(9),
                         fontWeight: "500",
-                        fill: d ? "#1D4ED8" : "#2563eb",
+                        fill: p ? "#1D4ED8" : "#2563eb",
                         textAnchor: "middle",
                         opacity: "0.7",
                         children: [
                           "run: ",
-                          z(P, h)
+                          I(E, g)
                         ]
                       }
                     )
@@ -1562,77 +1595,77 @@ function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, sel
                 return null;
               })(),
               c.showDistanceMarkers && (() => {
-                const g = [], b = Math.sqrt(P * P + S * S);
-                if (b > 0) {
-                  const N = r({ x: 0, y: 0 });
-                  let D = Math.atan2(S, P);
-                  D < 0 && (D = D + 2 * Math.PI);
-                  const q = [];
-                  for (let Y = 1; Y <= Math.floor(b); Y++)
-                    q.push({ radius: Y, isUnit: !0 });
-                  q.push({ radius: b, isUnit: !1 }), q.forEach(({ radius: Y, isUnit: w }, I) => {
-                    const T = Y * e.zoom;
-                    if (T >= 15 && T <= 800 && Math.abs(D) > 0.05) {
-                      const L = D > Math.PI ? 1 : 0, H = `M ${N.x + T},${N.y} A ${T},${T} 0 ${L},0 ${N.x + T * Math.cos(D)},${N.y - T * Math.sin(D)}`;
-                      g.push(
+                const f = [], w = Math.sqrt(E * E + k * k);
+                if (w > 0) {
+                  const T = i({ x: 0, y: 0 });
+                  let L = Math.atan2(k, E);
+                  L < 0 && (L = L + 2 * Math.PI);
+                  const G = [];
+                  for (let H = 1; H <= Math.floor(w); H++)
+                    G.push({ radius: H, isUnit: !0 });
+                  G.push({ radius: w, isUnit: !1 }), G.forEach(({ radius: H, isUnit: V }, C) => {
+                    const F = H * e.zoom;
+                    if (F >= 15 && F <= 800 && Math.abs(L) > 0.05) {
+                      const $ = L > Math.PI ? 1 : 0, D = `M ${T.x + F},${T.y} A ${F},${F} 0 ${$},0 ${T.x + F * Math.cos(L)},${T.y - F * Math.sin(L)}`;
+                      f.push(
                         /* @__PURE__ */ n.jsx(
                           "path",
                           {
-                            d: H,
+                            d: D,
                             fill: "none",
-                            stroke: d ? "#1D4ED8" : "#2563eb",
-                            strokeWidth: w ? "1" : "1.5",
-                            opacity: w ? "0.3" : "0.6",
-                            strokeDasharray: w ? "2,2" : "none"
+                            stroke: p ? "#1D4ED8" : "#2563eb",
+                            strokeWidth: V ? "1" : "1.5",
+                            opacity: V ? "0.3" : "0.6",
+                            strokeDasharray: V ? "2,2" : "none"
                           },
-                          `radial-${u.id}-${Y.toFixed(3)}-${D.toFixed(3)}-${I}`
+                          `radial-${l.id}-${H.toFixed(3)}-${L.toFixed(3)}-${C}`
                         )
                       );
                     }
                   });
-                  const U = r({ x: b, y: 0 });
-                  g.push(
+                  const z = i({ x: w, y: 0 });
+                  f.push(
                     /* @__PURE__ */ n.jsxs("g", { children: [
                       /* @__PURE__ */ n.jsx(
                         "path",
                         {
-                          d: `M ${U.x},${N.y} L ${U.x - 4},${N.y + 8} L ${U.x + 4},${N.y + 8} Z`,
-                          fill: d ? "#1D4ED8" : "#2563eb",
+                          d: `M ${z.x},${T.y} L ${z.x - 4},${T.y + 8} L ${z.x + 4},${T.y + 8} Z`,
+                          fill: p ? "#1D4ED8" : "#2563eb",
                           opacity: "0.7"
                         }
                       ),
                       /* @__PURE__ */ n.jsxs(
                         "text",
                         {
-                          x: U.x - 15,
-                          y: N.y - 8,
-                          fontSize: l(8),
+                          x: z.x - 15,
+                          y: T.y - 8,
+                          fontSize: d(8),
                           fontWeight: "600",
-                          fill: d ? "#1D4ED8" : "#2563eb",
+                          fill: p ? "#1D4ED8" : "#2563eb",
                           textAnchor: "end",
                           opacity: "0.8",
                           children: [
                             "d = ",
-                            b.toFixed(2)
+                            w.toFixed(2)
                           ]
                         }
                       )
-                    ] }, `distance-${u.id}`)
+                    ] }, `distance-${l.id}`)
                   );
                 }
-                return /* @__PURE__ */ n.jsx("g", { children: g });
+                return /* @__PURE__ */ n.jsx("g", { children: f });
               })(),
               c.showAngleArc && (() => {
-                let g = Math.atan2(S, P);
-                if (g < 0 && (g = g + 2 * Math.PI), Math.abs(P) > 0.05 || Math.abs(S) > 0.05) {
-                  const b = r({ x: 0, y: 0 }), N = 50, D = (g * 180 / Math.PI).toFixed(1), q = g, U = g > Math.PI ? 1 : 0, Y = `M ${b.x + N},${b.y} A ${N},${N} 0 ${U},0 ${b.x + N * Math.cos(q)},${b.y - N * Math.sin(q)}`, w = g / 2, I = N * 0.7, T = b.x + I * Math.cos(w), L = b.y - I * Math.sin(w);
+                let f = Math.atan2(k, E);
+                if (f < 0 && (f = f + 2 * Math.PI), Math.abs(E) > 0.05 || Math.abs(k) > 0.05) {
+                  const w = i({ x: 0, y: 0 }), T = 50, L = (f * 180 / Math.PI).toFixed(1), G = f, z = f > Math.PI ? 1 : 0, H = `M ${w.x + T},${w.y} A ${T},${T} 0 ${z},0 ${w.x + T * Math.cos(G)},${w.y - T * Math.sin(G)}`, V = f / 2, C = T * 0.7, F = w.x + C * Math.cos(V), $ = w.y - C * Math.sin(V);
                   return /* @__PURE__ */ n.jsxs("g", { children: [
                     /* @__PURE__ */ n.jsx(
                       "path",
                       {
-                        d: Y,
+                        d: H,
                         fill: "none",
-                        stroke: d ? "#1D4ED8" : "#2563eb",
+                        stroke: p ? "#1D4ED8" : "#2563eb",
                         strokeWidth: "2",
                         opacity: "0.6"
                       }
@@ -1640,16 +1673,16 @@ function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, sel
                     /* @__PURE__ */ n.jsxs(
                       "text",
                       {
-                        x: T,
-                        y: L,
-                        fontSize: l(11),
+                        x: F,
+                        y: $,
+                        fontSize: d(11),
                         fontWeight: "600",
-                        fill: d ? "#1D4ED8" : "#2563eb",
+                        fill: p ? "#1D4ED8" : "#2563eb",
                         textAnchor: "middle",
                         opacity: "0.8",
                         children: [
                           "θ = ",
-                          D,
+                          L,
                           "°"
                         ]
                       }
@@ -1658,14 +1691,14 @@ function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, sel
                 }
                 return null;
               })(),
-              c.showEquivalentFractions && ie.map((g, b) => {
-                const D = Math.abs(g.world.x - 1) < 0.1 && c.showDivisionAnswer, q = Math.abs(g.world.x - P) < 0.1 && Math.abs(g.world.y - S) < 0.1;
-                return D || q ? null : /* @__PURE__ */ n.jsxs("g", { children: [
+              c.showEquivalentFractions && u.map((f, w) => {
+                const L = Math.abs(f.world.x - 1) < 0.1 && c.showDivisionAnswer, G = Math.abs(f.world.x - E) < 0.1 && Math.abs(f.world.y - k) < 0.1;
+                return L || G ? null : /* @__PURE__ */ n.jsxs("g", { children: [
                   /* @__PURE__ */ n.jsx(
                     "circle",
                     {
-                      cx: g.screen.x,
-                      cy: g.screen.y,
+                      cx: f.screen.x,
+                      cy: f.screen.y,
                       r: "4",
                       fill: "white",
                       stroke: "#22C55E",
@@ -1676,138 +1709,38 @@ function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, sel
                   /* @__PURE__ */ n.jsxs(
                     "text",
                     {
-                      x: g.screen.x + 15,
-                      y: g.screen.y + 4,
-                      fontSize: l(9),
+                      x: f.screen.x + 15,
+                      y: f.screen.y + 4,
+                      fontSize: d(9),
                       fontWeight: "500",
                       fill: "#22C55E",
                       textAnchor: "start",
                       opacity: "0.8",
                       children: [
-                        g.fraction.num,
+                        f.fraction.num,
                         "/",
-                        g.fraction.den
+                        f.fraction.den
                       ]
                     }
                   )
-                ] }, `equiv-${b}`);
-              })
-            ] });
-          })(),
-          d && (() => {
-            const E = u.properties.endPoint.x, P = u.properties.endPoint.y;
-            if (!(Math.abs(u.properties.startPoint.x) < 1e-3 && Math.abs(u.properties.startPoint.y) < 1e-3)) return null;
-            const _ = Math.sqrt(E * E + P * P), G = Math.atan2(P, E), R = _ + 1, X = r({
-              x: R * Math.cos(G),
-              y: R * Math.sin(G)
-            }), W = [0.5, 2].map((B) => ({
-              factor: B,
-              pos: r({
-                x: E * B,
-                y: P * B
-              })
-            }));
-            return /* @__PURE__ */ n.jsxs("g", { className: "transformation-handles", children: [
-              /* @__PURE__ */ n.jsx(
-                "circle",
-                {
-                  cx: X.x,
-                  cy: X.y,
-                  r: "6",
-                  fill: "white",
-                  stroke: "#F59E0B",
-                  strokeWidth: "2",
-                  opacity: "0.9",
-                  style: { cursor: "grab" },
-                  className: "transform-handle rotation-handle"
-                }
-              ),
-              /* @__PURE__ */ n.jsx(
-                "text",
-                {
-                  x: X.x,
-                  y: X.y + 2,
-                  fontSize: l(8),
-                  fontWeight: "600",
-                  fill: "#F59E0B",
-                  textAnchor: "middle",
-                  opacity: "0.8",
-                  style: { pointerEvents: "none" },
-                  children: "↻"
-                }
-              ),
-              W.map(({ factor: B, pos: Z }) => /* @__PURE__ */ n.jsxs("g", { children: [
-                /* @__PURE__ */ n.jsx(
-                  "circle",
-                  {
-                    cx: Z.x,
-                    cy: Z.y,
-                    r: "5",
-                    fill: "white",
-                    stroke: "#8B5CF6",
-                    strokeWidth: "2",
-                    opacity: "0.8",
-                    style: { cursor: "nesw-resize" },
-                    className: "transform-handle scale-handle",
-                    "data-scale-factor": B
-                  }
-                ),
-                /* @__PURE__ */ n.jsxs(
-                  "text",
-                  {
-                    x: Z.x,
-                    y: Z.y + 1,
-                    fontSize: l(6),
-                    fontWeight: "600",
-                    fill: "#8B5CF6",
-                    textAnchor: "middle",
-                    opacity: "0.7",
-                    style: { pointerEvents: "none" },
-                    children: [
-                      B,
-                      "×"
-                    ]
-                  }
-                )
-              ] }, `scale-${B}`)),
-              [1, -1].map((B) => {
-                const Z = G + Math.PI / 2, ne = r({
-                  x: E * 0.75 + B * 0.8 * Math.cos(Z),
-                  y: P * 0.75 + B * 0.8 * Math.sin(Z)
-                });
-                return /* @__PURE__ */ n.jsx(
-                  "circle",
-                  {
-                    cx: ne.x,
-                    cy: ne.y,
-                    r: "4",
-                    fill: "white",
-                    stroke: "#EC4899",
-                    strokeWidth: "2",
-                    opacity: "0.7",
-                    style: { cursor: "pointer" },
-                    className: "transform-handle reflection-handle",
-                    "data-reflection-axis": B === 1 ? "perpendicular" : "parallel"
-                  },
-                  `reflect-${B}`
-                );
+                ] }, `equiv-${w}`);
               })
             ] });
           })()
-        ] }, u.id);
+        ] }, l.id);
       case "rectangle":
-        const a = r({
-          x: u.properties.x,
-          y: u.properties.y + u.properties.height
-        }), p = u.properties.width * e.zoom, y = u.properties.height * e.zoom, f = { x: u.properties.x, y: u.properties.y }, v = { x: u.properties.x + u.properties.width, y: u.properties.y }, C = { x: u.properties.x, y: u.properties.y + u.properties.height }, $ = { x: u.properties.x + u.properties.width, y: u.properties.y + u.properties.height };
+        const h = i({
+          x: l.properties.x,
+          y: l.properties.y + l.properties.height
+        }), y = l.properties.width * e.zoom, m = l.properties.height * e.zoom, b = { x: l.properties.x, y: l.properties.y }, M = { x: l.properties.x + l.properties.width, y: l.properties.y }, R = { x: l.properties.x, y: l.properties.y + l.properties.height }, S = { x: l.properties.x + l.properties.width, y: l.properties.y + l.properties.height };
         return /* @__PURE__ */ n.jsxs("g", { children: [
-          d && /* @__PURE__ */ n.jsx(
+          p && /* @__PURE__ */ n.jsx(
             "rect",
             {
-              x: a.x - 3,
-              y: a.y - 3,
-              width: p + 6,
-              height: y + 6,
+              x: h.x - 3,
+              y: h.y - 3,
+              width: y + 6,
+              height: m + 6,
               fill: "none",
               stroke: "#60A5FA",
               strokeWidth: 4,
@@ -1818,79 +1751,79 @@ function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, sel
           /* @__PURE__ */ n.jsx(
             "rect",
             {
-              x: a.x,
-              y: a.y,
-              width: p,
-              height: y,
-              fill: d ? "rgba(34, 197, 94, 0.3)" : "rgba(34, 197, 94, 0.2)",
-              stroke: d ? "#16A34A" : "#22c55e",
-              strokeWidth: d ? 3 : 2,
+              x: h.x,
+              y: h.y,
+              width: y,
+              height: m,
+              fill: p ? "rgba(34, 197, 94, 0.3)" : "rgba(34, 197, 94, 0.2)",
+              stroke: p ? "#16A34A" : "#22c55e",
+              strokeWidth: p ? 3 : 2,
               style: { cursor: "pointer" }
             }
           ),
           /* @__PURE__ */ n.jsx(
             "circle",
             {
-              cx: a.x,
-              cy: a.y,
+              cx: h.x,
+              cy: h.y,
               r: s / 6,
-              fill: d ? "#16A34A" : "#22c55e",
-              stroke: d ? "#60A5FA" : "none",
-              strokeWidth: d ? 2 : 0,
+              fill: p ? "#16A34A" : "#22c55e",
+              stroke: p ? "#60A5FA" : "none",
+              strokeWidth: p ? 2 : 0,
               style: { cursor: "nw-resize" }
             }
           ),
           /* @__PURE__ */ n.jsx(
             "circle",
             {
-              cx: a.x + p,
-              cy: a.y,
+              cx: h.x + y,
+              cy: h.y,
               r: s / 6,
-              fill: d ? "#16A34A" : "#22c55e",
-              stroke: d ? "#60A5FA" : "none",
-              strokeWidth: d ? 2 : 0,
+              fill: p ? "#16A34A" : "#22c55e",
+              stroke: p ? "#60A5FA" : "none",
+              strokeWidth: p ? 2 : 0,
               style: { cursor: "ne-resize" }
             }
           ),
           /* @__PURE__ */ n.jsx(
             "circle",
             {
-              cx: a.x,
-              cy: a.y + y,
+              cx: h.x,
+              cy: h.y + m,
               r: s / 6,
-              fill: d ? "#16A34A" : "#22c55e",
-              stroke: d ? "#60A5FA" : "none",
-              strokeWidth: d ? 2 : 0,
+              fill: p ? "#16A34A" : "#22c55e",
+              stroke: p ? "#60A5FA" : "none",
+              strokeWidth: p ? 2 : 0,
               style: { cursor: "sw-resize" }
             }
           ),
           /* @__PURE__ */ n.jsx(
             "circle",
             {
-              cx: a.x + p,
-              cy: a.y + y,
+              cx: h.x + y,
+              cy: h.y + m,
               r: s / 6,
-              fill: d ? "#16A34A" : "#22c55e",
-              stroke: d ? "#60A5FA" : "none",
-              strokeWidth: d ? 2 : 0,
+              fill: p ? "#16A34A" : "#22c55e",
+              stroke: p ? "#60A5FA" : "none",
+              strokeWidth: p ? 2 : 0,
               style: { cursor: "se-resize" }
             }
           ),
           /* @__PURE__ */ n.jsxs(
             "text",
             {
-              x: a.x - 10,
-              y: a.y - 5,
-              fontSize: l(9),
+              x: h.x - 10,
+              y: h.y - 5,
+              fontSize: d(9),
               fontWeight: "500",
               fill: "#22c55e",
               textAnchor: "end",
               opacity: "0.8",
               children: [
                 "(",
-                z(C.x, h),
+                I(R.x, g),
                 ", ",
-                z(C.y, h),
+                I(R.y, g),
                 ")"
               ]
             }
@@ -1898,18 +1831,18 @@ function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, sel
           /* @__PURE__ */ n.jsxs(
             "text",
             {
-              x: a.x + p + 10,
-              y: a.y - 5,
-              fontSize: l(9),
+              x: h.x + y + 10,
+              y: h.y - 5,
+              fontSize: d(9),
               fontWeight: "500",
               fill: "#22c55e",
               textAnchor: "start",
               opacity: "0.8",
               children: [
                 "(",
-                z($.x, h),
+                I(S.x, g),
                 ", ",
-                z($.y, h),
+                I(S.y, g),
                 ")"
               ]
             }
@@ -1917,18 +1850,18 @@ function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, sel
           /* @__PURE__ */ n.jsxs(
             "text",
             {
-              x: a.x - 10,
-              y: a.y + y + 15,
-              fontSize: l(9),
+              x: h.x - 10,
+              y: h.y + m + 15,
+              fontSize: d(9),
               fontWeight: "500",
               fill: "#22c55e",
               textAnchor: "end",
               opacity: "0.8",
               children: [
                 "(",
-                z(f.x, h),
+                I(b.x, g),
                 ", ",
-                z(f.y, h),
+                I(b.y, g),
                 ")"
               ]
             }
@@ -1936,18 +1869,18 @@ function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, sel
           /* @__PURE__ */ n.jsxs(
             "text",
             {
-              x: a.x + p + 10,
-              y: a.y + y + 15,
-              fontSize: l(9),
+              x: h.x + y + 10,
+              y: h.y + m + 15,
+              fontSize: d(9),
               fontWeight: "500",
               fill: "#22c55e",
               textAnchor: "start",
               opacity: "0.8",
               children: [
                 "(",
-                z(v.x, h),
+                I(M.x, g),
                 ", ",
-                z(v.y, h),
+                I(M.y, g),
                 ")"
               ]
             }
@@ -1955,33 +1888,33 @@ function Qe({ objects: t, viewport: e, touchTargetSize: s, worldToScreen: r, sel
           /* @__PURE__ */ n.jsxs(
             "text",
             {
-              x: a.x + p / 2,
-              y: a.y + y / 2,
-              fontSize: l(12),
+              x: h.x + y / 2,
+              y: h.y + m / 2,
+              fontSize: d(12),
               fontWeight: "600",
               fill: "#22c55e",
               textAnchor: "middle",
               opacity: "0.9",
               children: [
-                z(u.properties.height, h),
+                I(l.properties.height, g),
                 " × ",
-                z(u.properties.width, h),
+                I(l.properties.width, g),
                 " = ",
-                z(u.properties.area, h)
+                I(l.properties.area, g)
               ]
             }
           )
-        ] }, u.id);
+        ] }, l.id);
       default:
         return null;
     }
   };
   return /* @__PURE__ */ n.jsxs(n.Fragment, { children: [
     /* @__PURE__ */ n.jsx("defs", {}),
-    /* @__PURE__ */ n.jsx("g", { className: "objects", children: t.map(k) })
+    /* @__PURE__ */ n.jsx("g", { className: "objects", children: t.map(N) })
   ] });
 }
-function Ve({ capabilities: t, viewport: e, activeTool: s, selectedObjectsCount: r }) {
+function st({ capabilities: t, viewport: e, activeTool: s, selectedObjectsCount: i }) {
   return t ? /* @__PURE__ */ n.jsxs("div", { className: "absolute top-2 left-2 text-xs text-gray-500 bg-white/80 p-2 rounded shadow-sm", children: [
     /* @__PURE__ */ n.jsxs("div", { children: [
       "Input: ",
@@ -2005,40 +1938,40 @@ function Ve({ capabilities: t, viewport: e, activeTool: s, selectedObjectsCount:
       "Tool: ",
       s || "Pan Mode"
     ] }),
-    r > 0 && /* @__PURE__ */ n.jsxs("div", { children: [
+    i > 0 && /* @__PURE__ */ n.jsxs("div", { children: [
       "Selected: ",
-      r,
+      i,
       " object",
-      r !== 1 ? "s" : ""
+      i !== 1 ? "s" : ""
     ] })
   ] }) : null;
 }
-function et({ selectedObject: t, onDelete: e, onClose: s }) {
+function nt({ selectedObject: t, onDelete: e, onClose: s }) {
   if (!t) return null;
-  const r = () => {
+  const i = () => {
     e(), s();
   }, o = () => {
     switch (t.type) {
       case "ray":
-        const { startPoint: i, endPoint: c, slope: l } = t.properties, h = Math.abs(i.x) < 1e-3 && Math.abs(i.y) < 1e-3;
+        const { startPoint: r, endPoint: c, slope: d } = t.properties, x = Math.abs(r.x) < 1e-3 && Math.abs(r.y) < 1e-3;
         return /* @__PURE__ */ n.jsxs("div", { className: "space-y-2", children: [
           /* @__PURE__ */ n.jsx("div", { className: "text-sm font-medium text-gray-700", children: "Line Details" }),
           /* @__PURE__ */ n.jsxs("div", { className: "space-y-1 text-xs text-gray-600", children: [
             /* @__PURE__ */ n.jsxs("div", { children: [
               "Start: (",
-              z(i.x, 1),
+              I(r.x, 1),
               ", ",
-              z(i.y, 1),
+              I(r.y, 1),
               ")"
             ] }),
             /* @__PURE__ */ n.jsxs("div", { children: [
               "End: (",
-              z(c.x, 1),
+              I(c.x, 1),
               ", ",
-              z(c.y, 1),
+              I(c.y, 1),
               ")"
             ] }),
-            h && /* @__PURE__ */ n.jsxs("div", { children: [
+            x && /* @__PURE__ */ n.jsxs("div", { children: [
               "Fraction: ",
               Math.round(c.y),
               "/",
@@ -2046,31 +1979,27 @@ function et({ selectedObject: t, onDelete: e, onClose: s }) {
             ] }),
             /* @__PURE__ */ n.jsxs("div", { children: [
               "Slope: ",
-              isFinite(l) ? l.toFixed(3) : "undefined"
+              isFinite(d) ? d.toFixed(3) : "undefined"
             ] })
           ] })
         ] });
       case "rectangle":
-        const { x: m, y: j, width: k, height: u, area: d } = t.properties;
+        const { x: g, y: v, width: j, height: N, area: l } = t.properties;
         return /* @__PURE__ */ n.jsxs("div", { className: "space-y-2", children: [
           /* @__PURE__ */ n.jsx("div", { className: "text-sm font-medium text-gray-700", children: "Rectangle Details" }),
           /* @__PURE__ */ n.jsxs("div", { className: "space-y-1 text-xs text-gray-600", children: [
             /* @__PURE__ */ n.jsxs("div", { children: [
               "Position: (",
-              z(m, 1),
+              I(g, 1),
               ", ",
-              z(j, 1),
+              I(v, 1),
               ")"
             ] }),
             /* @__PURE__ */ n.jsxs("div", { children: [
               "Size: ",
-              z(k, 1),
+              I(j, 1),
               " × ",
-              z(u, 1)
-            ] }),
-            /* @__PURE__ */ n.jsxs("div", { children: [
-              "Area: ",
-              z(d, 1)
+              I(N, 1)
             ] })
           ] })
         ] });
@@ -2084,7 +2013,7 @@ function et({ selectedObject: t, onDelete: e, onClose: s }) {
       /* @__PURE__ */ n.jsxs(
         "button",
         {
-          onClick: r,
+          onClick: i,
           className: "flex items-center gap-1 px-2 py-1 text-xs text-red-600 hover:bg-red-50 rounded transition-colors",
           children: [
             /* @__PURE__ */ n.jsx("span", { children: "🗑️" }),
@@ -2106,18 +2035,18 @@ function et({ selectedObject: t, onDelete: e, onClose: s }) {
     ] })
   ] });
 }
-function tt() {
-  const [t, e] = Q(!1), s = se(null), r = me(), { toggleSetting: o, setFontScale: i, setGridScale: c, setSnapPrecision: l, setCoordinateSystem: h, resetToDefaults: m } = r;
-  te(() => {
-    function k(u) {
-      s.current && !s.current.contains(u.target) && e(!1);
+function rt() {
+  const [t, e] = Q(!1), s = ne(null), i = xe(), { toggleSetting: o, setFontScale: r, setGridScale: c, setSnapPrecision: d, setCoordinateSystem: x, resetToDefaults: g } = i;
+  se(() => {
+    function j(N) {
+      s.current && !s.current.contains(N.target) && e(!1);
     }
     if (t)
-      return document.addEventListener("mousedown", k), () => {
-        document.removeEventListener("mousedown", k);
+      return document.addEventListener("mousedown", j, !0), document.addEventListener("click", j, !0), () => {
+        document.removeEventListener("mousedown", j, !0), document.removeEventListener("click", j, !0);
       };
   }, [t]);
-  const j = [
+  const v = [
     {
       title: "Origin Lines",
       subtitle: "Enhancements for lines from (0,0)",
@@ -2213,38 +2142,38 @@ function tt() {
         /* @__PURE__ */ n.jsx(
           "button",
           {
-            onClick: m,
+            onClick: g,
             className: "text-xs text-blue-600 hover:text-blue-800 font-medium",
             children: "Reset All"
           }
         )
       ] }) }),
-      /* @__PURE__ */ n.jsx("div", { className: "p-4 space-y-5", children: j.map((k, u) => /* @__PURE__ */ n.jsxs("div", { children: [
-        /* @__PURE__ */ n.jsxs("div", { className: `${u > 0 ? "border-t border-gray-100 pt-4" : ""} mb-3`, children: [
-          /* @__PURE__ */ n.jsx("h4", { className: "text-xs font-semibold text-gray-700 uppercase tracking-wide", children: k.title }),
-          k.subtitle && /* @__PURE__ */ n.jsx("p", { className: "text-xs text-gray-500 mt-0.5", children: k.subtitle })
+      /* @__PURE__ */ n.jsx("div", { className: "p-4 space-y-5", children: v.map((j, N) => /* @__PURE__ */ n.jsxs("div", { children: [
+        /* @__PURE__ */ n.jsxs("div", { className: `${N > 0 ? "border-t border-gray-100 pt-4" : ""} mb-3`, children: [
+          /* @__PURE__ */ n.jsx("h4", { className: "text-xs font-semibold text-gray-700 uppercase tracking-wide", children: j.title }),
+          j.subtitle && /* @__PURE__ */ n.jsx("p", { className: "text-xs text-gray-500 mt-0.5", children: j.subtitle })
         ] }),
         /* @__PURE__ */ n.jsxs("div", { className: "space-y-2.5", children: [
-          k.settings.map((d) => /* @__PURE__ */ n.jsxs("label", { className: "flex items-start gap-3 cursor-pointer group", children: [
+          j.settings.map((l) => /* @__PURE__ */ n.jsxs("label", { className: "flex items-start gap-3 cursor-pointer group", children: [
             /* @__PURE__ */ n.jsx(
               "input",
               {
                 type: "checkbox",
-                checked: r[d.key],
-                onChange: () => o(d.key),
+                checked: i[l.key],
+                onChange: () => o(l.key),
                 className: "mt-0.5 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
               }
             ),
             /* @__PURE__ */ n.jsxs("div", { className: "flex-1 min-w-0", children: [
-              /* @__PURE__ */ n.jsx("div", { className: "text-sm font-medium text-gray-700 group-hover:text-gray-900", children: d.label }),
-              /* @__PURE__ */ n.jsx("div", { className: "text-xs text-gray-500 leading-relaxed", children: d.description })
+              /* @__PURE__ */ n.jsx("div", { className: "text-sm font-medium text-gray-700 group-hover:text-gray-900", children: l.label }),
+              /* @__PURE__ */ n.jsx("div", { className: "text-xs text-gray-500 leading-relaxed", children: l.description })
             ] })
-          ] }, d.key)),
-          k.title === "Display" && /* @__PURE__ */ n.jsxs("div", { className: "space-y-3", children: [
+          ] }, l.key)),
+          j.title === "Display" && /* @__PURE__ */ n.jsxs("div", { className: "space-y-3", children: [
             /* @__PURE__ */ n.jsxs("div", { className: "flex items-center justify-between", children: [
               /* @__PURE__ */ n.jsx("label", { className: "text-sm font-medium text-gray-700", children: "Font Size" }),
               /* @__PURE__ */ n.jsxs("span", { className: "text-xs text-gray-500 font-mono", children: [
-                Math.round(r.fontScale * 100),
+                Math.round(i.fontScale * 100),
                 "%"
               ] })
             ] }),
@@ -2257,8 +2186,8 @@ function tt() {
                   min: "0.8",
                   max: "2.0",
                   step: "0.1",
-                  value: r.fontScale,
-                  onChange: (d) => i(parseFloat(d.target.value)),
+                  value: i.fontScale,
+                  onChange: (l) => r(parseFloat(l.target.value)),
                   className: "flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
                 }
               ),
@@ -2269,7 +2198,7 @@ function tt() {
               /* @__PURE__ */ n.jsxs("div", { className: "flex items-center justify-between", children: [
                 /* @__PURE__ */ n.jsx("label", { className: "text-sm font-medium text-gray-700", children: "Grid Density" }),
                 /* @__PURE__ */ n.jsxs("span", { className: "text-xs text-gray-500 font-mono", children: [
-                  Math.round(r.gridScale * 100),
+                  Math.round(i.gridScale * 100),
                   "%"
                 ] })
               ] }),
@@ -2282,8 +2211,8 @@ function tt() {
                     min: "0.2",
                     max: "5.0",
                     step: "0.1",
-                    value: r.gridScale,
-                    onChange: (d) => c(parseFloat(d.target.value)),
+                    value: i.gridScale,
+                    onChange: (l) => c(parseFloat(l.target.value)),
                     className: "flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
                   }
                 ),
@@ -2297,23 +2226,23 @@ function tt() {
                 { value: "cartesian", label: "Cartesian Only", desc: "Standard x-y grid" },
                 { value: "polar", label: "Polar Only", desc: "Circular coordinate system" },
                 { value: "both", label: "Both Systems", desc: "Overlay polar on Cartesian" }
-              ].map((d) => /* @__PURE__ */ n.jsxs("label", { className: "flex items-start gap-3 cursor-pointer group", children: [
+              ].map((l) => /* @__PURE__ */ n.jsxs("label", { className: "flex items-start gap-3 cursor-pointer group", children: [
                 /* @__PURE__ */ n.jsx(
                   "input",
                   {
                     type: "radio",
                     name: "coordinateSystem",
-                    value: d.value,
-                    checked: r.coordinateSystem === d.value,
-                    onChange: (O) => h(O.target.value),
+                    value: l.value,
+                    checked: i.coordinateSystem === l.value,
+                    onChange: (p) => x(p.target.value),
                     className: "mt-0.5 w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                   }
                 ),
                 /* @__PURE__ */ n.jsxs("div", { className: "flex-1 min-w-0", children: [
-                  /* @__PURE__ */ n.jsx("div", { className: "text-sm font-medium text-gray-700 group-hover:text-gray-900", children: d.label }),
-                  /* @__PURE__ */ n.jsx("div", { className: "text-xs text-gray-500", children: d.desc })
+                  /* @__PURE__ */ n.jsx("div", { className: "text-sm font-medium text-gray-700 group-hover:text-gray-900", children: l.label }),
+                  /* @__PURE__ */ n.jsx("div", { className: "text-xs text-gray-500", children: l.desc })
                 ] })
-              ] }, d.value)) })
+              ] }, l.value)) })
             ] }),
             /* @__PURE__ */ n.jsxs("div", { className: "space-y-3 pt-4 border-t border-gray-100", children: [
               /* @__PURE__ */ n.jsx("label", { className: "text-sm font-medium text-gray-700", children: "Snap Precision" }),
@@ -2323,42 +2252,42 @@ function tt() {
                 { value: "half", label: "Half Units", desc: "Snap to 0.5, 1.0, 1.5, etc." },
                 { value: "quarter", label: "Quarter Units", desc: "Snap to 0.25, 0.5, 0.75, etc." },
                 { value: "tenth", label: "Tenth Units", desc: "Snap to 0.1, 0.2, 0.3, etc." }
-              ].map((d) => /* @__PURE__ */ n.jsxs("label", { className: "flex items-start gap-3 cursor-pointer group", children: [
+              ].map((l) => /* @__PURE__ */ n.jsxs("label", { className: "flex items-start gap-3 cursor-pointer group", children: [
                 /* @__PURE__ */ n.jsx(
                   "input",
                   {
                     type: "radio",
                     name: "snapPrecision",
-                    value: d.value,
-                    checked: r.snapPrecision === d.value,
-                    onChange: (O) => l(O.target.value),
+                    value: l.value,
+                    checked: i.snapPrecision === l.value,
+                    onChange: (p) => d(p.target.value),
                     className: "mt-0.5 w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                   }
                 ),
                 /* @__PURE__ */ n.jsxs("div", { className: "flex-1 min-w-0", children: [
-                  /* @__PURE__ */ n.jsx("div", { className: "text-sm font-medium text-gray-700 group-hover:text-gray-900", children: d.label }),
-                  /* @__PURE__ */ n.jsx("div", { className: "text-xs text-gray-500", children: d.desc })
+                  /* @__PURE__ */ n.jsx("div", { className: "text-sm font-medium text-gray-700 group-hover:text-gray-900", children: l.label }),
+                  /* @__PURE__ */ n.jsx("div", { className: "text-xs text-gray-500", children: l.desc })
                 ] })
-              ] }, d.value)) }),
+              ] }, l.value)) }),
               /* @__PURE__ */ n.jsx("div", { className: "text-xs text-gray-500 leading-relaxed", children: "Controls where objects can be placed when snap-to-grid is enabled" })
             ] })
           ] })
         ] })
-      ] }, k.title)) }),
+      ] }, j.title)) }),
       /* @__PURE__ */ n.jsx("div", { className: "sticky bottom-0 bg-gray-50 border-t border-gray-100 px-4 py-2 rounded-b-lg", children: /* @__PURE__ */ n.jsx("p", { className: "text-xs text-gray-500 text-center", children: "Toggle features to explore different mathematical concepts" }) })
     ] })
   ] });
 }
-const Ee = (t, e) => {
-  const s = e * Math.PI / 180, r = Math.cos(s), o = Math.sin(s);
+const Oe = (t, e) => {
+  const s = e * Math.PI / 180, i = Math.cos(s), o = Math.sin(s);
   return {
-    x: t.x * r - t.y * o,
-    y: t.x * o + t.y * r
+    x: t.x * i - t.y * o,
+    y: t.x * o + t.y * i
   };
-}, st = (t, e) => ({
+}, it = (t, e) => ({
   x: t.x * e,
   y: t.y * e
-}), ke = (t, e) => {
+}), Ae = (t, e) => {
   switch (e) {
     case "x":
       return { x: t.x, y: -t.y };
@@ -2369,90 +2298,90 @@ const Ee = (t, e) => {
     default:
       return t;
   }
-}, nt = fe((t, e) => ({
+}, ot = je((t, e) => ({
   isTransforming: !1,
   activeTransform: null,
   selectedObject: null,
-  rotateObject: (s, r, o) => {
+  rotateObject: (s, i, o) => {
     if (!o) {
       console.log(`No canvas API provided for rotation of ${s}`);
       return;
     }
-    const i = o.getObject(s);
-    if (i) {
-      if (i.type === "ray") {
-        if (Math.abs(i.properties.startPoint.x) < 1e-3 && Math.abs(i.properties.startPoint.y) < 1e-3) {
-          const l = Ee(i.properties.endPoint, r);
+    const r = o.getObject(s);
+    if (r) {
+      if (r.type === "ray") {
+        if (Math.abs(r.properties.startPoint.x) < 1e-3 && Math.abs(r.properties.startPoint.y) < 1e-3) {
+          const d = Oe(r.properties.endPoint, i);
           o.updateObject(s, {
             properties: {
-              ...i.properties,
-              endPoint: l
+              ...r.properties,
+              endPoint: d
             }
           });
         }
-      } else if (i.type === "rectangle") {
-        const c = i.properties.x + i.properties.width / 2, l = i.properties.y + i.properties.height / 2, h = {
-          x: i.properties.x - c,
-          y: i.properties.y - l
-        }, m = Ee(h, r);
+      } else if (r.type === "rectangle") {
+        const c = r.properties.x + r.properties.width / 2, d = r.properties.y + r.properties.height / 2, x = {
+          x: r.properties.x - c,
+          y: r.properties.y - d
+        }, g = Oe(x, i);
         o.updateObject(s, {
           properties: {
-            ...i.properties,
-            x: m.x + c,
-            y: m.y + l
+            ...r.properties,
+            x: g.x + c,
+            y: g.y + d
           }
         });
       }
     }
   },
-  scaleObject: (s, r, o) => {
+  scaleObject: (s, i, o) => {
     if (!o) {
       console.log(`No canvas API provided for scaling of ${s}`);
       return;
     }
-    const i = o.getObject(s);
-    if (i)
-      if (i.type === "ray") {
-        if (Math.abs(i.properties.startPoint.x) < 1e-3 && Math.abs(i.properties.startPoint.y) < 1e-3) {
-          const l = st(i.properties.endPoint, r);
+    const r = o.getObject(s);
+    if (r)
+      if (r.type === "ray") {
+        if (Math.abs(r.properties.startPoint.x) < 1e-3 && Math.abs(r.properties.startPoint.y) < 1e-3) {
+          const d = it(r.properties.endPoint, i);
           o.updateObject(s, {
             properties: {
-              ...i.properties,
-              endPoint: l
+              ...r.properties,
+              endPoint: d
             }
           });
         }
-      } else i.type === "rectangle" && o.updateObject(s, {
+      } else r.type === "rectangle" && o.updateObject(s, {
         properties: {
-          ...i.properties,
-          width: i.properties.width * r,
-          height: i.properties.height * r,
-          area: i.properties.width * r * i.properties.height * r
+          ...r.properties,
+          width: r.properties.width * i,
+          height: r.properties.height * i,
+          area: r.properties.width * i * r.properties.height * i
         }
       });
   },
-  reflectObject: (s, r, o) => {
+  reflectObject: (s, i, o) => {
     if (!o) {
       console.log(`No canvas API provided for reflection of ${s}`);
       return;
     }
-    const i = o.getObject(s);
-    if (i) {
-      if (i.type === "ray") {
-        if (Math.abs(i.properties.startPoint.x) < 1e-3 && Math.abs(i.properties.startPoint.y) < 1e-3) {
-          const l = ke(i.properties.endPoint, r);
+    const r = o.getObject(s);
+    if (r) {
+      if (r.type === "ray") {
+        if (Math.abs(r.properties.startPoint.x) < 1e-3 && Math.abs(r.properties.startPoint.y) < 1e-3) {
+          const d = Ae(r.properties.endPoint, i);
           o.updateObject(s, {
             properties: {
-              ...i.properties,
-              endPoint: l
+              ...r.properties,
+              endPoint: d
             }
           });
         }
-      } else if (i.type === "rectangle") {
-        const c = ke({ x: i.properties.x, y: i.properties.y }, r);
+      } else if (r.type === "rectangle") {
+        const c = Ae({ x: r.properties.x, y: r.properties.y }, i);
         o.updateObject(s, {
           properties: {
-            ...i.properties,
+            ...r.properties,
             x: c.x,
             y: c.y
           }
@@ -2460,14 +2389,14 @@ const Ee = (t, e) => {
       }
     }
   },
-  rotate90: (s, r) => {
-    e().rotateObject(s, 90, r);
+  rotate90: (s, i) => {
+    e().rotateObject(s, 90, i);
   },
-  rotate180: (s, r) => {
-    e().rotateObject(s, 180, r);
+  rotate180: (s, i) => {
+    e().rotateObject(s, 180, i);
   },
-  rotate270: (s, r) => {
-    e().rotateObject(s, 270, r);
+  rotate270: (s, i) => {
+    e().rotateObject(s, 270, i);
   },
   setActiveTransform: (s) => {
     t({
@@ -2486,253 +2415,255 @@ const Ee = (t, e) => {
     });
   }
 }));
-function rt(t, e, s) {
-  const r = s.x - e.x, o = s.y - e.y, i = Math.sqrt(r * r + o * o);
-  if (i === 0) return Math.sqrt(Math.pow(t.x - e.x, 2) + Math.pow(t.y - e.y, 2));
-  const c = Math.max(0, Math.min(1, ((t.x - e.x) * r + (t.y - e.y) * o) / (i * i))), l = {
-    x: e.x + c * r,
+function at(t, e, s) {
+  const i = s.x - e.x, o = s.y - e.y, r = Math.sqrt(i * i + o * o);
+  if (r === 0) return Math.sqrt(Math.pow(t.x - e.x, 2) + Math.pow(t.y - e.y, 2));
+  const c = Math.max(0, Math.min(1, ((t.x - e.x) * i + (t.y - e.y) * o) / (r * r))), d = {
+    x: e.x + c * i,
     y: e.y + c * o
   };
-  return Math.sqrt(Math.pow(t.x - l.x, 2) + Math.pow(t.y - l.y, 2));
+  return Math.sqrt(Math.pow(t.x - d.x, 2) + Math.pow(t.y - d.y, 2));
 }
-function it({
+function ct({
   width: t = 800,
   height: e = 600,
   className: s = "",
-  onObjectInteraction: r
+  onObjectInteraction: i
 }) {
-  const o = se(null), {
-    viewport: i,
+  const o = ne(null), {
+    viewport: r,
     setViewport: c,
-    objects: l,
-    selectedObjects: h,
-    snapToGrid: m,
-    gridDensity: j,
-    canvasSize: k,
-    setCanvasSize: u,
-    removeObject: d,
-    clearSelection: O,
-    selectObject: M,
+    objects: d,
+    selectedObjects: x,
+    snapToGrid: g,
+    gridDensity: v,
+    canvasSize: j,
+    setCanvasSize: N,
+    removeObject: l,
+    clearSelection: p,
+    selectObject: P,
     screenToWorld: a,
-    worldToScreen: p
-  } = V(), y = Xe(), { activeTool: f, setActiveTool: v, eventBus: C } = pe(), { rotate90: $, rotate180: E, rotate270: P, scaleObject: S, setSelectedObject: _ } = nt();
-  te(() => {
-    u({ width: t, height: e });
-  }, [t, e, u]);
-  const G = se({
+    worldToScreen: h,
+    getObject: y,
+    updateObject: m
+  } = ee(), b = Ze(), { activeTool: M, setActiveTool: R, eventBus: S } = fe(), { rotate90: W, rotate180: E, rotate270: k, scaleObject: B, setSelectedObject: X } = ot();
+  se(() => {
+    N({ width: t, height: e });
+  }, [t, e, N]);
+  const q = ne({
     isPanning: !1,
     startPoint: { x: 0, y: 0 },
     startCenter: { x: 0, y: 0 }
-  }), R = se({
+  }), A = ne({
     isDown: !1,
     startPoint: { x: 0, y: 0 },
     hasMoved: !1,
     dragThreshold: 5,
     // pixels
     pendingSelection: null
-  }), [X, W] = Q(null), [B, Z] = Q(!1), ne = K((w) => {
-    const I = { x: w.x, y: w.y };
-    R.current = {
+  }), [U, re] = Q(null), [ce, ie] = Q(!1), oe = K((C) => {
+    const F = { x: C.x, y: C.y };
+    A.current = {
       isDown: !0,
-      startPoint: I,
+      startPoint: F,
       hasMoved: !1,
       dragThreshold: 5,
       pendingSelection: null
     };
-    const T = 22;
-    a(I);
-    let L = !1;
-    for (const F of l)
-      if (F.type === "ray") {
-        const H = p(F.properties.startPoint), ee = p(F.properties.endPoint), oe = Math.sqrt(
-          Math.pow(I.x - H.x, 2) + Math.pow(I.y - H.y, 2)
-        ), he = Math.sqrt(
-          Math.pow(I.x - ee.x, 2) + Math.pow(I.y - ee.y, 2)
+    const $ = 22;
+    a(F);
+    let Y = !1;
+    for (const D of d)
+      if (D.type === "ray") {
+        const Z = h(D.properties.startPoint), te = h(D.properties.endPoint), ae = Math.sqrt(
+          Math.pow(F.x - Z.x, 2) + Math.pow(F.y - Z.y, 2)
+        ), pe = Math.sqrt(
+          Math.pow(F.x - te.x, 2) + Math.pow(F.y - te.y, 2)
         );
-        if (oe <= T || he <= T) {
-          L = !0, R.current.pendingSelection = { objectId: F.id, type: "ray" }, M(F.id);
+        if (ae <= $ || pe <= $) {
+          Y = !0, A.current.pendingSelection = { objectId: D.id, type: "ray" }, P(D.id);
           break;
         }
-        if (rt(I, H, ee) <= 8) {
-          L = !0, R.current.pendingSelection = { objectId: F.id, type: "ray" }, M(F.id);
+        if (at(F, Z, te) <= 8) {
+          Y = !0, A.current.pendingSelection = { objectId: D.id, type: "ray" }, P(D.id);
           break;
         }
-      } else if (F.type === "rectangle") {
-        const H = p({
-          x: F.properties.x,
-          y: F.properties.y + F.properties.height
-        }), ee = F.properties.width * i.zoom, oe = F.properties.height * i.zoom;
-        if (I.x >= H.x && I.x <= H.x + ee && I.y >= H.y && I.y <= H.y + oe) {
-          L = !0, R.current.pendingSelection = { objectId: F.id, type: "rectangle" }, M(F.id);
+      } else if (D.type === "rectangle") {
+        const Z = h({
+          x: D.properties.x,
+          y: D.properties.y + D.properties.height
+        }), te = D.properties.width * r.zoom, ae = D.properties.height * r.zoom;
+        if (F.x >= Z.x && F.x <= Z.x + te && F.y >= Z.y && F.y <= Z.y + ae) {
+          Y = !0, A.current.pendingSelection = { objectId: D.id, type: "rectangle" }, P(D.id);
           break;
         }
         if ([
-          { x: H.x, y: H.y },
+          { x: Z.x, y: Z.y },
           // top-left
-          { x: H.x + ee, y: H.y },
+          { x: Z.x + te, y: Z.y },
           // top-right  
-          { x: H.x, y: H.y + oe },
+          { x: Z.x, y: Z.y + ae },
           // bottom-left
-          { x: H.x + ee, y: H.y + oe }
+          { x: Z.x + te, y: Z.y + ae }
           // bottom-right
-        ].some((ge) => Math.sqrt(
-          Math.pow(I.x - ge.x, 2) + Math.pow(I.y - ge.y, 2)
-        ) <= T)) {
-          L = !0, R.current.pendingSelection = { objectId: F.id, type: "rectangle" }, M(F.id);
+        ].some((be) => Math.sqrt(
+          Math.pow(F.x - be.x, 2) + Math.pow(F.y - be.y, 2)
+        ) <= $)) {
+          Y = !0, A.current.pendingSelection = { objectId: D.id, type: "rectangle" }, P(D.id);
           break;
         }
       }
-    (!L && !f || !L && f) && O(), (f || L) && y.handlePointerDown(w), !L && !f && (w.type === "touch" || w.type === "mouse") && (G.current = {
+    (!Y && !M || !Y && M) && p(), (M || Y) && b.handlePointerDown(C), !Y && !M && (C.type === "touch" || C.type === "mouse") && (q.current = {
       isPanning: !0,
-      startPoint: { x: w.x, y: w.y },
-      startCenter: { ...i.center }
+      startPoint: { x: C.x, y: C.y },
+      startCenter: { ...r.center }
     });
-  }, [i.center, y, f, v, l, a, p, i.zoom]), re = K((w) => {
-    const I = { x: w.x, y: w.y };
-    if (w.type === "mouse" && f ? W(I) : f || W(null), R.current.isDown && !R.current.hasMoved) {
-      const T = Math.abs(w.x - R.current.startPoint.x), L = Math.abs(w.y - R.current.startPoint.y);
-      Math.sqrt(T * T + L * L) >= R.current.dragThreshold && (R.current.hasMoved = !0, R.current.pendingSelection = null);
+  }, [r.center, b, M, R, d, a, h, r.zoom]), u = K((C) => {
+    const F = { x: C.x, y: C.y };
+    if (C.type === "mouse" && M ? re(F) : M || re(null), A.current.isDown && !A.current.hasMoved) {
+      const $ = Math.abs(C.x - A.current.startPoint.x), Y = Math.abs(C.y - A.current.startPoint.y);
+      Math.sqrt($ * $ + Y * Y) >= A.current.dragThreshold && (A.current.hasMoved = !0, A.current.pendingSelection = null);
     }
-    if (y.handlePointerMove(w), !f && G.current.isPanning) {
-      const T = (w.x - G.current.startPoint.x) / i.zoom, L = (w.y - G.current.startPoint.y) / i.zoom;
+    if (b.handlePointerMove(C), !M && q.current.isPanning) {
+      const $ = (C.x - q.current.startPoint.x) / r.zoom, Y = (C.y - q.current.startPoint.y) / r.zoom;
       c({
         center: {
-          x: G.current.startCenter.x - T,
-          y: G.current.startCenter.y + L
+          x: q.current.startCenter.x - $,
+          y: q.current.startCenter.y + Y
           // Flip Y for mathematical coordinates
         }
       });
     }
-  }, [i.zoom, c, y, f, W]), ie = K((w) => {
-    R.current = {
+  }, [r.zoom, c, b, M, re]), O = K((C) => {
+    A.current = {
       isDown: !1,
       startPoint: { x: 0, y: 0 },
       hasMoved: !1,
       dragThreshold: 5,
       pendingSelection: null
-    }, y.handlePointerUp(w), G.current.isPanning = !1;
-  }, [y, v]), x = K((w) => {
-    switch (w.type) {
+    }, b.handlePointerUp(C), q.current.isPanning = !1;
+  }, [b, R]), _ = K((C) => {
+    switch (C.type) {
       case "pinch":
-        if (w.scale) {
-          const I = Math.max(0.1, Math.min(10, i.zoom * w.scale));
-          c({ zoom: I });
+        if (C.scale) {
+          const F = Math.max(0.1, Math.min(10, r.zoom * C.scale));
+          c({ zoom: F });
         }
         break;
     }
-  }, [i.zoom, c]), { capabilities: A, touchTargetSize: g } = qe(
+  }, [r.zoom, c]), { capabilities: f, touchTargetSize: w } = Ke(
     o,
     {
-      onPointerDown: ne,
-      onPointerMove: re,
-      onPointerUp: ie,
-      onGesture: x
+      onPointerDown: oe,
+      onPointerMove: u,
+      onPointerUp: O,
+      onGesture: _
     },
     {
       enableGestures: !0,
       preventScrolling: !0
     }
   );
-  te(() => {
-    const w = (T) => {
-      switch (T.key) {
+  se(() => {
+    const C = ($) => {
+      switch ($.key) {
         case "Escape":
-          f && (C.emit("tool:cancel", { toolId: f }), v(null));
+          M && (S.emit("tool:cancel", { toolId: M }), R(null));
           break;
         case "Delete":
         case "Backspace":
-          h.length > 0 && (console.log("Deleting objects:", h), h.forEach((L) => {
-            C.emit("object:removed", { objectId: L }), d(L);
-          }), O(), v(null));
+          x.length > 0 && (console.log("Deleting objects:", x), x.forEach((Y) => {
+            S.emit("object:removed", { objectId: Y }), l(Y);
+          }), p(), R(null));
           break;
         case "r":
         case "R":
-          if (h.length > 0 && !T.ctrlKey) {
-            T.preventDefault();
-            const L = { getObject, updateObject };
-            h.forEach((F) => {
-              T.shiftKey ? P(F, L) : $(F, L);
+          if (x.length > 0 && !$.ctrlKey) {
+            $.preventDefault();
+            const Y = { getObject: y, updateObject: m };
+            x.forEach((D) => {
+              $.shiftKey ? k(D, Y) : W(D, Y);
             });
           }
           break;
         case "f":
         case "F":
-          if (h.length > 0 && !T.ctrlKey) {
-            T.preventDefault();
-            const L = { getObject, updateObject };
-            h.forEach((F) => {
-              E(F, L);
+          if (x.length > 0 && !$.ctrlKey) {
+            $.preventDefault();
+            const Y = { getObject: y, updateObject: m };
+            x.forEach((D) => {
+              E(D, Y);
             });
           }
           break;
         case "=":
         case "+":
-          if (h.length > 0 && !T.ctrlKey) {
-            T.preventDefault();
-            const L = { getObject, updateObject };
-            h.forEach((F) => {
-              S(F, 2, L);
+          if (x.length > 0 && !$.ctrlKey) {
+            $.preventDefault();
+            const Y = { getObject: y, updateObject: m };
+            x.forEach((D) => {
+              B(D, 2, Y);
             });
           }
           break;
         case "-":
         case "_":
-          if (h.length > 0 && !T.ctrlKey) {
-            T.preventDefault();
-            const L = { getObject, updateObject };
-            h.forEach((F) => {
-              S(F, 0.5, L);
+          if (x.length > 0 && !$.ctrlKey) {
+            $.preventDefault();
+            const Y = { getObject: y, updateObject: m };
+            x.forEach((D) => {
+              B(D, 0.5, Y);
             });
           }
           break;
       }
-    }, I = (T) => {
-      console.log("Object created, returning to pan mode:", T), O(), v(null);
+    }, F = ($) => {
+      console.log("Object created, returning to pan mode:", $), p(), R(null);
     };
-    return document.addEventListener("keydown", w), C.on("tool:creation-complete", I), () => {
-      document.removeEventListener("keydown", w), C.off("tool:creation-complete", I);
+    return document.addEventListener("keydown", C), S.on("tool:creation-complete", F), () => {
+      document.removeEventListener("keydown", C), S.off("tool:creation-complete", F);
     };
-  }, [f, v, C, h, d, O]), te(() => {
-    h.length === 1 ? Z(!0) : Z(!1);
-  }, [h]);
-  const b = K(() => {
-    Z(!1);
-  }, []), N = K(() => {
-    h.length > 0 && (h.forEach((w) => {
-      C.emit("object:removed", { objectId: w }), d(w);
-    }), O());
-  }, [h, d, O, C]), D = K(() => {
-    const w = Math.min(1e3, i.zoom * 1.4);
-    c({ zoom: w });
-  }, [i.zoom, c]), q = K(() => {
-    const w = Math.max(0.01, i.zoom / 1.4);
-    c({ zoom: w });
-  }, [i.zoom, c]), U = K(() => {
+  }, [M, R, S, x, l, p]), se(() => {
+    x.length === 1 ? ie(!0) : ie(!1);
+  }, [x]);
+  const T = K(() => {
+    ie(!1);
+  }, []), L = K(() => {
+    x.length > 0 && (x.forEach((C) => {
+      S.emit("object:removed", { objectId: C }), l(C);
+    }), p());
+  }, [x, l, p, S]), G = K(() => {
+    const C = Math.min(1e3, r.zoom * 1.4);
+    c({ zoom: C });
+  }, [r.zoom, c]), z = K(() => {
+    const C = Math.max(0.01, r.zoom / 1.4);
+    c({ zoom: C });
+  }, [r.zoom, c]), H = K(() => {
     c({ zoom: 20, center: { x: 0, y: 0 } });
-  }, [c]), Y = K(() => {
+  }, [c]), V = K(() => {
     c({ center: { x: 0, y: 0 } });
   }, [c]);
-  return te(() => {
-    const w = (T) => {
-      T.preventDefault();
-      const F = V.getState().viewport;
-      if (T.ctrlKey || T.metaKey) {
-        const H = T.deltaY > 0 ? 0.9 : 1.1, ee = Math.max(0.01, Math.min(1e3, F.zoom * H));
-        c({ zoom: ee });
+  return se(() => {
+    const C = ($) => {
+      $.preventDefault();
+      const D = ee.getState().viewport;
+      if ($.ctrlKey || $.metaKey) {
+        const Z = $.deltaY > 0 ? 0.9 : 1.1, te = Math.max(0.01, Math.min(1e3, D.zoom * Z));
+        c({ zoom: te });
       } else {
-        const ee = T.shiftKey ? T.deltaY : 0, oe = T.shiftKey ? 0 : T.deltaY, he = ee * 1 / F.zoom, ye = oe * 1 / F.zoom;
+        const te = $.shiftKey ? $.deltaY : 0, ae = $.shiftKey ? 0 : $.deltaY, pe = te * 1 / D.zoom, me = ae * 1 / D.zoom;
         c({
           center: {
-            x: F.center.x + he,
-            y: F.center.y - ye
+            x: D.center.x + pe,
+            y: D.center.y - me
             // subtract because scroll down should move view down
           }
         });
       }
-    }, I = o.current;
-    if (I)
-      return I.addEventListener("wheel", w, { passive: !1 }), () => {
-        I.removeEventListener("wheel", w);
+    }, F = o.current;
+    if (F)
+      return F.addEventListener("wheel", C, { passive: !1 }), () => {
+        F.removeEventListener("wheel", C);
       };
   }, [c]), /* @__PURE__ */ n.jsxs("div", { className: `relative ${s}`, style: { width: t, height: e }, children: [
     /* @__PURE__ */ n.jsxs(
@@ -2745,30 +2676,30 @@ function it({
         style: { touchAction: "none" },
         children: [
           /* @__PURE__ */ n.jsx(
-            Ke,
+            Ve,
             {
-              viewport: i,
+              viewport: r,
               canvasSize: { width: t, height: e },
-              worldToScreen: p,
-              objects: l
+              worldToScreen: h,
+              objects: d
             }
           ),
           /* @__PURE__ */ n.jsx(
-            Qe,
+            tt,
             {
-              objects: l,
-              viewport: i,
-              touchTargetSize: g,
-              worldToScreen: p,
-              selectedObjects: h,
+              objects: d,
+              viewport: r,
+              touchTargetSize: w,
+              worldToScreen: h,
+              selectedObjects: x,
               canvasSize: { width: t, height: e }
             }
           ),
-          f && X && !R.current.isDown && /* @__PURE__ */ n.jsx(
+          M && U && !A.current.isDown && /* @__PURE__ */ n.jsx(
             "circle",
             {
-              cx: X.x,
-              cy: X.y,
+              cx: U.x,
+              cy: U.y,
               r: "4",
               fill: "rgba(37, 99, 235, 0.4)",
               stroke: "#2563eb",
@@ -2781,36 +2712,36 @@ function it({
       }
     ),
     /* @__PURE__ */ n.jsx(
-      Ve,
+      st,
       {
-        capabilities: A,
-        viewport: i,
-        activeTool: f,
-        selectedObjectsCount: h.length
+        capabilities: f,
+        viewport: r,
+        activeTool: M,
+        selectedObjectsCount: x.length
       }
     ),
     /* @__PURE__ */ n.jsx(
-      Je,
-      {
-        viewport: i,
-        onZoomIn: D,
-        onZoomOut: q,
-        onZoomReset: U,
-        onCenterOnly: Y
-      }
-    ),
-    B && h.length === 1 && /* @__PURE__ */ n.jsx(
       et,
       {
-        selectedObject: l.find((w) => w.id === h[0]) || null,
-        onDelete: N,
-        onClose: b
+        viewport: r,
+        onZoomIn: G,
+        onZoomOut: z,
+        onZoomReset: H,
+        onCenterOnly: V
       }
     ),
-    /* @__PURE__ */ n.jsx(tt, {})
+    ce && x.length === 1 && /* @__PURE__ */ n.jsx(
+      nt,
+      {
+        selectedObject: d.find((C) => C.id === x[0]) || null,
+        onDelete: L,
+        onClose: T
+      }
+    ),
+    /* @__PURE__ */ n.jsx(rt, {})
   ] });
 }
-const Oe = [
+const Te = [
   {
     id: "ray-tool",
     name: "Line Builder",
@@ -2824,68 +2755,68 @@ const Oe = [
     description: "Create rectangles to explore area and multiplication"
   }
 ];
-function ot({ className: t = "" }) {
-  const { activeTool: e, setActiveTool: s } = pe(), [r, o] = Q(!1), i = se(null), c = (j) => {
-    s(j), o(!1);
-  }, l = () => {
+function lt({ className: t = "" }) {
+  const { activeTool: e, setActiveTool: s } = fe(), [i, o] = Q(!1), r = ne(null), c = (v) => {
+    s(v), o(!1);
+  }, d = () => {
     s(null), o(!1);
-  }, h = () => {
-    o(!r);
-  }, m = Oe.find((j) => j.id === e);
-  return te(() => {
-    const j = (k) => {
-      i.current && !i.current.contains(k.target) && o(!1);
+  }, x = () => {
+    o(!i);
+  }, g = Te.find((v) => v.id === e);
+  return se(() => {
+    const v = (j) => {
+      r.current && !r.current.contains(j.target) && o(!1);
     };
-    return r && document.addEventListener("mousedown", j), () => {
-      document.removeEventListener("mousedown", j);
+    return i && document.addEventListener("mousedown", v), () => {
+      document.removeEventListener("mousedown", v);
     };
-  }, [r]), /* @__PURE__ */ n.jsxs("div", { className: `flex items-center gap-2 p-2 bg-white border-b border-gray-200 ${t}`, children: [
+  }, [i]), /* @__PURE__ */ n.jsxs("div", { className: `flex items-center gap-2 p-2 bg-white border-b border-gray-200 ${t}`, children: [
     /* @__PURE__ */ n.jsxs("div", { className: "flex items-center gap-2 mr-4", children: [
       /* @__PURE__ */ n.jsx("div", { className: "text-2xl", children: "🟦" }),
       /* @__PURE__ */ n.jsx("h1", { className: "text-lg font-semibold text-gray-800", children: "Grix" })
     ] }),
-    /* @__PURE__ */ n.jsxs("div", { className: "relative", ref: i, children: [
+    /* @__PURE__ */ n.jsxs("div", { className: "relative", ref: r, children: [
       /* @__PURE__ */ n.jsxs(
         "button",
         {
-          onClick: h,
+          onClick: x,
           className: `
             flex items-center gap-2 px-4 py-2 rounded-lg border transition-all
             ${e ? "bg-blue-100 border-blue-300 text-blue-700" : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"}
           `,
           children: [
             /* @__PURE__ */ n.jsx("span", { className: "text-lg", children: "🏗️" }),
-            /* @__PURE__ */ n.jsx("span", { className: "text-sm font-medium", children: m ? m.name : "Build" }),
-            /* @__PURE__ */ n.jsx("span", { className: `text-xs transition-transform ${r ? "rotate-180" : ""}`, children: "▼" })
+            /* @__PURE__ */ n.jsx("span", { className: "text-sm font-medium", children: g ? g.name : "Build" }),
+            /* @__PURE__ */ n.jsx("span", { className: `text-xs transition-transform ${i ? "rotate-180" : ""}`, children: "▼" })
           ]
         }
       ),
-      r && /* @__PURE__ */ n.jsxs("div", { className: "absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-48", children: [
-        Oe.map((j) => /* @__PURE__ */ n.jsxs(
+      i && /* @__PURE__ */ n.jsxs("div", { className: "absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-48", children: [
+        Te.map((v) => /* @__PURE__ */ n.jsxs(
           "button",
           {
-            onClick: () => c(j.id),
+            onClick: () => c(v.id),
             className: `
                   w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg transition-colors
-                  ${e === j.id ? "bg-blue-50 text-blue-700" : "text-gray-700"}
+                  ${e === v.id ? "bg-blue-50 text-blue-700" : "text-gray-700"}
                 `,
-            title: j.description,
+            title: v.description,
             children: [
-              /* @__PURE__ */ n.jsx("span", { className: "text-lg", children: j.icon }),
+              /* @__PURE__ */ n.jsx("span", { className: "text-lg", children: v.icon }),
               /* @__PURE__ */ n.jsxs("div", { children: [
-                /* @__PURE__ */ n.jsx("div", { className: "text-sm font-medium", children: j.name }),
-                /* @__PURE__ */ n.jsx("div", { className: "text-xs text-gray-500", children: j.description })
+                /* @__PURE__ */ n.jsx("div", { className: "text-sm font-medium", children: v.name }),
+                /* @__PURE__ */ n.jsx("div", { className: "text-xs text-gray-500", children: v.description })
               ] })
             ]
           },
-          j.id
+          v.id
         )),
         e && /* @__PURE__ */ n.jsxs(n.Fragment, { children: [
           /* @__PURE__ */ n.jsx("div", { className: "border-t border-gray-100" }),
           /* @__PURE__ */ n.jsxs(
             "button",
             {
-              onClick: l,
+              onClick: d,
               className: "w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-50 rounded-b-lg transition-colors text-gray-600",
               children: [
                 /* @__PURE__ */ n.jsx("span", { className: "text-lg", children: "✕" }),
@@ -2898,14 +2829,14 @@ function ot({ className: t = "" }) {
     ] }),
     /* @__PURE__ */ n.jsx("div", { className: "ml-auto flex items-center gap-4 text-sm text-gray-500", children: e ? /* @__PURE__ */ n.jsxs("span", { className: "flex items-center gap-1", children: [
       /* @__PURE__ */ n.jsx("div", { className: "w-2 h-2 bg-green-400 rounded-full" }),
-      (m == null ? void 0 : m.name) || "Active Tool"
+      (g == null ? void 0 : g.name) || "Active Tool"
     ] }) : /* @__PURE__ */ n.jsxs("span", { className: "flex items-center gap-1", children: [
       /* @__PURE__ */ n.jsx("div", { className: "w-2 h-2 bg-gray-300 rounded-full" }),
       "Click Build to start creating"
     ] }) })
   ] });
 }
-class Ce extends xe.Component {
+class Re extends ye.Component {
   constructor(e) {
     super(e), this.state = { hasError: !1 };
   }
@@ -2924,8 +2855,8 @@ class Ce extends xe.Component {
   render() {
     var e, s;
     if (this.state.hasError) {
-      const r = this.props.fallback;
-      return r ? /* @__PURE__ */ n.jsx(r, { error: this.state.error }) : /* @__PURE__ */ n.jsx("div", { className: "flex items-center justify-center h-full bg-red-50 text-red-700 p-8", children: /* @__PURE__ */ n.jsxs("div", { className: "text-center", children: [
+      const i = this.props.fallback;
+      return i ? /* @__PURE__ */ n.jsx(i, { error: this.state.error }) : /* @__PURE__ */ n.jsx("div", { className: "flex items-center justify-center h-full bg-red-50 text-red-700 p-8", children: /* @__PURE__ */ n.jsxs("div", { className: "text-center", children: [
         /* @__PURE__ */ n.jsx("h2", { className: "text-xl font-semibold mb-4", children: "Something went wrong with the Canvas" }),
         /* @__PURE__ */ n.jsxs("details", { className: "text-sm", children: [
           /* @__PURE__ */ n.jsx("summary", { className: "cursor-pointer mb-2", children: "Error Details" }),
@@ -2947,7 +2878,7 @@ class Ce extends xe.Component {
     return this.props.children;
   }
 }
-class at {
+class dt {
   constructor() {
     J(this, "id", "ray-tool");
     J(this, "name", "Line Builder");
@@ -2987,101 +2918,106 @@ class at {
   snapPoint(e) {
     const s = this.context.state.getState();
     if (s.snapToGrid) {
-      const r = s.viewport;
-      let o;
-      return r.zoom >= 50 ? o = 0.1 : r.zoom >= 20 ? o = 0.25 : r.zoom >= 10 ? o = 0.5 : o = s.gridDensity === "fine" ? 1 : 10, this.context.math.snapToGrid(e, o);
+      if (Math.sqrt(e.x * e.x + e.y * e.y) <= 0.75)
+        return { x: 0, y: 0 };
+      const r = xe.getState(), c = ve(
+        s.viewport,
+        r.gridScale,
+        r.snapPrecision
+      );
+      return this.context.math.snapToGrid(e, c);
     }
     return e;
   }
   findNearestHandle(e, s = 20) {
     this.context.canvas.screenToWorld(e);
-    const r = this.context.canvas.getAllObjects();
-    for (const o of r)
+    const i = this.context.canvas.getAllObjects();
+    for (const o of i)
       if (o.type === "ray") {
-        const i = o, c = this.context.canvas.worldToScreen(i.properties.startPoint), l = this.context.canvas.worldToScreen(i.properties.endPoint), h = this.context.math.distance(e, c), m = this.context.math.distance(e, l);
-        if (h <= s)
-          return { rayId: i.id, handle: "start" };
-        if (m <= s)
-          return { rayId: i.id, handle: "end" };
-        const j = 8, k = l.x - c.x, u = l.y - c.y, d = Math.sqrt(k * k + u * u);
-        if (d > 0) {
-          const O = Math.max(0, Math.min(1, ((e.x - c.x) * k + (e.y - c.y) * u) / (d * d))), M = {
-            x: c.x + O * k,
-            y: c.y + O * u
+        const r = o, c = this.context.canvas.worldToScreen(r.properties.startPoint), d = this.context.canvas.worldToScreen(r.properties.endPoint), x = this.context.math.distance(e, c), g = this.context.math.distance(e, d);
+        if (x <= s)
+          return { rayId: r.id, handle: "start" };
+        if (g <= s)
+          return { rayId: r.id, handle: "end" };
+        const v = 8, j = d.x - c.x, N = d.y - c.y, l = Math.sqrt(j * j + N * N);
+        if (l > 0) {
+          const p = Math.max(0, Math.min(1, ((e.x - c.x) * j + (e.y - c.y) * N) / (l * l))), P = {
+            x: c.x + p * j,
+            y: c.y + p * N
           };
-          if (this.context.math.distance(e, M) <= j)
-            return { rayId: i.id, handle: "move" };
+          if (this.context.math.distance(e, P) <= v)
+            return { rayId: r.id, handle: "move" };
         }
       }
     return null;
   }
   onPointerDown(e) {
-    const s = { x: e.x, y: e.y }, r = this.snapPoint(this.context.canvas.screenToWorld(s)), o = this.findNearestHandle(s);
+    const s = { x: e.x, y: e.y }, i = this.snapPoint(this.context.canvas.screenToWorld(s)), o = this.findNearestHandle(s);
     if (o) {
-      const i = this.context.canvas.getObject(o.rayId), c = this.context.state.getState().selectedObjects;
-      if (i && c.includes(o.rayId)) {
-        this.state.currentRay = i, this.state.dragTarget = o.handle, this.state.isCreating = !1, o.handle === "move" && (this.state.dragOffset = {
-          x: r.x - i.properties.startPoint.x,
-          y: r.y - i.properties.startPoint.y
+      const r = this.context.canvas.getObject(o.rayId), c = this.context.state.getState().selectedObjects;
+      if (r && c.includes(o.rayId)) {
+        this.state.currentRay = r, this.state.dragTarget = o.handle, this.state.isCreating = !1, o.handle === "move" && (this.state.dragOffset = {
+          x: i.x - r.properties.startPoint.x,
+          y: i.y - r.properties.startPoint.y
         });
         return;
       }
     }
     if (!this.state.isCreating) {
-      this.state.isCreating = !0, this.state.startPoint = r;
-      const i = {
+      this.state.isCreating = !0, this.state.startPoint = i;
+      const r = {
         id: this.generateId(),
         type: "ray",
         properties: {
-          startPoint: r,
-          endPoint: { ...r },
+          startPoint: i,
+          endPoint: { ...i },
           // Start with same point
           slope: 0,
-          yIntercept: r.y
+          yIntercept: i.y
         },
         visible: !0,
         selected: !1
       };
-      this.state.currentRay = i, this.context.canvas.addObject(i);
+      this.state.currentRay = r, this.context.canvas.addObject(r);
     }
   }
   onPointerMove(e) {
     if (!this.state.currentRay) return;
-    const s = { x: e.x, y: e.y }, r = this.snapPoint(this.context.canvas.screenToWorld(s));
+    const s = { x: e.x, y: e.y }, i = this.snapPoint(this.context.canvas.screenToWorld(s));
     if (this.state.isCreating) {
-      const o = this.context.math.slope(this.state.currentRay.properties.startPoint, r), i = r.y - o * r.x;
+      const o = this.context.math.slope(this.state.currentRay.properties.startPoint, i), r = i.y - o * i.x;
       this.context.canvas.updateObject(this.state.currentRay.id, {
         properties: {
           ...this.state.currentRay.properties,
-          endPoint: r,
+          endPoint: i,
           slope: o,
-          yIntercept: isFinite(o) ? i : this.state.currentRay.properties.startPoint.y
+          yIntercept: isFinite(o) ? r : this.state.currentRay.properties.startPoint.y
         }
       });
     } else if (this.state.dragTarget) {
       const o = this.context.canvas.getObject(this.state.currentRay.id);
       if (!o) return;
-      const i = { ...o.properties };
+      const r = { ...o.properties };
       if (this.state.dragTarget === "start")
-        i.startPoint = r;
+        r.startPoint = i;
       else if (this.state.dragTarget === "end")
-        i.endPoint = r;
+        r.endPoint = i;
       else if (this.state.dragTarget === "move" && this.state.dragOffset) {
-        const c = r.x - this.state.dragOffset.x - o.properties.startPoint.x, l = r.y - this.state.dragOffset.y - o.properties.startPoint.y;
-        i.startPoint = {
+        const c = i.x - this.state.dragOffset.x - o.properties.startPoint.x, d = i.y - this.state.dragOffset.y - o.properties.startPoint.y;
+        r.startPoint = {
           x: o.properties.startPoint.x + c,
-          y: o.properties.startPoint.y + l
-        }, i.endPoint = {
+          y: o.properties.startPoint.y + d
+        }, r.endPoint = {
           x: o.properties.endPoint.x + c,
-          y: o.properties.endPoint.y + l
+          y: o.properties.endPoint.y + d
         };
       }
       if (this.state.dragTarget === "start" || this.state.dragTarget === "end") {
-        const c = this.context.math.slope(i.startPoint, i.endPoint);
-        i.slope = c, i.yIntercept = isFinite(c) ? i.startPoint.y - c * i.startPoint.x : i.startPoint.y;
+        const c = this.context.math.slope(r.startPoint, r.endPoint);
+        r.slope = c, r.yIntercept = isFinite(c) ? r.startPoint.y - c * r.startPoint.x : r.startPoint.y;
       }
       this.context.canvas.updateObject(this.state.currentRay.id, {
-        properties: i
+        properties: r
       });
     }
     this.context.events.emit("ray:update", {
@@ -3091,8 +3027,8 @@ class at {
   }
   onPointerUp(e) {
     if (this.state.isCreating && this.state.currentRay) {
-      const s = { x: e.x, y: e.y }, r = this.snapPoint(this.context.canvas.screenToWorld(s)), o = this.state.currentRay.properties.startPoint;
-      this.context.math.distance(o, r) < 0.1 ? this.context.canvas.removeObject(this.state.currentRay.id) : (this.context.events.emit("ray:created", {
+      const s = { x: e.x, y: e.y }, i = this.snapPoint(this.context.canvas.screenToWorld(s)), o = this.state.currentRay.properties.startPoint;
+      this.context.math.distance(o, i) < 0.1 ? this.context.canvas.removeObject(this.state.currentRay.id) : (this.context.events.emit("ray:created", {
         rayId: this.state.currentRay.id,
         ray: this.state.currentRay
       }), this.context.events.emit("tool:creation-complete", {
@@ -3109,10 +3045,10 @@ class at {
     };
   }
 }
-function ct() {
-  return new at();
+function ht() {
+  return new dt();
 }
-class lt {
+class ut {
   constructor() {
     J(this, "id", "rectangle-tool");
     J(this, "name", "Rectangle Builder");
@@ -3154,75 +3090,80 @@ class lt {
   snapPoint(e) {
     const s = this.context.state.getState();
     if (s.snapToGrid) {
-      const r = s.viewport;
-      let o;
-      return r.zoom >= 50 ? o = 0.1 : r.zoom >= 20 ? o = 0.25 : r.zoom >= 10 ? o = 0.5 : o = s.gridDensity === "fine" ? 1 : 10, this.context.math.snapToGrid(e, o);
+      if (Math.sqrt(e.x * e.x + e.y * e.y) <= 0.75)
+        return { x: 0, y: 0 };
+      const r = xe.getState(), c = ve(
+        s.viewport,
+        r.gridScale,
+        r.snapPrecision
+      );
+      return this.context.math.snapToGrid(e, c);
     }
     return e;
   }
   findRectangleAtPoint(e) {
     const s = this.context.canvas.getAllObjects();
-    for (const r of s)
-      if (r.type === "rectangle") {
-        const o = r, { x: i, y: c, width: l, height: h } = o.properties;
-        if (e.x >= i && e.x <= i + l && e.y >= c && e.y <= c + h)
+    for (const i of s)
+      if (i.type === "rectangle") {
+        const o = i, { x: r, y: c, width: d, height: x } = o.properties;
+        if (e.x >= r && e.x <= r + d && e.y >= c && e.y <= c + x)
           return o;
       }
     return null;
   }
-  findNearestCorner(e, s, r = 0.5) {
-    const { x: o, y: i, width: c, height: l } = s.properties, h = [
-      { point: { x: o, y: i }, type: "corner-bl" },
+  findNearestCorner(e, s, i = 0.5) {
+    const { x: o, y: r, width: c, height: d } = s.properties, x = [
+      { point: { x: o, y: r }, type: "corner-bl" },
       // bottom-left
-      { point: { x: o + c, y: i }, type: "corner-br" },
+      { point: { x: o + c, y: r }, type: "corner-br" },
       // bottom-right
-      { point: { x: o, y: i + l }, type: "corner-tl" },
+      { point: { x: o, y: r + d }, type: "corner-tl" },
       // top-left
-      { point: { x: o + c, y: i + l }, type: "corner-tr" }
+      { point: { x: o + c, y: r + d }, type: "corner-tr" }
       // top-right
     ];
-    for (const m of h)
-      if (this.context.math.distance(e, m.point) <= r)
-        return m.type;
+    for (const g of x)
+      if (this.context.math.distance(e, g.point) <= i)
+        return g.type;
     return null;
   }
   onPointerDown(e) {
-    const s = { x: e.x, y: e.y }, r = this.snapPoint(this.context.canvas.screenToWorld(s)), o = this.findRectangleAtPoint(r);
+    const s = { x: e.x, y: e.y }, i = this.snapPoint(this.context.canvas.screenToWorld(s)), o = this.findRectangleAtPoint(i);
     if (o && this.context.state.getState().selectedObjects.includes(o.id)) {
-      const l = this.findNearestCorner(r, o);
-      if (l) {
-        this.state.currentRectangle = o, this.state.dragTarget = l, this.state.isCreating = !1;
-        const { x: h, y: m, width: j, height: k } = o.properties;
-        switch (l) {
+      const d = this.findNearestCorner(i, o);
+      if (d) {
+        this.state.currentRectangle = o, this.state.dragTarget = d, this.state.isCreating = !1;
+        const { x, y: g, width: v, height: j } = o.properties;
+        switch (d) {
           case "corner-tl":
-            this.state.lockedCorner = { x: h + j, y: m };
+            this.state.lockedCorner = { x: x + v, y: g };
             break;
           case "corner-tr":
-            this.state.lockedCorner = { x: h, y: m };
+            this.state.lockedCorner = { x, y: g };
             break;
           case "corner-bl":
-            this.state.lockedCorner = { x: h + j, y: m + k };
+            this.state.lockedCorner = { x: x + v, y: g + j };
             break;
           case "corner-br":
-            this.state.lockedCorner = { x: h, y: m + k };
+            this.state.lockedCorner = { x, y: g + j };
             break;
         }
         return;
       } else {
         this.state.currentRectangle = o, this.state.dragTarget = "move", this.state.dragOffset = {
-          x: r.x - o.properties.x,
-          y: r.y - o.properties.y
+          x: i.x - o.properties.x,
+          y: i.y - o.properties.y
         }, this.state.isCreating = !1;
         return;
       }
     }
-    this.state.isCreating = !0, this.state.startPoint = r;
-    const i = {
+    this.state.isCreating = !0, this.state.startPoint = i;
+    const r = {
       id: this.generateId(),
       type: "rectangle",
       properties: {
-        x: r.x,
-        y: r.y,
+        x: i.x,
+        y: i.y,
         width: 0,
         height: 0,
         area: 0
@@ -3230,40 +3171,40 @@ class lt {
       visible: !0,
       selected: !1
     };
-    this.state.currentRectangle = i, this.context.canvas.addObject(i);
+    this.state.currentRectangle = r, this.context.canvas.addObject(r);
   }
   onPointerMove(e) {
     if (!this.state.currentRectangle) return;
-    const s = { x: e.x, y: e.y }, r = this.snapPoint(this.context.canvas.screenToWorld(s));
+    const s = { x: e.x, y: e.y }, i = this.snapPoint(this.context.canvas.screenToWorld(s));
     if (this.state.isCreating && this.state.startPoint) {
-      const o = Math.min(this.state.startPoint.x, r.x), i = Math.min(this.state.startPoint.y, r.y), c = Math.abs(r.x - this.state.startPoint.x), l = Math.abs(r.y - this.state.startPoint.y), h = c * l;
+      const o = Math.min(this.state.startPoint.x, i.x), r = Math.min(this.state.startPoint.y, i.y), c = Math.abs(i.x - this.state.startPoint.x), d = Math.abs(i.y - this.state.startPoint.y), x = c * d;
       this.context.canvas.updateObject(this.state.currentRectangle.id, {
         properties: {
           x: o,
-          y: i,
+          y: r,
           width: c,
-          height: l,
-          area: h
+          height: d,
+          area: x
         }
       });
     } else if (this.state.dragTarget === "move" && this.state.dragOffset) {
-      const o = r.x - this.state.dragOffset.x, i = r.y - this.state.dragOffset.y;
+      const o = i.x - this.state.dragOffset.x, r = i.y - this.state.dragOffset.y;
       this.context.canvas.updateObject(this.state.currentRectangle.id, {
         properties: {
           ...this.state.currentRectangle.properties,
           x: o,
-          y: i
+          y: r
         }
       });
     } else if (this.state.dragTarget && this.state.dragTarget.startsWith("corner-") && this.state.lockedCorner) {
-      const o = this.state.lockedCorner, i = Math.min(r.x, o.x), c = Math.max(r.x, o.x), l = Math.min(r.y, o.y), h = Math.max(r.y, o.y), m = i, j = l, k = c - i, u = h - l, d = Math.max(0.1, k), O = Math.max(0.1, u), M = d * O;
+      const o = this.state.lockedCorner, r = Math.min(i.x, o.x), c = Math.max(i.x, o.x), d = Math.min(i.y, o.y), x = Math.max(i.y, o.y), g = r, v = d, j = c - r, N = x - d, l = Math.max(0.1, j), p = Math.max(0.1, N), P = l * p;
       this.context.canvas.updateObject(this.state.currentRectangle.id, {
         properties: {
-          x: m,
-          y: j,
-          width: d,
-          height: O,
-          area: M
+          x: g,
+          y: v,
+          width: l,
+          height: p,
+          area: P
         }
       });
     }
@@ -3293,10 +3234,10 @@ class lt {
     };
   }
 }
-function dt() {
-  return new lt();
+function xt() {
+  return new ut();
 }
-class ht {
+class pt {
   constructor() {
     J(this, "id", "area-counter");
     J(this, "name", "Area Counter");
@@ -3306,7 +3247,7 @@ class ht {
   }
   init(e) {
     this.context = e, e.events.on("rectangle:created", this.handleRectangleCreated.bind(this)), e.events.on("rectangle:update", this.handleRectangleUpdated.bind(this)), e.events.on("object:removed", this.handleObjectRemoved.bind(this)), this.createBadgesForExistingRectangles();
-    const s = e.state.subscribe((r) => {
+    const s = e.state.subscribe((i) => {
       this.updateBadgePositions();
     });
     this.unsubscribeFromState = s;
@@ -3371,18 +3312,18 @@ class ht {
   updateBadgeElement(e) {
     const s = this.badgeElements.get(e.rectangleId);
     if (!s) return;
-    const r = e.x + e.width / 2, o = e.y + e.height / 2, i = this.context.canvas.worldToScreen({ x: r, y: o }), c = this.formatArea(e.area, e.width, e.height);
+    const i = e.x + e.width / 2, o = e.y + e.height / 2, r = this.context.canvas.worldToScreen({ x: i, y: o }), c = this.formatArea(e.area, e.width, e.height);
     s.textContent = c;
-    const l = s.getBoundingClientRect();
-    s.style.left = `${i.x - l.width / 2}px`, s.style.top = `${i.y - l.height / 2}px`;
-    const h = this.context.state.getState(), m = 30, j = e.width * h.viewport.zoom, k = e.height * h.viewport.zoom;
-    s.style.display = j >= m && k >= m ? "block" : "none";
+    const d = s.getBoundingClientRect();
+    s.style.left = `${r.x - d.width / 2}px`, s.style.top = `${r.y - d.height / 2}px`;
+    const x = this.context.state.getState(), g = 30, v = e.width * x.viewport.zoom, j = e.height * x.viewport.zoom;
+    s.style.display = v >= g && j >= g ? "block" : "none";
   }
-  formatArea(e, s, r) {
-    const o = Math.abs(s - Math.round(s)) < 1e-3, i = Math.abs(r - Math.round(r)) < 1e-3;
-    if (o && i) {
-      const c = Math.round(s), l = Math.round(r);
-      return `${l} × ${c} = ${l * c}`;
+  formatArea(e, s, i) {
+    const o = Math.abs(s - Math.round(s)) < 1e-3, r = Math.abs(i - Math.round(i)) < 1e-3;
+    if (o && r) {
+      const c = Math.round(s), d = Math.round(i);
+      return `${d} × ${c} = ${d * c}`;
     }
     return e >= 1e3 ? `${e.toFixed(0)} sq units` : e >= 10 ? `${e.toFixed(1)} sq units` : `${e.toFixed(2)} sq units`;
   }
@@ -3400,8 +3341,8 @@ class ht {
     const s = this.badges.get(e);
     if (s) {
       s.visible = !1;
-      const r = this.badgeElements.get(e);
-      r && (r.style.display = "none");
+      const i = this.badgeElements.get(e);
+      i && (i.style.display = "none");
     }
   }
   showAllBadges() {
@@ -3415,20 +3356,20 @@ class ht {
     });
   }
 }
-function ut() {
-  return new ht();
+function gt() {
+  return new pt();
 }
-function xt() {
-  const { registerPlugin: t } = pe(), e = se(!1);
-  return te(() => {
+function yt() {
+  const { registerPlugin: t } = fe(), e = ne(!1);
+  return se(() => {
     if (e.current) return;
-    const s = ct(), r = dt(), o = ut();
-    return t(s), t(r), t(o), e.current = !0, () => {
+    const s = ht(), i = xt(), o = gt();
+    return t(s), t(i), t(o), e.current = !0, () => {
     };
   }, [t]), /* @__PURE__ */ n.jsxs("div", { className: "flex flex-col h-screen bg-gray-50", children: [
-    /* @__PURE__ */ n.jsx(ot, {}),
+    /* @__PURE__ */ n.jsx(lt, {}),
     /* @__PURE__ */ n.jsx("div", { className: "flex-1 relative", "data-grix-canvas": !0, children: /* @__PURE__ */ n.jsx(
-      it,
+      ct,
       {
         width: window.innerWidth,
         height: window.innerHeight - 60,
@@ -3437,20 +3378,20 @@ function xt() {
     ) })
   ] });
 }
-function ft() {
-  return /* @__PURE__ */ n.jsx(Ce, { children: /* @__PURE__ */ n.jsx(Be, { children: /* @__PURE__ */ n.jsx(Ce, { children: /* @__PURE__ */ n.jsx(xt, {}) }) }) });
+function jt() {
+  return /* @__PURE__ */ n.jsx(Re, { children: /* @__PURE__ */ n.jsx(He, { children: /* @__PURE__ */ n.jsx(Re, { children: /* @__PURE__ */ n.jsx(yt, {}) }) }) });
 }
-const mt = "0.1.0";
+const vt = "0.1.0";
 export {
-  it as Canvas,
-  ft as GrixApp,
-  Be as PluginManagerProvider,
-  ot as ToolBar,
-  ut as createAreaCounter,
-  ct as createRayTool,
-  dt as createRectangleTool,
-  V as useCanvasStore,
-  qe as useInputSystem,
-  pe as usePluginManager,
-  mt as version
+  ct as Canvas,
+  jt as GrixApp,
+  He as PluginManagerProvider,
+  lt as ToolBar,
+  gt as createAreaCounter,
+  ht as createRayTool,
+  xt as createRectangleTool,
+  ee as useCanvasStore,
+  Ke as useInputSystem,
+  fe as usePluginManager,
+  vt as version
 };

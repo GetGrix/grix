@@ -16,7 +16,11 @@
       "Bash(npx tsc:*)",
       "Bash(npx esbuild:*)",
       "Bash(grep:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(npx vite:*)",
+      "Bash(git rm:*)",
+      "Bash(git reset:*)",
+      "Bash(git clean:*)"
     ],
     "deny": []
   }

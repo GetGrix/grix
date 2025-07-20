@@ -9,7 +9,7 @@ import { DebugInfo } from './DebugInfo.js';
 import { ContextMenu } from './ContextMenu.js';
 import { SettingsPanel } from './SettingsPanel.js';
 import { useTransformationStore } from '../store/transformationStore.js';
-import type { UnifiedPointerEvent } from '@getgrix/core';
+import type { UnifiedPointerEvent, Point } from '@getgrix/core';
 import type { GestureEvent } from '../hooks/useInputSystem.js';
 
 interface CanvasProps {
@@ -56,7 +56,9 @@ export function Canvas({
     clearSelection,
     selectObject,
     screenToWorld,
-    worldToScreen
+    worldToScreen,
+    getObject,
+    updateObject
   } = useCanvasStore();
 
   // Connect to plugin system

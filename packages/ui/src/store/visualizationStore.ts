@@ -10,6 +10,7 @@ interface VisualizationSettings {
   showRiseRunTriangle: boolean;
   showDistanceMarkers: boolean;
   showAngleArc: boolean;
+  showCoordinateProjections: boolean;
   
   // Circle enhancements
   showTangentLines: boolean;
@@ -31,7 +32,6 @@ interface VisualizationSettings {
   
   // Grid enhancements
   showLatticePoints: boolean;
-  showIntegerGridLines: boolean;
   showReferenceLineY_equals_X: boolean;
   
   // Rectangle-based educational concepts
@@ -79,6 +79,7 @@ const defaultSettings: VisualizationSettings = {
   showRiseRunTriangle: false,
   showDistanceMarkers: false,
   showAngleArc: false,
+  showCoordinateProjections: true,
   
   // Circle enhancements
   showTangentLines: false,
@@ -100,7 +101,6 @@ const defaultSettings: VisualizationSettings = {
   
   // Grid enhancements
   showLatticePoints: false,
-  showIntegerGridLines: true,
   showReferenceLineY_equals_X: true,
   
   // Rectangle-based educational concepts

@@ -104,6 +104,7 @@ export function Canvas({
   
   // Track context menu state
   const [showContextMenu, setShowContextMenu] = useState(false);
+  const [userClosedContextMenu, setUserClosedContextMenu] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   
   // Track overlapping selection cycling
@@ -727,12 +728,13 @@ export function Canvas({
 
   // Show context menu when an object is selected and not dragging
   useEffect(() => {
-    if (selectedObjects.length === 1 && !isDragging) {
+    if (selectedObjects.length === 1 && !isDragging && !userClosedContextMenu) {
       setShowContextMenu(true);
-    } else {
+    } else if (selectedObjects.length !== 1 || isDragging) {
       setShowContextMenu(false);
+      setUserClosedContextMenu(false); // Reset when selection changes
     }
-  }, [selectedObjects, isDragging]);
+  }, [selectedObjects, isDragging, userClosedContextMenu]);
 
   // Close context menu when other menus open
   useEffect(() => {
@@ -743,6 +745,7 @@ export function Canvas({
 
   const handleContextMenuClose = useCallback(() => {
     setShowContextMenu(false);
+    setUserClosedContextMenu(true);
   }, []);
 
   const handleContextMenuDelete = useCallback(() => {

@@ -99,6 +99,34 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
               stroke={isSelected ? "#1D4ED8" : "#2563eb"}
               strokeWidth={isSelected ? 3 : 2}
             />
+            
+            {/* Dashed lines to axes for lines from origin */}
+            {visualSettings.showCoordinateProjections && (Math.abs(obj.properties.startPoint.x) < 0.001 && Math.abs(obj.properties.startPoint.y) < 0.001) && (
+              <>
+                {/* Vertical dashed line from endpoint to x-axis */}
+                <line
+                  x1={end.x}
+                  y1={end.y}
+                  x2={end.x}
+                  y2={worldToScreen({ x: obj.properties.endPoint.x, y: 0 }).y}
+                  stroke="#9CA3AF"
+                  strokeWidth="1"
+                  strokeDasharray="2,3"
+                  opacity="0.6"
+                />
+                {/* Horizontal dashed line from endpoint to y-axis */}
+                <line
+                  x1={end.x}
+                  y1={end.y}
+                  x2={worldToScreen({ x: 0, y: obj.properties.endPoint.y }).x}
+                  y2={end.y}
+                  stroke="#9CA3AF"
+                  strokeWidth="1"
+                  strokeDasharray="2,3"
+                  opacity="0.6"
+                />
+              </>
+            )}
             <circle
               cx={start.x}
               cy={start.y}
@@ -141,7 +169,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                 x={(() => {
                   // For lines from origin, show coordinates to the left to avoid mouse covering them
                   const isFromOrigin = Math.abs(obj.properties.startPoint.x) < 0.001 && Math.abs(obj.properties.startPoint.y) < 0.001;
-                  return isFromOrigin ? end.x - 60 : end.x + 5;
+                  return isFromOrigin ? end.x - 20 : end.x + 5;
                 })()}
                 y={(() => {
                   // For lines from origin, show coordinates at same level as point

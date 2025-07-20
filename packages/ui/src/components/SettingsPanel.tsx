@@ -99,6 +99,11 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
           label: 'Angle Arc',
           description: 'Arc showing angle from x-axis with measurement',
         },
+        {
+          key: 'showCoordinateProjections',
+          label: 'Coordinate Projection Lines',
+          description: 'Dashed lines from endpoint to axes showing x,y values',
+        },
       ],
     },
     {
@@ -120,11 +125,6 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
           key: 'showLatticePoints',
           label: 'Lattice Points',
           description: 'Dots at all integer coordinates',
-        },
-        {
-          key: 'showIntegerGridLines',
-          label: 'Integer Grid Lines',
-          description: 'Faint lines at whole numbers',
         },
         {
           key: 'showReferenceLineY_equals_X',

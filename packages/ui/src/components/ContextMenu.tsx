@@ -11,10 +11,30 @@ interface ContextMenuProps {
 }
 
 export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: ContextMenuProps) {
-  // Initialize collapsed state directly from storage
+  // Detect if we're on a mobile device
+  const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth < 768;
+  
+  // Initialize collapsed state directly from storage, defaulting to collapsed on mobile
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const state = storageManager.loadState();
-    return state?.uiSettings?.contextMenuCollapsed ?? false;
+    if (state?.uiSettings?.contextMenuCollapsed !== undefined) {
+      return state.uiSettings.contextMenuCollapsed;
+    }
+    // Default to collapsed on mobile, expanded on desktop
+    const defaultCollapsed = isMobile;
+    
+    // Save the default value to storage
+    const newState = {
+      ...state,
+      uiSettings: {
+        ...state?.uiSettings,
+        contextMenuCollapsed: defaultCollapsed
+      }
+    };
+    storageManager.saveState(newState);
+    storageManager.scheduleSave();
+    
+    return defaultCollapsed;
   });
 
   // Save collapsed state to storage
@@ -30,6 +50,7 @@ export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: Con
         contextMenuCollapsed: newCollapsed
       }
     });
+    storageManager.scheduleSave();
   };
 
   if (!selectedObject) return null;

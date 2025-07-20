@@ -17,7 +17,7 @@ export function SettingsPanel() {
   const [isOpen, setIsOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const visualizationStore = useVisualizationStore();
-  const { toggleSetting, resetToDefaults } = visualizationStore;
+  const { toggleSetting, setFontScale, resetToDefaults } = visualizationStore;
 
   // Close panel when clicking outside
   useEffect(() => {
@@ -104,6 +104,11 @@ export function SettingsPanel() {
         },
       ],
     },
+    {
+      title: 'Display',
+      subtitle: 'Adjust visibility for classrooms and large screens',
+      settings: [], // No checkboxes for this section
+    },
   ];
 
   return (
@@ -169,6 +174,36 @@ export function SettingsPanel() {
                       </div>
                     </label>
                   ))}
+                  
+                  {/* Font Scale Control for Display section */}
+                  {section.title === 'Display' && (
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <label className="text-sm font-medium text-gray-700">
+                          Font Size
+                        </label>
+                        <span className="text-xs text-gray-500 font-mono">
+                          {Math.round(visualizationStore.fontScale * 100)}%
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs text-gray-400">A</span>
+                        <input
+                          type="range"
+                          min="0.8"
+                          max="2.0"
+                          step="0.1"
+                          value={visualizationStore.fontScale}
+                          onChange={(e) => setFontScale(parseFloat(e.target.value))}
+                          className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                        />
+                        <span className="text-sm text-gray-600">A</span>
+                      </div>
+                      <div className="text-xs text-gray-500 leading-relaxed">
+                        Increase font size for better visibility on TVs and projectors
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

@@ -17,6 +17,9 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
   // Get visualization settings
   const visualSettings = useVisualizationStore();
   
+  // Helper function to scale font sizes
+  const scaledFontSize = (baseSize: number) => Math.round(baseSize * visualSettings.fontScale);
+  
   // Determine grid size for coordinate formatting (shared across all objects)
   const gridSize = viewport.zoom > 50 ? 0.1 : viewport.zoom > 10 ? 1 : 10;
   
@@ -82,7 +85,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
               <text
                 x={start.x - 5}
                 y={start.y - 10}
-                fontSize="10"
+                fontSize={scaledFontSize(10)}
                 fontWeight="500"
                 fill={isSelected ? "#1D4ED8" : "#2563eb"}
                 textAnchor="middle"
@@ -103,7 +106,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                   const isFromOrigin = Math.abs(obj.properties.startPoint.x) < 0.001 && Math.abs(obj.properties.startPoint.y) < 0.001;
                   return isFromOrigin ? end.y + 4 : end.y - 10;
                 })()}
-                fontSize="10"
+                fontSize={scaledFontSize(10)}
                 fontWeight="500"
                 fill={isSelected ? "#1D4ED8" : "#2563eb"}
                 textAnchor={(() => {
@@ -145,7 +148,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                       <text
                         x={labelX + 15}
                         y={labelY - 25}
-                        fontSize="9"
+                        fontSize={scaledFontSize(9)}
                         fontWeight="500"
                         fill={isSelected ? "#1D4ED8" : "#2563eb"}
                         textAnchor="middle"
@@ -165,7 +168,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                       <text
                         x={labelX + 15}
                         y={labelY - 9}
-                        fontSize="9"
+                        fontSize={scaledFontSize(9)}
                         fontWeight="500"
                         fill={isSelected ? "#1D4ED8" : "#2563eb"}
                         textAnchor="middle"
@@ -315,7 +318,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                       <text
                         x={mark.screen.x + 8}
                         y={mark.screen.y - 8}
-                        fontSize="7"
+                        fontSize={scaledFontSize(7)}
                         fontWeight="400"
                         fill={isSelected ? "#1D4ED8" : "#2563eb"}
                         textAnchor="start"
@@ -367,7 +370,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                           <text
                             x={rectX + rectWidth / 2}
                             y={rectY + 15}
-                            fontSize="10"
+                            fontSize={scaledFontSize(10)}
                             fontWeight="400"
                             fill={isSelected ? "#1D4ED8" : "#2563eb"}
                             textAnchor="middle"
@@ -410,7 +413,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                           <text
                             x={rightScreen.x + 10}
                             y={(rightScreen.y + topScreen.y) / 2}
-                            fontSize="9"
+                            fontSize={scaledFontSize(9)}
                             fontWeight="500"
                             fill={isSelected ? "#1D4ED8" : "#2563eb"}
                             textAnchor="start"
@@ -423,7 +426,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                           <text
                             x={(originScreen.x + rightScreen.x) / 2}
                             y={rightScreen.y + 8}
-                            fontSize="9"
+                            fontSize={scaledFontSize(9)}
                             fontWeight="500"
                             fill={isSelected ? "#1D4ED8" : "#2563eb"}
                             textAnchor="middle"
@@ -444,7 +447,12 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                     
                     if (lineLength > 0) {
                       const originScreen = worldToScreen({ x: 0, y: 0 });
-                      const lineAngle = Math.atan2(endY, endX);
+                      let lineAngle = Math.atan2(endY, endX);
+                      
+                      // Normalize angle to 0-2π range for proper arc rendering
+                      if (lineAngle < 0) {
+                        lineAngle = lineAngle + 2 * Math.PI;
+                      }
                       
                       // Show quarter-circle arcs at unit intervals from origin, plus one at the exact endpoint
                       const radiiToShow = [];
@@ -454,10 +462,8 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                         radiiToShow.push({ radius: i, isUnit: true });
                       }
                       
-                      // Add circle at exact endpoint if it's not already an integer
-                      if (Math.abs(lineLength - Math.floor(lineLength)) > 0.1) {
-                        radiiToShow.push({ radius: lineLength, isUnit: false });
-                      }
+                      // Always add circle at exact endpoint (this is the actual distance)
+                      radiiToShow.push({ radius: lineLength, isUnit: false });
                       
                       radiiToShow.forEach(({ radius, isUnit }, index) => {
                         const radiusInScreen = radius * viewport.zoom;
@@ -466,11 +472,15 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                         if (radiusInScreen >= 15 && radiusInScreen <= 800) {
                           // Only show if we have a meaningful angle (not too close to x-axis)
                           if (Math.abs(lineAngle) > 0.05) {
-                            const arcPath = `M ${originScreen.x + radiusInScreen},${originScreen.y} A ${radiusInScreen},${radiusInScreen} 0 0,0 ${originScreen.x + radiusInScreen * Math.cos(lineAngle)},${originScreen.y - radiusInScreen * Math.sin(lineAngle)}`;
+                            // Calculate the correct sweep direction and large arc flag
+                            const largeArcFlag = lineAngle > Math.PI ? 1 : 0;
+                            const sweepFlag = 0; // Always counter-clockwise from positive x-axis
+                            
+                            const arcPath = `M ${originScreen.x + radiusInScreen},${originScreen.y} A ${radiusInScreen},${radiusInScreen} 0 ${largeArcFlag},${sweepFlag} ${originScreen.x + radiusInScreen * Math.cos(lineAngle)},${originScreen.y - radiusInScreen * Math.sin(lineAngle)}`;
                             
                             radialMarkers.push(
                               <path
-                                key={`radial-${radius}`}
+                                key={`radial-${obj.id}-${radius.toFixed(3)}-${lineAngle.toFixed(3)}-${index}`}
                                 d={arcPath}
                                 fill="none"
                                 stroke={isSelected ? "#1D4ED8" : "#2563eb"}
@@ -482,6 +492,32 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                           }
                         }
                       });
+                      
+                      // Add distance indicator on x-axis for Pythagorean theorem
+                      const distancePointScreen = worldToScreen({ x: lineLength, y: 0 });
+                      
+                      radialMarkers.push(
+                        <g key={`distance-${obj.id}`}>
+                          {/* Small triangle pointing up to show distance */}
+                          <path
+                            d={`M ${distancePointScreen.x},${originScreen.y} L ${distancePointScreen.x - 4},${originScreen.y + 8} L ${distancePointScreen.x + 4},${originScreen.y + 8} Z`}
+                            fill={isSelected ? "#1D4ED8" : "#2563eb"}
+                            opacity="0.7"
+                          />
+                          {/* Distance label - positioned to the left of arrow, above x-axis */}
+                          <text
+                            x={distancePointScreen.x - 15}
+                            y={originScreen.y - 8}
+                            fontSize={scaledFontSize(8)}
+                            fontWeight="600"
+                            fill={isSelected ? "#1D4ED8" : "#2563eb"}
+                            textAnchor="end"
+                            opacity="0.8"
+                          >
+                            d = {lineLength.toFixed(2)}
+                          </text>
+                        </g>
+                      );
                     }
                     
                     return <g>{radialMarkers}</g>;
@@ -532,7 +568,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                           <text
                             x={textX}
                             y={textY}
-                            fontSize="11"
+                            fontSize={scaledFontSize(11)}
                             fontWeight="600"
                             fill={isSelected ? "#1D4ED8" : "#2563eb"}
                             textAnchor="middle"
@@ -573,7 +609,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                         <text
                           x={point.screen.x + 15}
                           y={point.screen.y + 4}
-                          fontSize="9"
+                          fontSize={scaledFontSize(9)}
                           fontWeight="500"
                           fill="#22C55E"
                           textAnchor="start"
@@ -673,7 +709,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
             <text
               x={topLeft.x - 10}
               y={topLeft.y - 5}
-              fontSize="9"
+              fontSize={scaledFontSize(9)}
               fontWeight="500"
               fill="#22c55e"
               textAnchor="end"
@@ -684,7 +720,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
             <text
               x={topLeft.x + rectWidth + 10}
               y={topLeft.y - 5}
-              fontSize="9"
+              fontSize={scaledFontSize(9)}
               fontWeight="500"
               fill="#22c55e"
               textAnchor="start"
@@ -695,7 +731,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
             <text
               x={topLeft.x - 10}
               y={topLeft.y + rectHeight + 15}
-              fontSize="9"
+              fontSize={scaledFontSize(9)}
               fontWeight="500"
               fill="#22c55e"
               textAnchor="end"
@@ -706,7 +742,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
             <text
               x={topLeft.x + rectWidth + 10}
               y={topLeft.y + rectHeight + 15}
-              fontSize="9"
+              fontSize={scaledFontSize(9)}
               fontWeight="500"
               fill="#22c55e"
               textAnchor="start"
@@ -719,7 +755,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
             <text
               x={topLeft.x + rectWidth / 2}
               y={topLeft.y + rectHeight / 2}
-              fontSize="12"
+              fontSize={scaledFontSize(12)}
               fontWeight="600"
               fill="#22c55e"
               textAnchor="middle"

@@ -12,7 +12,11 @@
       "Bash(ls:*)",
       "Bash(curl:*)",
       "Bash(npm ls:*)",
-      "Bash(killall:*)"
+      "Bash(killall:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx esbuild:*)",
+      "Bash(grep:*)",
+      "Bash(node:*)"
     ],
     "deny": []
   }

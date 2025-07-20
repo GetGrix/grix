@@ -16,11 +16,15 @@ interface VisualizationSettings {
   showLatticePoints: boolean;
   showIntegerGridLines: boolean;
   showReferenceLineY_equals_X: boolean;
+  
+  // Display settings
+  fontScale: number; // 1.0 = normal, 1.5 = 50% bigger, etc.
 }
 
 interface VisualizationStore extends VisualizationSettings {
   // Actions
   toggleSetting: (setting: keyof VisualizationSettings) => void;
+  setFontScale: (scale: number) => void;
   resetToDefaults: () => void;
 }
 
@@ -40,6 +44,9 @@ const defaultSettings: VisualizationSettings = {
   showLatticePoints: false,
   showIntegerGridLines: true,
   showReferenceLineY_equals_X: true,
+  
+  // Display settings
+  fontScale: 1.0,
 };
 
 export const useVisualizationStore = create<VisualizationStore>((set) => ({
@@ -49,6 +56,10 @@ export const useVisualizationStore = create<VisualizationStore>((set) => ({
     set((state) => ({
       [setting]: !state[setting]
     }));
+  },
+
+  setFontScale: (scale) => {
+    set({ fontScale: scale });
   },
 
   resetToDefaults: () => {

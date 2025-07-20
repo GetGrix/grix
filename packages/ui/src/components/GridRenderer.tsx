@@ -15,6 +15,9 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
   // Get visualization settings
   const visualSettings = useVisualizationStore();
   
+  // Helper function to scale font sizes
+  const scaledFontSize = (baseSize: number) => Math.round(baseSize * visualSettings.fontScale);
+  
   // Calculate adaptive grid system
   const gridSystem = calculateAdaptiveGrid(viewport);
   const { verticalLines: vLines, horizontalLines: hLines } = generateGridLines(
@@ -208,7 +211,7 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
                 x={line.x}
                 y={worldToScreen({ x: 0, y: 0 }).y + 20}
                 textAnchor="middle"
-                fontSize="11"
+                fontSize={scaledFontSize(11)}
                 fontWeight="500"
                 opacity={Math.max(0.7, gridSystem.opacity)}
               >
@@ -226,7 +229,7 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
                 x={worldToScreen({ x: 0, y: 0 }).x - 15}
                 y={line.y + 4}
                 textAnchor="middle"
-                fontSize="11"
+                fontSize={scaledFontSize(11)}
                 fontWeight="500"
                 opacity={Math.max(0.7, gridSystem.opacity)}
               >
@@ -239,7 +242,7 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
           <text
             x={worldToScreen({ x: 0, y: 0 }).x - 25}
             y={worldToScreen({ x: 0, y: 0 }).y - 10}
-            fontSize="11"
+            fontSize={scaledFontSize(11)}
             fontWeight="600"
             fill="#374151"
             opacity={Math.max(0.8, gridSystem.opacity)}
@@ -266,7 +269,7 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
                 <text
                   x={xOneScreenX + 15}
                   y={intersection.screenY + 4}
-                  fontSize="10"
+                  fontSize={scaledFontSize(10)}
                   fontWeight="600"
                   fill="#60A5FA"
                   opacity="0.9"

@@ -113,6 +113,17 @@ export function SettingsPanel() {
       ],
     },
     {
+      title: 'Circle Concepts',
+      subtitle: 'Visual features for circles and curves',
+      settings: [
+        {
+          key: 'showTangentLines',
+          label: 'Tangent Lines',
+          description: 'Show tangent line and slope on hover',
+        },
+      ],
+    },
+    {
       title: 'Rectangle Concepts',
       subtitle: 'Educational features for rectangles and areas',
       settings: [

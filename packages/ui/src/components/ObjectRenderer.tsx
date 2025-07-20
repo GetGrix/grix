@@ -26,6 +26,39 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
   
   // Track hover state for ray endpoints
   const [hoveredEndpoint, setHoveredEndpoint] = useState<string | null>(null);
+  
+  // Track mouse position for tangent lines on circles  
+  const [mousePosition, setMousePosition] = useState<Point | null>(null);
+  const [hoveredCircle, setHoveredCircle] = useState<string | null>(null);
+  const [touchTangentInfo, setTouchTangentInfo] = useState<{circleId: string, point: Point, slope: number | null} | null>(null);
+  
+  // Use a ref to track leave timeout to prevent brief mouse exits from clearing state
+  const leaveTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  
+  // Clear touch tangent info when touching anywhere else
+  React.useEffect(() => {
+    const handleGlobalTouch = (e: TouchEvent) => {
+      // Check if the touch is on a circle - if not, clear tangent info
+      const target = e.target as Element;
+      if (touchTangentInfo && !target?.closest('circle')) {
+        setTouchTangentInfo(null);
+      }
+    };
+    
+    if (touchTangentInfo) {
+      document.addEventListener('touchstart', handleGlobalTouch);
+      return () => document.removeEventListener('touchstart', handleGlobalTouch);
+    }
+  }, [touchTangentInfo]);
+  
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (leaveTimeoutRef.current) {
+        clearTimeout(leaveTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Render mathematical objects
   const renderObject = (obj: MathObject) => {
@@ -1201,6 +1234,62 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
         const center = worldToScreen(obj.properties.center);
         const radius = obj.properties.radius * viewport.zoom;
         
+        // Calculate tangent line if hovering and tangent lines are enabled
+        const showTangent = visualSettings.showTangentLines && 
+          ((hoveredCircle === obj.id && mousePosition) || (touchTangentInfo && touchTangentInfo.circleId === obj.id));
+        let tangentInfo = null;
+        
+        if (showTangent) {
+          let worldMouse = null;
+          
+          // Use touch tangent info if available, otherwise use mouse position
+          if (touchTangentInfo && touchTangentInfo.circleId === obj.id) {
+            worldMouse = touchTangentInfo.point;
+          } else if (mousePosition && hoveredCircle === obj.id) {
+            // Convert mouse position to world coordinates
+            worldMouse = {
+              x: (mousePosition.x - canvasSize.width / 2) / viewport.zoom + viewport.center.x,
+              y: -(mousePosition.y - canvasSize.height / 2) / viewport.zoom + viewport.center.y
+            };
+          }
+          
+          if (worldMouse) {
+            // Calculate direction from center to mouse (no distance checking - hover circle handles that)
+            const dx = worldMouse.x - obj.properties.center.x;
+            const dy = worldMouse.y - obj.properties.center.y;
+            
+            // Find the closest point on the circle circumference to the mouse
+            const angle = Math.atan2(dy, dx);
+            const tangentPoint = {
+              x: obj.properties.center.x + obj.properties.radius * Math.cos(angle),
+              y: obj.properties.center.y + obj.properties.radius * Math.sin(angle)
+            };
+            
+            // Calculate tangent slope (perpendicular to radius)
+            const radiusSlope = dy / dx;
+            const tangentSlope = isFinite(radiusSlope) && radiusSlope !== 0 ? -1 / radiusSlope : null;
+            
+            // Calculate tangent line endpoints (extend beyond visible area)
+            const lineLength = Math.max(canvasSize.width, canvasSize.height) / viewport.zoom;
+            const tangentStart = {
+              x: tangentPoint.x - lineLength * Math.cos(angle + Math.PI / 2),
+              y: tangentPoint.y - lineLength * Math.sin(angle + Math.PI / 2)
+            };
+            const tangentEnd = {
+              x: tangentPoint.x + lineLength * Math.cos(angle + Math.PI / 2),
+              y: tangentPoint.y + lineLength * Math.sin(angle + Math.PI / 2)
+            };
+            
+            tangentInfo = {
+              point: tangentPoint,
+              start: tangentStart,
+              end: tangentEnd,
+              slope: tangentSlope,
+              angle: angle
+            };
+          }
+        }
+        
         return (
           <g key={obj.id}>
             {/* Selection glow effect */}
@@ -1215,6 +1304,76 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                 opacity={0.5}
               />
             )}
+            {/* Invisible larger circle for better hover detection */}
+            <circle
+              cx={center.x}
+              cy={center.y}
+              r={radius * 1.8}
+              fill="transparent"
+              style={{ cursor: 'pointer' }}
+              onMouseEnter={() => {
+                // Clear any pending leave timeout
+                if (leaveTimeoutRef.current) {
+                  clearTimeout(leaveTimeoutRef.current);
+                  leaveTimeoutRef.current = null;
+                }
+                setHoveredCircle(obj.id);
+              }}
+              onMouseLeave={() => {
+                // Small delay to prevent brief exits from clearing the tangent
+                leaveTimeoutRef.current = setTimeout(() => {
+                  setHoveredCircle(null);
+                  setMousePosition(null);
+                }, 100); // 100ms grace period
+              }}
+              onMouseMove={(e) => {
+                if (visualSettings.showTangentLines && hoveredCircle === obj.id) {
+                  const rect = e.currentTarget.ownerSVGElement?.getBoundingClientRect();
+                  if (rect) {
+                    setMousePosition({
+                      x: e.clientX - rect.left,
+                      y: e.clientY - rect.top
+                    });
+                  }
+                }
+              }}
+              onTouchStart={(e) => {
+                if (visualSettings.showTangentLines) {
+                  e.preventDefault();
+                  const rect = e.currentTarget.ownerSVGElement?.getBoundingClientRect();
+                  if (rect && e.touches[0]) {
+                    const touchPoint = {
+                      x: e.touches[0].clientX - rect.left,
+                      y: e.touches[0].clientY - rect.top
+                    };
+                    
+                    // Convert to world coordinates
+                    const worldTouch = {
+                      x: (touchPoint.x - canvasSize.width / 2) / viewport.zoom + viewport.center.x,
+                      y: -(touchPoint.y - canvasSize.height / 2) / viewport.zoom + viewport.center.y
+                    };
+                    
+                    // Calculate tangent slope at touch point
+                    const dx = worldTouch.x - obj.properties.center.x;
+                    const dy = worldTouch.y - obj.properties.center.y;
+                    const radiusSlope = dy / dx;
+                    const tangentSlope = isFinite(radiusSlope) ? -1 / radiusSlope : null;
+                    
+                    setTouchTangentInfo({
+                      circleId: obj.id,
+                      point: worldTouch,
+                      slope: tangentSlope
+                    });
+                  }
+                }
+              }}
+              onTouchEnd={() => {
+                // Clear tangent info on touch end, but with a small delay to allow seeing it
+                setTimeout(() => setTouchTangentInfo(null), 100);
+              }}
+            />
+            
+            {/* Visible circle */}
             <circle
               cx={center.x}
               cy={center.y}
@@ -1222,8 +1381,74 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
               fill={isSelected ? "rgba(168, 85, 247, 0.15)" : "rgba(168, 85, 247, 0.1)"}
               stroke={isSelected ? "#7C3AED" : "#A855F7"}
               strokeWidth={isSelected ? 3 : 2}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', pointerEvents: 'none' }}
             />
+            
+            {/* Tangent line visualization */}
+            {tangentInfo && (
+              <g>
+                {/* Tangent line */}
+                <line
+                  x1={worldToScreen(tangentInfo.start).x}
+                  y1={worldToScreen(tangentInfo.start).y}
+                  x2={worldToScreen(tangentInfo.end).x}
+                  y2={worldToScreen(tangentInfo.end).y}
+                  stroke="#EF4444"
+                  strokeWidth="2"
+                  opacity="0.7"
+                  strokeDasharray="4,2"
+                />
+                
+                {/* Tangent point */}
+                <circle
+                  cx={worldToScreen(tangentInfo.point).x}
+                  cy={worldToScreen(tangentInfo.point).y}
+                  r="3"
+                  fill="#EF4444"
+                  opacity="0.8"
+                />
+                
+                {/* Radius to tangent point */}
+                <line
+                  x1={center.x}
+                  y1={center.y}
+                  x2={worldToScreen(tangentInfo.point).x}
+                  y2={worldToScreen(tangentInfo.point).y}
+                  stroke="#EF4444"
+                  strokeWidth="1"
+                  opacity="0.5"
+                  strokeDasharray="2,2"
+                />
+                
+                {/* Slope label */}
+                {tangentInfo.slope !== null && isFinite(tangentInfo.slope) && (
+                  <text
+                    x={worldToScreen(tangentInfo.point).x + 15}
+                    y={worldToScreen(tangentInfo.point).y - 10}
+                    fontSize={scaledFontSize(10)}
+                    fontWeight="500"
+                    fill="#EF4444"
+                    textAnchor="start"
+                    opacity="0.9"
+                  >
+                    slope = {tangentInfo.slope.toFixed(2)}
+                  </text>
+                )}
+                {(tangentInfo.slope === null || !isFinite(tangentInfo.slope)) && (
+                  <text
+                    x={worldToScreen(tangentInfo.point).x + 15}
+                    y={worldToScreen(tangentInfo.point).y - 10}
+                    fontSize={scaledFontSize(10)}
+                    fontWeight="500"
+                    fill="#EF4444"
+                    textAnchor="start"
+                    opacity="0.9"
+                  >
+                    slope = ∞
+                  </text>
+                )}
+              </g>
+            )}
             
             {/* Center handle */}
             <circle

@@ -10,6 +10,9 @@ interface VisualizationSettings {
   showDistanceMarkers: boolean;
   showAngleArc: boolean;
   
+  // Circle enhancements
+  showTangentLines: boolean;
+  
   // Division visualization
   showDivisionAnswer: boolean;
   
@@ -59,6 +62,9 @@ const defaultSettings: VisualizationSettings = {
   showRiseRunTriangle: false,
   showDistanceMarkers: false,
   showAngleArc: false,
+  
+  // Circle enhancements
+  showTangentLines: false,
   
   // Division visualization
   showDivisionAnswer: true,

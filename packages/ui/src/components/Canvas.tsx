@@ -450,6 +450,89 @@ export function Canvas({
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       switch (event.key) {
+        case 'ArrowUp':
+        case 'ArrowDown':
+        case 'ArrowLeft':
+        case 'ArrowRight':
+          // Move selected objects with arrow keys
+          if (selectedObjects.length > 0) {
+            event.preventDefault();
+            const moveDistance = event.shiftKey ? 0.1 : 1; // Fine movement with shift
+            let deltaX = 0;
+            let deltaY = 0;
+            
+            switch (event.key) {
+              case 'ArrowUp':
+                deltaY = moveDistance;
+                break;
+              case 'ArrowDown':
+                deltaY = -moveDistance;
+                break;
+              case 'ArrowLeft':
+                deltaX = -moveDistance;
+                break;
+              case 'ArrowRight':
+                deltaX = moveDistance;
+                break;
+            }
+            
+            // Move each selected object
+            selectedObjects.forEach(objectId => {
+              const obj = getObject(objectId);
+              if (obj) {
+                switch (obj.type) {
+                  case 'ray':
+                    updateObject(objectId, {
+                      properties: {
+                        ...obj.properties,
+                        startPoint: {
+                          x: obj.properties.startPoint.x + deltaX,
+                          y: obj.properties.startPoint.y + deltaY
+                        },
+                        endPoint: {
+                          x: obj.properties.endPoint.x + deltaX,
+                          y: obj.properties.endPoint.y + deltaY
+                        }
+                      }
+                    });
+                    break;
+                  case 'rectangle':
+                    updateObject(objectId, {
+                      properties: {
+                        ...obj.properties,
+                        x: obj.properties.x + deltaX,
+                        y: obj.properties.y + deltaY
+                      }
+                    });
+                    break;
+                  case 'circle':
+                    updateObject(objectId, {
+                      properties: {
+                        ...obj.properties,
+                        center: {
+                          x: obj.properties.center.x + deltaX,
+                          y: obj.properties.center.y + deltaY
+                        }
+                      }
+                    });
+                    break;
+                  case 'triangle':
+                    const newVertices = obj.properties.vertices.map(vertex => ({
+                      x: vertex.x + deltaX,
+                      y: vertex.y + deltaY
+                    }));
+                    updateObject(objectId, {
+                      properties: {
+                        ...obj.properties,
+                        vertices: newVertices
+                      }
+                    });
+                    break;
+                }
+              }
+            });
+          }
+          break;
         case 'Escape':
           if (activeTool) {
             // Send cancel event to active tool first

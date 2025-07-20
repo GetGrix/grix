@@ -53,6 +53,9 @@ interface VisualizationSettings {
   coordinateSystem: 'cartesian' | 'polar' | 'both';
   showPolarGrid: boolean;
   customOrigin: { x: number; y: number } | null; // null = default (0,0)
+  
+  // Zoom behavior settings
+  zoomSensitivity: 'low' | 'medium' | 'high';
 }
 
 interface VisualizationStore extends VisualizationSettings {
@@ -63,6 +66,7 @@ interface VisualizationStore extends VisualizationSettings {
   setSnapPrecision: (precision: 'adaptive' | 'whole' | 'half' | 'quarter' | 'tenth') => void;
   setCoordinateSystem: (system: 'cartesian' | 'polar' | 'both') => void;
   setCustomOrigin: (origin: { x: number; y: number } | null) => void;
+  setZoomSensitivity: (sensitivity: 'low' | 'medium' | 'high') => void;
   resetToDefaults: () => void;
 }
 
@@ -118,6 +122,9 @@ const defaultSettings: VisualizationSettings = {
   coordinateSystem: 'cartesian',
   showPolarGrid: false,
   customOrigin: null,
+  
+  // Zoom behavior settings
+  zoomSensitivity: 'medium',
 };
 
 export const useVisualizationStore = create<VisualizationStore>((set) => ({
@@ -152,6 +159,11 @@ export const useVisualizationStore = create<VisualizationStore>((set) => ({
 
   setCustomOrigin: (origin) => {
     set({ customOrigin: origin });
+    storageManager.scheduleSave();
+  },
+
+  setZoomSensitivity: (sensitivity) => {
+    set({ zoomSensitivity: sensitivity });
     storageManager.scheduleSave();
   },
 

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { usePluginManager } from '../plugins/PluginManager.js';
 import { ExamplesDropdown } from './ExamplesDropdown.js';
+import { useMenuState } from '../context/MenuStateContext.js';
+import { useTranslation } from '../i18n/useTranslation.js';
 
 interface Tool {
   id: string;
@@ -48,21 +50,23 @@ interface ToolBarProps {
 
 export function ToolBar({ className = '' }: ToolBarProps) {
   const { activeTool, setActiveTool } = usePluginManager();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { openMenu, setOpenMenu } = useMenuState();
+  const { t } = useTranslation();
+  const isDropdownOpen = openMenu === 'build';
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleToolSelect = (toolId: string) => {
     setActiveTool(toolId);
-    setIsDropdownOpen(false);
+    setOpenMenu(null);
   };
 
   const handleClearTool = () => {
     setActiveTool(null);
-    setIsDropdownOpen(false);
+    setOpenMenu(null);
   };
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+    setOpenMenu(openMenu === 'build' ? null : 'build');
   };
 
   const activeToolInfo = buildTools.find(t => t.id === activeTool);
@@ -71,7 +75,7 @@ export function ToolBar({ className = '' }: ToolBarProps) {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
+        setOpenMenu(null);
       }
     };
 
@@ -86,7 +90,7 @@ export function ToolBar({ className = '' }: ToolBarProps) {
         document.removeEventListener('click', handleClickOutside, true);
       };
     }
-  }, [isDropdownOpen]);
+  }, [isDropdownOpen, setOpenMenu]);
 
   return (
     <div className={`flex items-center gap-2 p-2 bg-white border-b border-gray-200 ${className}`}>
@@ -140,7 +144,7 @@ export function ToolBar({ className = '' }: ToolBarProps) {
         >
           <span className="text-lg">🏗️</span>
           <span className="text-sm font-medium">
-            {activeToolInfo ? activeToolInfo.name : 'Build'}
+            {activeToolInfo ? activeToolInfo.name : t('toolbar.build')}
           </span>
           <span className={`text-xs transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}>
             ▼

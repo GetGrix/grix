@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useVisualizationStore } from '../store/visualizationStore.js';
+import { useTranslation } from '../i18n/useTranslation.js';
 
 interface SettingItem {
   key: keyof ReturnType<typeof useVisualizationStore>;
@@ -13,18 +14,37 @@ interface SettingSection {
   settings: SettingItem[];
 }
 
-export function SettingsPanel() {
-  const [isOpen, setIsOpen] = useState(false);
+interface SettingsPanelProps {
+  isOpen?: boolean;
+  onToggle?: () => void;
+}
+
+export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPanelProps = {}) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const panelRef = useRef<HTMLDivElement>(null);
   const visualizationStore = useVisualizationStore();
-  const { toggleSetting, setFontScale, setGridScale, setSnapPrecision, setCoordinateSystem, resetToDefaults } = visualizationStore;
+  const { toggleSetting, setFontScale, setGridScale, setSnapPrecision, setCoordinateSystem, setZoomSensitivity, resetToDefaults } = visualizationStore;
+  const { t, language, changeLanguage, availableLanguages } = useTranslation();
+
+  const handleToggle = () => {
+    if (onToggle) {
+      onToggle();
+    } else {
+      setInternalIsOpen(!internalIsOpen);
+    }
+  };
 
   // Close panel when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+        if (onToggle) {
+          onToggle();
+        } else {
+          setInternalIsOpen(false);
+        }
       }
     }
 
@@ -37,7 +57,7 @@ export function SettingsPanel() {
         document.removeEventListener('click', handleClickOutside, true);
       };
     }
-  }, [isOpen]);
+  }, [isOpen, onToggle]);
 
   const allSettingSections: SettingSection[] = [
     {
@@ -87,7 +107,7 @@ export function SettingsPanel() {
       settings: [
         {
           key: 'showDivisionAnswer',
-          label: 'Slope/Division Answer (x=1)',
+          label: 'Slope/Division Answer Line (x=1)',
           description: 'Blue dot showing slope value and division answer at x=1',
         },
       ],
@@ -230,7 +250,7 @@ export function SettingsPanel() {
 
   // Create category options for the dropdown
   const categoryOptions = [
-    { id: 'all', name: 'All Settings' },
+    { id: 'all', name: t('settings.allSettings') },
     ...allSettingSections.map(section => ({
       id: section.title.toLowerCase().replace(/[^a-z0-9]/g, '-'),
       name: section.title
@@ -238,30 +258,26 @@ export function SettingsPanel() {
   ];
 
   return (
-    <div ref={panelRef} className="fixed bottom-4 left-4 z-50">
+    <div ref={panelRef} className="relative">
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
-        title="Visualization Settings"
+        onClick={handleToggle}
+        className="w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg hover:bg-gray-50 transition-all hover:shadow-xl flex items-center justify-center"
+        title={t('settings.title')}
       >
         <span className="text-lg">⚙️</span>
-        <span className="text-sm font-medium text-gray-700">Settings</span>
-        <span className={`text-xs transition-transform ${isOpen ? '' : 'rotate-180'}`}>
-          ▼
-        </span>
       </button>
 
       {isOpen && (
-        <div className="settings-panel absolute bottom-full left-0 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg w-80 max-h-[28rem] overflow-y-auto">
+        <div className="settings-panel absolute bottom-full left-0 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg w-80 max-h-[28rem] overflow-y-auto z-60">
           {/* Header */}
           <div className="sticky top-0 bg-white border-b border-gray-100 px-4 py-3 rounded-t-lg">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-gray-800">Visualization Settings</h3>
+              <h3 className="text-sm font-semibold text-gray-800">{t('settings.title')}</h3>
               <button
                 onClick={resetToDefaults}
                 className="text-xs text-blue-600 hover:text-blue-800 font-medium"
               >
-                Reset All
+                {t('settings.resetAll')}
               </button>
             </div>
             
@@ -440,6 +456,63 @@ export function SettingsPanel() {
                         </div>
                         <div className="text-xs text-gray-500 leading-relaxed">
                           Controls where objects can be placed when snap-to-grid is enabled
+                        </div>
+                      </div>
+                      
+                      {/* Zoom Sensitivity */}
+                      <div className="space-y-3 pt-4 border-t border-gray-100">
+                        <label className="text-sm font-medium text-gray-700">
+                          Zoom Sensitivity
+                        </label>
+                        <div className="grid grid-cols-1 gap-1">
+                          {[
+                            { value: 'low', label: 'Low', desc: 'Gentle zoom, harder to get lost' },
+                            { value: 'medium', label: 'Medium', desc: 'Balanced zoom behavior' },
+                            { value: 'high', label: 'High', desc: 'Responsive zoom, full control' }
+                          ].map(option => (
+                            <label key={option.value} className="flex items-start gap-3 p-2 rounded hover:bg-gray-50 cursor-pointer group">
+                              <input
+                                type="radio"
+                                name="zoomSensitivity"
+                                value={option.value}
+                                checked={visualizationStore.zoomSensitivity === option.value}
+                                onChange={(e) => setZoomSensitivity(e.target.value as 'low' | 'medium' | 'high')}
+                                className="mt-0.5"
+                              />
+                              <div>
+                                <div className="text-sm font-medium text-gray-900 group-hover:text-gray-700">
+                                  {option.label}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {option.desc}
+                                </div>
+                              </div>
+                            </label>
+                          ))}
+                        </div>
+                        <div className="text-xs text-gray-500 leading-relaxed">
+                          Controls how responsive zoom gestures are on mobile devices
+                        </div>
+                      </div>
+                      
+                      {/* Language Selector */}
+                      <div className="space-y-3 pt-4 border-t border-gray-100">
+                        <label className="text-sm font-medium text-gray-700">
+                          Language / Idioma
+                        </label>
+                        <select
+                          value={language}
+                          onChange={(e) => changeLanguage(e.target.value)}
+                          className="w-full text-sm border border-gray-200 rounded px-3 py-2 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                          {availableLanguages.map(lang => (
+                            <option key={lang.code} value={lang.code}>
+                              {lang.nativeName} ({lang.name})
+                            </option>
+                          ))}
+                        </select>
+                        <div className="text-xs text-gray-500 leading-relaxed">
+                          Help translate Grix to your language! Visit our GitHub page.
                         </div>
                       </div>
                     </div>

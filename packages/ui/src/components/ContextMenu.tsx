@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import type { MathObject } from '@getgrix/core';
 import { formatCoordinate, formatMathValue } from '../utils/gridUtils.js';
+import { storageManager } from '../utils/storageManager.js';
 
 interface ContextMenuProps {
   selectedObject: MathObject | null;
@@ -10,6 +11,27 @@ interface ContextMenuProps {
 }
 
 export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: ContextMenuProps) {
+  // Initialize collapsed state directly from storage
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    const state = storageManager.loadState();
+    return state?.uiSettings?.contextMenuCollapsed ?? false;
+  });
+
+  // Save collapsed state to storage
+  const handleToggleCollapse = () => {
+    const newCollapsed = !isCollapsed;
+    setIsCollapsed(newCollapsed);
+    
+    const state = storageManager.loadState() || {};
+    storageManager.saveState({
+      ...state,
+      uiSettings: {
+        ...state.uiSettings,
+        contextMenuCollapsed: newCollapsed
+      }
+    });
+  };
+
   if (!selectedObject) return null;
 
   const handleDelete = () => {
@@ -230,6 +252,56 @@ export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: Con
     }
   };
 
+  // Get object label for collapsed view
+  const getObjectLabel = () => {
+    switch (selectedObject.type) {
+      case 'ray':
+        return `Line: slope ${formatMathValue((selectedObject as any).properties.slope)}`;
+      case 'rectangle':
+        const rect = selectedObject as any;
+        return `Rectangle: ${formatMathValue(rect.properties.width)} × ${formatMathValue(rect.properties.height)}`;
+      case 'circle':
+        return `Circle: r=${formatMathValue((selectedObject as any).properties.radius)}`;
+      case 'triangle':
+        return `Triangle`;
+      case 'function':
+        return `Function: ${(selectedObject as any).properties.equation}`;
+      default:
+        return selectedObject.type;
+    }
+  };
+
+  if (isCollapsed) {
+    return (
+      <div className="fixed top-20 right-4 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+        <div className="flex items-center gap-2 px-3 py-2">
+          <button
+            onClick={handleToggleCollapse}
+            className="text-gray-500 hover:text-gray-700"
+            title="Expand"
+          >
+            ▶
+          </button>
+          <span className="text-sm text-gray-700">{getObjectLabel()}</span>
+          <button
+            onClick={handleDelete}
+            className="ml-2 text-red-600 hover:text-red-700"
+            title="Delete"
+          >
+            🗑️
+          </button>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600"
+            title="Close"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div 
       className="fixed top-20 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-50 min-w-48"
@@ -244,6 +316,17 @@ export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: Con
         e.stopPropagation();
       }}
     >
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-sm font-semibold text-gray-700">{selectedObject.type.charAt(0).toUpperCase() + selectedObject.type.slice(1)} Details</h3>
+        <button
+          onClick={handleToggleCollapse}
+          className="text-gray-400 hover:text-gray-600 text-xs"
+          title="Collapse"
+        >
+          ▼
+        </button>
+      </div>
+      
       {renderObjectDetails()}
       
       <div className="mt-3 pt-2 border-t border-gray-100 flex gap-2">

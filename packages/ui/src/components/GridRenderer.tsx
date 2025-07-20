@@ -118,18 +118,19 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
 
   // Generate grid line elements with special x=1 line
   const verticalLines = vLines.map(line => {
-    // Special styling for x=1 line
+    // Special styling for x=1 line (only if showDivisionAnswer is enabled)
     const isXOne = Math.abs(line.value - 1) < 0.001;
+    const showXOneSpecial = isXOne && visualSettings.showDivisionAnswer;
     const stroke = line.isAxis ? '#374151' : 
-                   isXOne ? '#60A5FA' : // Light blue for x=1
+                   showXOneSpecial ? '#60A5FA' : // Light blue for x=1 when division answer is shown
                    line.isInteger ? '#D1D5DB' : // Darker gray for better visibility
                    line.isMajor ? '#9CA3AF' : '#E5E7EB';
     const strokeWidth = line.isAxis ? 2 : 
-                        isXOne ? 1.5 :
+                        showXOneSpecial ? 1.5 :
                         line.isInteger ? 1 : // Fixed width for integer lines
                         line.isMajor ? 1 : 0.5;
     const opacity = line.isAxis ? 1 : 
-                    isXOne ? 0.8 :
+                    showXOneSpecial ? 0.8 :
                     line.isInteger ? 0.5 : // Increased visibility for integer lines
                     line.isMajor ? 0.6 * gridSystem.opacity : 0.3 * gridSystem.opacity;
     

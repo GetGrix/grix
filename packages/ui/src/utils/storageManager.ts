@@ -24,6 +24,18 @@ export interface StoredState {
   // UI state
   activeTool: string | null;
   
+  // UI preferences
+  uiSettings?: {
+    contextMenuCollapsed?: boolean;
+    [key: string]: any;
+  };
+  
+  // Tooltip settings
+  tooltipSettings?: {
+    homeButtonDismissed?: boolean;
+    [key: string]: any;
+  };
+  
   // Metadata
   version: string;
   timestamp: number;

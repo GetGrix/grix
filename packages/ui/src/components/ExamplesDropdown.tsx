@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { examplesManager, type Example, type ExampleCategory } from '../utils/examplesManager.js';
+import { useMenuState } from '../context/MenuStateContext.js';
 
 export function ExamplesDropdown() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { openMenu, setOpenMenu } = useMenuState();
+  const isOpen = openMenu === 'examples';
   const [examples, setExamples] = useState<Example[]>([]);
   const [categories, setCategories] = useState<ExampleCategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -14,7 +16,7 @@ export function ExamplesDropdown() {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+        setOpenMenu(null);
       }
     }
 
@@ -26,7 +28,7 @@ export function ExamplesDropdown() {
         document.removeEventListener('click', handleClickOutside, true);
       };
     }
-  }, [isOpen]);
+  }, [isOpen, setOpenMenu]);
 
   // Load examples and categories on mount
   useEffect(() => {
@@ -58,7 +60,7 @@ export function ExamplesDropdown() {
       setIsLoading(true);
       setError(null);
       await examplesManager.applyExample(example.id);
-      setIsOpen(false);
+      setOpenMenu(null);
     } catch (err) {
       console.error('Failed to apply example:', err);
       setError(`Failed to load "${example.title}"`);
@@ -72,7 +74,7 @@ export function ExamplesDropdown() {
       setIsLoading(true);
       setError(null);
       await examplesManager.clearCanvas();
-      setIsOpen(false);
+      setOpenMenu(null);
     } catch (err) {
       console.error('Failed to clear canvas:', err);
       setError('Failed to clear canvas');
@@ -106,7 +108,7 @@ export function ExamplesDropdown() {
   return (
     <div ref={dropdownRef} className="relative z-50">
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setOpenMenu(openMenu === 'examples' ? null : 'examples')}
         className="flex items-center gap-2 px-4 py-2 rounded-lg border transition-all bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"
         title="Mathematical Examples"
         disabled={isLoading}

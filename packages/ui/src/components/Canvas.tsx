@@ -12,6 +12,8 @@ import { TutorialOverlay } from './TutorialOverlay.js';
 import { InfoModal } from './InfoModal.js';
 import { ActionMenu } from './ActionMenu.js';
 import { useTransformationStore } from '../store/transformationStore.js';
+import { useVisualizationStore } from '../store/visualizationStore.js';
+import { useMenuState } from '../context/MenuStateContext.js';
 import type { UnifiedPointerEvent, Point } from '@getgrix/core';
 import type { GestureEvent } from '../hooks/useInputSystem.js';
 import { distanceToLineSegment, pointInTriangle, distanceToCircleEdge } from '../utils/gridUtils.js';
@@ -47,6 +49,7 @@ export function Canvas({
   onObjectInteraction 
 }: CanvasProps) {
   const svgRef = useRef<SVGSVGElement>(null);
+  const { openMenu, setOpenMenu } = useMenuState();
   const {
     viewport,
     setViewport,
@@ -71,6 +74,9 @@ export function Canvas({
   
   // Connect to transformation system
   const { rotate90, rotate180, rotate270, scaleObject, setSelectedObject } = useTransformationStore();
+  
+  // Connect to visualization settings
+  const { zoomSensitivity } = useVisualizationStore();
 
   // Update canvas size when dimensions change
   useEffect(() => {
@@ -412,25 +418,77 @@ export function Canvas({
     switch (gesture.type) {
       case 'pinch':
         if (gesture.scale && gesture.center) {
-          // Mobile-optimized zoom handling - detect mobile through event properties
+          // Smart zoom management for mobile
           const objectCount = objects.length;
           
-          // Dampen zoom for touch devices to prevent aggressive scaling
-          let adjustedScale = gesture.scale;
+          // Intelligent zoom limits based on context
+          const getZoomLimits = () => {
+            const baseMin = 0.1;
+            const baseMax = objectCount > 50 ? 100 : objectCount > 20 ? 200 : 500;
+            
+            // Tighter limits when zoomed out to prevent getting lost
+            if (viewport.zoom < 1) {
+              return { min: baseMin, max: Math.min(50, baseMax) };
+            }
+            
+            // More restrictive when zoomed in very far
+            if (viewport.zoom > 100) {
+              return { min: 5, max: baseMax };
+            }
+            
+            return { min: baseMin, max: baseMax };
+          };
+          
+          const { min: minZoom, max: maxZoom } = getZoomLimits();
+          
+          // Adaptive dampening based on user preference and current zoom level
+          let dampeningFactor = 1.0;
+          
           if (gesture.touches && gesture.touches > 1) {
-            // Multi-touch indicates mobile/tablet - apply moderate dampening
-            // Check for iOS specifically for different handling if needed
+            // Base dampening by user preference
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-            const dampeningFactor = isIOS ? 0.3 : 0.4; // 30% for iOS, 40% for other touch devices
-            adjustedScale = 1 + (gesture.scale - 1) * dampeningFactor;
+            const baseDampening = (() => {
+              switch (zoomSensitivity) {
+                case 'low': return isIOS ? 0.15 : 0.25;
+                case 'medium': return isIOS ? 0.25 : 0.35;
+                case 'high': return isIOS ? 0.4 : 0.5;
+                default: return isIOS ? 0.25 : 0.35;
+              }
+            })();
+            
+            // Increase dampening when zoomed very far in/out
+            const zoomFactor = viewport.zoom < 0.5 || viewport.zoom > 50 ? 0.7 : 1.0;
+            
+            // Reduce extreme gesture scales based on sensitivity
+            const gestureIntensity = Math.abs(gesture.scale - 1);
+            const intensityThreshold = zoomSensitivity === 'high' ? 0.5 : 0.3;
+            const intensityFactor = gestureIntensity > intensityThreshold ? 0.6 : 1.0;
+            
+            dampeningFactor = baseDampening * zoomFactor * intensityFactor;
           }
           
-          // Performance-based zoom limits (stricter when many objects)
-          const maxZoom = objectCount > 50 ? 100 : objectCount > 20 ? 200 : 500;
-          const minZoom = 0.1;
+          // Apply smart dampening with dead zone based on sensitivity
+          const scaleDelta = gesture.scale - 1;
+          const deadZone = zoomSensitivity === 'high' ? 0.01 : zoomSensitivity === 'low' ? 0.03 : 0.02;
+          if (Math.abs(scaleDelta) < deadZone) return; // Ignore tiny movements
           
-          // Calculate new zoom with center point
-          const newZoom = Math.max(minZoom, Math.min(maxZoom, viewport.zoom * adjustedScale));
+          const adjustedScale = 1 + scaleDelta * dampeningFactor;
+          
+          // Calculate new zoom with intelligent bounds
+          let newZoom = viewport.zoom * adjustedScale;
+          
+          // Soft limits with resistance at boundaries
+          if (newZoom > maxZoom * 0.9) {
+            const overshoot = (newZoom - maxZoom * 0.9) / (maxZoom * 0.1);
+            newZoom = maxZoom * 0.9 + (maxZoom * 0.1) * (1 - Math.exp(-overshoot));
+          }
+          
+          if (newZoom < minZoom * 1.1) {
+            const undershoot = (minZoom * 1.1 - newZoom) / (minZoom * 0.1);
+            newZoom = minZoom * 1.1 - (minZoom * 0.1) * (1 - Math.exp(-undershoot));
+          }
+          
+          newZoom = Math.max(minZoom, Math.min(maxZoom, newZoom));
           
           // Zoom towards the center of the pinch gesture
           if (Math.abs(newZoom - viewport.zoom) > 0.001) {
@@ -454,7 +512,7 @@ export function Canvas({
         // Handle tap events (tool interactions will be handled by plugins)
         break;
     }
-  }, [viewport.zoom, viewport.center, setViewport, objects.length, screenToWorld]);
+  }, [viewport.zoom, viewport.center, setViewport, objects.length, screenToWorld, zoomSensitivity]);
 
   // Set up input system
   const { capabilities, touchTargetSize } = useInputSystem(
@@ -676,6 +734,13 @@ export function Canvas({
     }
   }, [selectedObjects, isDragging]);
 
+  // Close context menu when other menus open
+  useEffect(() => {
+    if (openMenu && showContextMenu) {
+      setShowContextMenu(false);
+    }
+  }, [openMenu, showContextMenu]);
+
   const handleContextMenuClose = useCallback(() => {
     setShowContextMenu(false);
   }, []);
@@ -824,17 +889,26 @@ export function Canvas({
         />
       )}
 
-      {/* Settings panel */}
-      <SettingsPanel />
+      {/* Bottom-left button group */}
+      <div className="fixed bottom-4 left-4 z-50 flex gap-3">
+        {/* Settings button */}
+        <SettingsPanel 
+          isOpen={openMenu === 'settings'}
+          onToggle={() => setOpenMenu(openMenu === 'settings' ? null : 'settings')}
+        />
+        
+        {/* Action menu button */}
+        <ActionMenu 
+          isOpen={openMenu === 'action'}
+          onToggle={() => setOpenMenu(openMenu === 'action' ? null : 'action')}
+        />
+      </div>
 
       {/* First-visit tutorial overlay */}
       <TutorialOverlay />
 
       {/* Info modal */}
       <InfoModal />
-
-      {/* Action menu */}
-      <ActionMenu />
     </div>
   );
 }

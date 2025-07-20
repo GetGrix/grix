@@ -24,7 +24,7 @@ export function TutorialOverlay() {
     },
     {
       title: "Explore Examples 📚",
-      content: "Click the 'Examples' button in the top-right corner to load pre-made mathematical demonstrations. Perfect for getting started!",
+      content: "Click the 'Examples' button in the toolbar to load pre-made mathematical demonstrations. Perfect for getting started!",
       highlight: "examples"
     },
     {
@@ -150,18 +150,18 @@ export function TutorialOverlay() {
       {currentStepData.highlight && (
         <>
           {currentStepData.highlight === 'examples' && (
-            <div className="fixed top-4 right-4 z-[10000] pointer-events-none">
-              <div className="w-24 h-12 border-4 border-yellow-400 rounded-lg animate-pulse"></div>
+            <div className="fixed top-0 right-0 z-[10000] pointer-events-none">
+              <div className="absolute top-2 right-2 w-32 h-12 border-4 border-yellow-400 rounded-lg animate-pulse"></div>
             </div>
           )}
           {currentStepData.highlight === 'settings' && (
             <div className="fixed bottom-4 left-4 z-[10000] pointer-events-none">
-              <div className="w-24 h-12 border-4 border-yellow-400 rounded-lg animate-pulse"></div>
+              <div className="w-12 h-12 border-4 border-yellow-400 rounded-full animate-pulse"></div>
             </div>
           )}
           {currentStepData.highlight === 'toolbar' && (
-            <div className="fixed top-4 left-4 z-[10000] pointer-events-none">
-              <div className="w-48 h-12 border-4 border-yellow-400 rounded-lg animate-pulse"></div>
+            <div className="fixed top-0 left-0 z-[10000] pointer-events-none">
+              <div className="absolute top-2 left-32 w-24 h-12 border-4 border-yellow-400 rounded-lg animate-pulse"></div>
             </div>
           )}
         </>

@@ -428,7 +428,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                   })()}
                   
                   {/* Division multiples visualization - horizontal lines and optional shading */}
-                  {visualSettings.showDivisionMultiples && (() => {
+                  {visualSettings.showDivisionMultiples && visualSettings.showDivisionAnswer && (() => {
                     // Only show for lines from origin to show division concept
                     const isFromOrigin = Math.abs(obj.properties.startPoint.x) < 0.001 && Math.abs(obj.properties.startPoint.y) < 0.001;
                     if (!isFromOrigin || endX <= 0) return null;
@@ -1073,7 +1073,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                         textAnchor="middle"
                         opacity="0.7"
                       >
-                        {tilesX} × {tilesY} = {tilesX * tilesY} squares
+                        {tilesY} × {tilesX} = {tilesX * tilesY} squares
                       </text>
                     </g>
                   );

@@ -7,10 +7,13 @@ interface ActionMenuProps {
   onClearBoard?: () => void;
   onExportImage?: () => void;
   onImportState?: (file: File) => void;
+  isOpen?: boolean;
+  onToggle?: () => void;
 }
 
-export function ActionMenu({ onClearBoard, onExportImage, onImportState }: ActionMenuProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export function ActionMenu({ onClearBoard, onExportImage, onImportState, isOpen: externalIsOpen, onToggle }: ActionMenuProps) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   const [storageInfo, setStorageInfo] = useState<any>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -19,11 +22,23 @@ export function ActionMenu({ onClearBoard, onExportImage, onImportState }: Actio
   const { objects, clearObjects, clearSelection } = useCanvasStore();
   const { resetToDefaults } = useVisualizationStore();
 
+  const handleToggle = () => {
+    if (onToggle) {
+      onToggle();
+    } else {
+      setInternalIsOpen(!internalIsOpen);
+    }
+  };
+
   // Close menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+        if (onToggle) {
+          onToggle();
+        } else {
+          setInternalIsOpen(false);
+        }
         setShowClearConfirmation(false);
       }
     }
@@ -36,7 +51,7 @@ export function ActionMenu({ onClearBoard, onExportImage, onImportState }: Actio
         document.removeEventListener('click', handleClickOutside, true);
       };
     }
-  }, [isOpen]);
+  }, [isOpen, onToggle]);
 
   // Load storage info when menu opens
   useEffect(() => {
@@ -46,12 +61,20 @@ export function ActionMenu({ onClearBoard, onExportImage, onImportState }: Actio
     }
   }, [isOpen]);
 
+  const closeMenu = () => {
+    if (onToggle) {
+      onToggle();
+    } else {
+      setInternalIsOpen(false);
+    }
+  };
+
   const handleClearBoard = () => {
     clearObjects();
     clearSelection();
     onClearBoard?.();
     setShowClearConfirmation(false);
-    setIsOpen(false);
+    closeMenu();
   };
 
   const handleResetAll = () => {
@@ -60,7 +83,7 @@ export function ActionMenu({ onClearBoard, onExportImage, onImportState }: Actio
     resetToDefaults();
     storageManager.clearState();
     setShowClearConfirmation(false);
-    setIsOpen(false);
+    closeMenu();
   };
 
   const handleExportState = () => {
@@ -76,7 +99,7 @@ export function ActionMenu({ onClearBoard, onExportImage, onImportState }: Actio
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     }
-    setIsOpen(false);
+    closeMenu();
   };
 
   const handleImportState = () => {
@@ -105,12 +128,12 @@ export function ActionMenu({ onClearBoard, onExportImage, onImportState }: Actio
       fileInputRef.current.value = '';
     }
     
-    setIsOpen(false);
+    closeMenu();
   };
 
   const handleExportImage = () => {
     onExportImage?.();
-    setIsOpen(false);
+    closeMenu();
   };
 
   const formatBytes = (bytes: number): string => {
@@ -159,8 +182,8 @@ export function ActionMenu({ onClearBoard, onExportImage, onImportState }: Actio
     <>
       {/* Action Menu Button */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-4 left-4 z-40 w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg hover:bg-gray-50 transition-all hover:shadow-xl flex items-center justify-center"
+        onClick={handleToggle}
+        className="w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg hover:bg-gray-50 transition-all hover:shadow-xl flex items-center justify-center"
         title="Actions & Tools"
       >
         <span className="text-lg">⚡</span>
@@ -177,7 +200,7 @@ export function ActionMenu({ onClearBoard, onExportImage, onImportState }: Actio
 
       {/* Action Menu Dropdown */}
       {isOpen && (
-        <div className="fixed bottom-20 left-4 z-50 bg-white border border-gray-200 rounded-lg shadow-xl min-w-64 max-w-80">
+        <div className="absolute bottom-full left-0 mb-2 z-50 bg-white border border-gray-200 rounded-lg shadow-xl min-w-64 max-w-80">
           {/* Header */}
           <div className="px-4 py-3 border-b border-gray-100">
             <h3 className="text-sm font-semibold text-gray-800">Actions & Tools</h3>

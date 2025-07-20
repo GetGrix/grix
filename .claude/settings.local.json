@@ -20,7 +20,8 @@
       "Bash(npx vite:*)",
       "Bash(git rm:*)",
       "Bash(git reset:*)",
-      "Bash(git clean:*)"
+      "Bash(git clean:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }

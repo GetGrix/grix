@@ -86,6 +86,25 @@ export interface Triangle extends MathObject {
         type: 'scalene' | 'isosceles' | 'equilateral' | 'right' | 'obtuse' | 'acute';
     };
 }
+export interface Function extends MathObject {
+    type: 'function';
+    properties: {
+        equation: string;
+        functionType: 'polynomial' | 'trigonometric' | 'exponential' | 'logarithmic' | 'custom';
+        domain: {
+            min: number;
+            max: number;
+        };
+        range?: {
+            min: number;
+            max: number;
+        };
+        points: Point[];
+        resolution: number;
+        color: string;
+        strokeWidth: number;
+    };
+}
 export interface Viewport {
     center: Point;
     zoom: number;

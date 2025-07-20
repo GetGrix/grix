@@ -5,15 +5,89 @@ import { formatCoordinate, formatMathValue } from '../utils/gridUtils.js';
 interface ContextMenuProps {
   selectedObject: MathObject | null;
   onDelete: () => void;
+  onUpdate: (objectId: string, updates: Partial<any>) => void;
   onClose: () => void;
 }
 
-export function ContextMenu({ selectedObject, onDelete, onClose }: ContextMenuProps) {
+export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: ContextMenuProps) {
   if (!selectedObject) return null;
 
   const handleDelete = () => {
     onDelete();
     onClose();
+  };
+
+  // Helper function to update function equation and regenerate points
+  const updateFunctionEquation = (functionObj: any, newEquation: string) => {
+    try {
+      // Helper to safely evaluate function
+      const evaluateFunction = (equation: string, x: number): number | null => {
+        try {
+          const safeEquation = equation
+            .replace(/\bx\b/g, `(${x})`)
+            .replace(/\^/g, '**')
+            .replace(/sin/g, 'Math.sin')
+            .replace(/cos/g, 'Math.cos')
+            .replace(/tan/g, 'Math.tan')
+            .replace(/log/g, 'Math.log')
+            .replace(/ln/g, 'Math.log')
+            .replace(/exp/g, 'Math.exp')
+            .replace(/sqrt/g, 'Math.sqrt')
+            .replace(/abs/g, 'Math.abs')
+            .replace(/pi/g, 'Math.PI')
+            .replace(/e\b/g, 'Math.E');
+          
+          const func = new Function('x', `return ${safeEquation}`);
+          const y = func(x);
+          return (typeof y === 'number' && !isNaN(y) && isFinite(y)) ? y : null;
+        } catch (e) {
+          return null;
+        }
+      };
+
+      // Detect function type
+      const detectFunctionType = (equation: string): 'polynomial' | 'trigonometric' | 'exponential' | 'logarithmic' | 'custom' => {
+        if (equation.includes('sin') || equation.includes('cos') || equation.includes('tan')) {
+          return 'trigonometric';
+        }
+        if (equation.includes('exp') || equation.includes('e^')) {
+          return 'exponential';
+        }
+        if (equation.includes('log') || equation.includes('ln')) {
+          return 'logarithmic';
+        }
+        if (/x\^\d+|x\*\*\d+/.test(equation)) {
+          return 'polynomial';
+        }
+        return 'custom';
+      };
+
+      // Regenerate points with new equation
+      const domain = functionObj.properties.domain;
+      const resolution = functionObj.properties.resolution || 20;
+      const points = [];
+      const step = (domain.max - domain.min) / (resolution * (domain.max - domain.min));
+      
+      for (let x = domain.min; x <= domain.max; x += step) {
+        const y = evaluateFunction(newEquation, x);
+        if (y !== null) {
+          points.push({ x, y });
+        }
+      }
+
+      // Return updated function properties
+      return {
+        properties: {
+          ...functionObj.properties,
+          equation: newEquation,
+          functionType: detectFunctionType(newEquation),
+          points: points
+        }
+      };
+    } catch (error) {
+      console.error('Failed to update function equation:', error);
+      return null;
+    }
   };
 
   const renderObjectDetails = () => {
@@ -87,13 +161,89 @@ export function ContextMenu({ selectedObject, onDelete, onClose }: ContextMenuPr
           </div>
         );
         
+      case 'function':
+        const functionObj = selectedObject as any;
+        const { equation, functionType, domain, points } = functionObj.properties;
+        
+        return (
+          <div className="space-y-2">
+            <div className="text-sm font-medium text-gray-700">Function Details</div>
+            <div className="space-y-1 text-xs text-gray-600">
+              <div>Equation: f(x) = {equation}</div>
+              <div>Type: {functionType}</div>
+              <div>Domain: [{formatCoordinate(domain.min, 1)}, {formatCoordinate(domain.max, 1)}]</div>
+              <div>Points: {points.length}</div>
+            </div>
+            
+            {/* Editable equation input */}
+            <div className="mt-2 pt-2 border-t border-gray-100">
+              <label className="block text-xs font-medium text-gray-700 mb-1">
+                Edit Equation:
+              </label>
+              <input
+                type="text"
+                defaultValue={equation}
+                className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                placeholder="e.g., x^2, sin(x), 2*x + 1"
+                onKeyDown={(e) => {
+                  // Prevent all keyboard events from propagating to the grid
+                  e.stopPropagation();
+                  
+                  if (e.key === 'Enter') {
+                    const newEquation = (e.target as HTMLInputElement).value.trim();
+                    if (newEquation && newEquation !== equation) {
+                      // Update the function with new equation
+                      const updatedFunction = updateFunctionEquation(functionObj, newEquation);
+                      if (updatedFunction) {
+                        onUpdate(selectedObject.id, { properties: updatedFunction.properties });
+                      }
+                    }
+                    // Blur the input to exit editing mode
+                    (e.target as HTMLInputElement).blur();
+                  } else if (e.key === 'Escape') {
+                    // Cancel editing and blur
+                    (e.target as HTMLInputElement).blur();
+                  }
+                }}
+                onKeyUp={(e) => {
+                  // Also prevent keyup events from propagating
+                  e.stopPropagation();
+                }}
+                onKeyPress={(e) => {
+                  // Also prevent keypress events from propagating
+                  e.stopPropagation();
+                }}
+                onFocus={(e) => {
+                  // Select all text when focused for easy editing
+                  (e.target as HTMLInputElement).select();
+                }}
+              />
+              <div className="text-xs text-gray-500 mt-1">
+                Press Enter to apply. Examples: x^2, sin(x), cos(x), log(x), exp(x)
+              </div>
+            </div>
+          </div>
+        );
+        
       default:
         return null;
     }
   };
 
   return (
-    <div className="fixed top-20 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-50 min-w-48">
+    <div 
+      className="fixed top-20 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-50 min-w-48"
+      onKeyDown={(e) => {
+        // Prevent all keyboard events from propagating to the canvas/grid
+        e.stopPropagation();
+      }}
+      onKeyUp={(e) => {
+        e.stopPropagation();
+      }}
+      onKeyPress={(e) => {
+        e.stopPropagation();
+      }}
+    >
       {renderObjectDetails()}
       
       <div className="mt-3 pt-2 border-t border-gray-100 flex gap-2">

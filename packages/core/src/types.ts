@@ -101,6 +101,20 @@ export interface Triangle extends MathObject {
   };
 }
 
+export interface Function extends MathObject {
+  type: 'function';
+  properties: {
+    equation: string; // e.g., "x^2", "sin(x)", "2*x + 1"
+    functionType: 'polynomial' | 'trigonometric' | 'exponential' | 'logarithmic' | 'custom';
+    domain: { min: number; max: number };
+    range?: { min: number; max: number };
+    points: Point[]; // computed points for rendering
+    resolution: number; // number of points per unit
+    color: string;
+    strokeWidth: number;
+  };
+}
+
 // Canvas and viewport
 export interface Viewport {
   center: Point;

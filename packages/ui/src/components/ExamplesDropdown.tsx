@@ -104,10 +104,10 @@ export function ExamplesDropdown() {
   };
 
   return (
-    <div ref={dropdownRef} className="fixed top-4 right-4 z-50">
+    <div ref={dropdownRef} className="relative z-50">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+        className="flex items-center gap-2 px-4 py-2 rounded-lg border transition-all bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"
         title="Mathematical Examples"
         disabled={isLoading}
       >

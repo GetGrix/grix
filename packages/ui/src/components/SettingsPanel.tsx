@@ -15,6 +15,7 @@ interface SettingSection {
 
 export function SettingsPanel() {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const panelRef = useRef<HTMLDivElement>(null);
   const visualizationStore = useVisualizationStore();
   const { toggleSetting, setFontScale, setGridScale, setSnapPrecision, setCoordinateSystem, resetToDefaults } = visualizationStore;
@@ -38,7 +39,7 @@ export function SettingsPanel() {
     }
   }, [isOpen]);
 
-  const settingSections: SettingSection[] = [
+  const allSettingSections: SettingSection[] = [
     {
       title: 'Origin Lines',
       subtitle: 'Enhancements for lines from (0,0)',
@@ -120,6 +121,17 @@ export function SettingsPanel() {
           key: 'showTangentLines',
           label: 'Tangent Lines',
           description: 'Show tangent line and slope on hover',
+        },
+      ],
+    },
+    {
+      title: 'Function Concepts',
+      subtitle: 'Mathematical function visualization features',
+      settings: [
+        {
+          key: 'showFunctionExtensions',
+          label: 'Function Extensions',
+          description: 'Show subtle curve extensions beyond domain endpoints',
         },
       ],
     },
@@ -207,6 +219,24 @@ export function SettingsPanel() {
     },
   ];
 
+  // Filter sections based on selected category
+  const settingSections = selectedCategory === 'all' 
+    ? allSettingSections 
+    : allSettingSections.filter(section => {
+        // Create a URL-friendly version of the section title for comparison
+        const sectionId = section.title.toLowerCase().replace(/[^a-z0-9]/g, '-');
+        return sectionId === selectedCategory;
+      });
+
+  // Create category options for the dropdown
+  const categoryOptions = [
+    { id: 'all', name: 'All Settings' },
+    ...allSettingSections.map(section => ({
+      id: section.title.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+      name: section.title
+    }))
+  ];
+
   return (
     <div ref={panelRef} className="fixed bottom-4 left-4 z-50">
       <button
@@ -233,6 +263,21 @@ export function SettingsPanel() {
               >
                 Reset All
               </button>
+            </div>
+            
+            {/* Category Filter */}
+            <div className="px-4 pt-2">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="w-full text-xs border border-gray-200 rounded px-2 py-1 bg-white"
+              >
+                {categoryOptions.map(option => (
+                  <option key={option.id} value={option.id}>
+                    {option.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 

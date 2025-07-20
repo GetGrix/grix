@@ -13,6 +13,9 @@ interface VisualizationSettings {
   // Circle enhancements
   showTangentLines: boolean;
   
+  // Function enhancements
+  showFunctionExtensions: boolean;
+  
   // Triangle enhancements
   showTriangleAngles: boolean;
   showSOHCAHTOA: boolean;
@@ -74,6 +77,9 @@ const defaultSettings: VisualizationSettings = {
   
   // Circle enhancements
   showTangentLines: false,
+  
+  // Function enhancements
+  showFunctionExtensions: true,
   
   // Triangle enhancements
   showTriangleAngles: true,

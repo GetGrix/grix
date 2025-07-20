@@ -90,6 +90,9 @@ button:disabled {
 .settings-scrollable,
 .examples-scrollable,
 .examples-scrollable *,
+.build-dropdown,
+.build-dropdown *,
+.build-dropdown-scrollable,
 .overflow-y-auto,
 .overflow-auto {
   touch-action: auto !important;

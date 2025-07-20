@@ -7,6 +7,7 @@ import { createRayTool } from '../plugins/RayTool.js';
 import { createRectangleTool } from '../plugins/RectangleTool.js';
 import { createCircleTool } from '../plugins/CircleTool.js';
 import { createTriangleTool } from '../plugins/TriangleTool.js';
+import { createFunctionTool } from '../plugins/FunctionTool.js';
 import { createAreaCounter } from '../plugins/AreaCounter.js';
 
 function GrixAppContent() {
@@ -21,12 +22,14 @@ function GrixAppContent() {
     const rectangleTool = createRectangleTool();
     const circleTool = createCircleTool();
     const triangleTool = createTriangleTool();
+    const functionTool = createFunctionTool();
     const areaCounter = createAreaCounter();
 
     registerPlugin(rayTool);
     registerPlugin(rectangleTool);
     registerPlugin(circleTool);
     registerPlugin(triangleTool);
+    registerPlugin(functionTool);
     registerPlugin(areaCounter);
     
     pluginsRegistered.current = true;

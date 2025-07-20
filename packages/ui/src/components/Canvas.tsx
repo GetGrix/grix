@@ -8,8 +8,8 @@ import { ObjectRenderer } from './ObjectRenderer.js';
 import { DebugInfo } from './DebugInfo.js';
 import { ContextMenu } from './ContextMenu.js';
 import { SettingsPanel } from './SettingsPanel.js';
-import { ExamplesDropdown } from './ExamplesDropdown.js';
 import { TutorialOverlay } from './TutorialOverlay.js';
+import { InfoModal } from './InfoModal.js';
 import { useTransformationStore } from '../store/transformationStore.js';
 import type { UnifiedPointerEvent, Point } from '@getgrix/core';
 import type { GestureEvent } from '../hooks/useInputSystem.js';
@@ -206,6 +206,27 @@ export function Canvas({
             isHit = true;
           }
           break;
+          
+        case 'function':
+          const functionObj = obj as any;
+          const points = functionObj.properties.points;
+          
+          if (points && points.length > 1) {
+            let minFunctionDistance = Infinity;
+            for (let i = 0; i < points.length - 1; i++) {
+              const p1 = points[i];
+              const p2 = points[i + 1];
+              const segmentDist = distanceToLineSegment(worldPoint, p1, p2);
+              minFunctionDistance = Math.min(minFunctionDistance, segmentDist);
+            }
+            
+            if (minFunctionDistance <= tolerance) {
+              priority = 100;
+              distance = minFunctionDistance;
+              isHit = true;
+            }
+          }
+          break;
       }
       
       if (isHit) {
@@ -396,8 +417,11 @@ export function Canvas({
           // Dampen zoom for touch devices to prevent aggressive scaling
           let adjustedScale = gesture.scale;
           if (gesture.touches && gesture.touches > 1) {
-            // Multi-touch indicates mobile/tablet - apply more aggressive dampening
-            adjustedScale = 1 + (gesture.scale - 1) * 0.25; // 25% of original scale change (reduced from 40%)
+            // Multi-touch indicates mobile/tablet - apply moderate dampening
+            // Check for iOS specifically for different handling if needed
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const dampeningFactor = isIOS ? 0.3 : 0.4; // 30% for iOS, 40% for other touch devices
+            adjustedScale = 1 + (gesture.scale - 1) * dampeningFactor;
           }
           
           // Performance-based zoom limits (stricter when many objects)
@@ -517,7 +541,7 @@ export function Canvas({
                     });
                     break;
                   case 'triangle':
-                    const newVertices = obj.properties.vertices.map(vertex => ({
+                    const newVertices = obj.properties.vertices.map((vertex: any) => ({
                       x: vertex.x + deltaX,
                       y: vertex.y + deltaY
                     }));
@@ -525,6 +549,26 @@ export function Canvas({
                       properties: {
                         ...obj.properties,
                         vertices: newVertices
+                      }
+                    });
+                    break;
+                  case 'function':
+                    const newDomain = {
+                      min: obj.properties.domain.min + deltaX,
+                      max: obj.properties.domain.max + deltaX
+                    };
+                    
+                    // Recalculate points for the shifted domain
+                    const newPoints = obj.properties.points.map((point: any) => ({
+                      x: point.x + deltaX,
+                      y: point.y + deltaY
+                    }));
+                    
+                    updateObject(objectId, {
+                      properties: {
+                        ...obj.properties,
+                        domain: newDomain,
+                        points: newPoints
                       }
                     });
                     break;
@@ -644,6 +688,10 @@ export function Canvas({
       clearSelection();
     }
   }, [selectedObjects, removeObject, clearSelection, eventBus]);
+
+  const handleContextMenuUpdate = useCallback((objectId: string, updates: Partial<any>) => {
+    updateObject(objectId, updates);
+  }, [updateObject]);
 
   // Zoom controls with infinite range
   const handleZoomIn = useCallback(() => {
@@ -770,6 +818,7 @@ export function Canvas({
         <ContextMenu
           selectedObject={objects.find(obj => obj.id === selectedObjects[0]) || null}
           onDelete={handleContextMenuDelete}
+          onUpdate={handleContextMenuUpdate}
           onClose={handleContextMenuClose}
         />
       )}
@@ -777,11 +826,11 @@ export function Canvas({
       {/* Settings panel */}
       <SettingsPanel />
 
-      {/* Examples dropdown */}
-      <ExamplesDropdown />
-
       {/* First-visit tutorial overlay */}
       <TutorialOverlay />
+
+      {/* Info modal */}
+      <InfoModal />
     </div>
   );
 }

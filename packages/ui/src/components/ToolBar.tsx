@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { usePluginManager } from '../plugins/PluginManager.js';
+import { ExamplesDropdown } from './ExamplesDropdown.js';
 
 interface Tool {
   id: string;
@@ -32,6 +33,12 @@ const buildTools: Tool[] = [
     name: 'Triangle Builder',
     icon: '🔺',
     description: 'Create triangles to explore angles and trigonometry'
+  },
+  {
+    id: 'function-tool',
+    name: 'Function Grapher',
+    icon: '📈',
+    description: 'Create function graphs like parabolas, sine waves, and more'
   }
 ];
 
@@ -62,19 +69,23 @@ export function ToolBar({ className = '' }: ToolBarProps) {
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
     };
 
     if (isDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      // Use capture phase to ensure we get the event before canvas handlers
+      document.addEventListener('mousedown', handleClickOutside, true);
+      document.addEventListener('touchstart', handleClickOutside, true);
+      document.addEventListener('click', handleClickOutside, true);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside, true);
+        document.removeEventListener('touchstart', handleClickOutside, true);
+        document.removeEventListener('click', handleClickOutside, true);
+      };
     }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
   }, [isDropdownOpen]);
 
   return (
@@ -138,40 +149,47 @@ export function ToolBar({ className = '' }: ToolBarProps) {
 
         {/* Dropdown Menu */}
         {isDropdownOpen && (
-          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-48">
-            {buildTools.map((tool) => (
-              <button
-                key={tool.id}
-                onClick={() => handleToolSelect(tool.id)}
-                className={`
-                  w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg transition-colors
-                  ${activeTool === tool.id ? 'bg-blue-50 text-blue-700' : 'text-gray-700'}
-                `}
-                title={tool.description}
-              >
-                <span className="text-lg">{tool.icon}</span>
-                <div>
-                  <div className="text-sm font-medium">{tool.name}</div>
-                  <div className="text-xs text-gray-500">{tool.description}</div>
-                </div>
-              </button>
-            ))}
-            
-            {/* Clear option */}
-            {activeTool && (
-              <>
-                <div className="border-t border-gray-100"></div>
+          <div className="build-dropdown absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-48 max-h-80 overflow-y-auto">
+            <div className="build-dropdown-scrollable">
+              {buildTools.map((tool) => (
                 <button
-                  onClick={handleClearTool}
-                  className="w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-50 rounded-b-lg transition-colors text-gray-600"
+                  key={tool.id}
+                  onClick={() => handleToolSelect(tool.id)}
+                  className={`
+                    w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 first:rounded-t-lg transition-colors
+                    ${activeTool === tool.id ? 'bg-blue-50 text-blue-700' : 'text-gray-700'}
+                  `}
+                  title={tool.description}
                 >
-                  <span className="text-lg">✕</span>
-                  <span className="text-sm">Clear selection</span>
+                  <span className="text-lg">{tool.icon}</span>
+                  <div>
+                    <div className="text-sm font-medium">{tool.name}</div>
+                    <div className="text-xs text-gray-500">{tool.description}</div>
+                  </div>
                 </button>
-              </>
-            )}
+              ))}
+              
+              {/* Clear option */}
+              {activeTool && (
+                <>
+                  <div className="border-t border-gray-100"></div>
+                  <button
+                    onClick={handleClearTool}
+                    className="w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-50 rounded-b-lg transition-colors text-gray-600"
+                  >
+                    <span className="text-lg">✕</span>
+                    <span className="text-sm">Clear selection</span>
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         )}
+      </div>
+
+      {/* Right side - Examples */}
+      <div className="ml-auto">
+        <ExamplesDropdown />
       </div>
 
     </div>

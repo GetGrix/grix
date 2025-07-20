@@ -152,6 +152,8 @@ export function PluginManagerProvider({ children }: PluginManagerProviderProps) 
               targetTool = plugins.get('circle-tool');
             } else if (selectedObj?.type === 'triangle') {
               targetTool = plugins.get('triangle-tool');
+            } else if (selectedObj?.type === 'function') {
+              targetTool = plugins.get('function-tool');
             }
           }
           

@@ -36,6 +36,10 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
   const [hoveredTriangle, setHoveredTriangle] = useState<string | null>(null);
   const [triangleHoverPoint, setTriangleHoverPoint] = useState<Point | null>(null);
   
+  // Track function hover for coordinate display
+  const [hoveredFunction, setHoveredFunction] = useState<string | null>(null);
+  const [functionHoverPoint, setFunctionHoverPoint] = useState<Point | null>(null);
+  
   // Use a ref to track leave timeout to prevent brief mouse exits from clearing state
   const leaveTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   
@@ -2287,6 +2291,307 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
           </g>
         );
       
+      case 'function':
+        const functionObj = obj as any; // Function type from core
+        const points = functionObj.properties.points;
+        
+        if (!points || points.length < 2) return null;
+        
+        // Convert world points to screen coordinates
+        const screenPoints = points.map(worldToScreen);
+        
+        // Create SVG path string
+        const pathData = screenPoints.reduce((path, point, index) => {
+          if (index === 0) {
+            return `M ${point.x} ${point.y}`;
+          } else {
+            return `${path} L ${point.x} ${point.y}`;
+          }
+        }, '');
+        
+        // Show domain endpoints for manipulation
+        const domainStart = worldToScreen({ x: functionObj.properties.domain.min, y: points[0]?.y || 0 });
+        const domainEnd = worldToScreen({ x: functionObj.properties.domain.max, y: points[points.length - 1]?.y || 0 });
+        
+        return (
+          <g key={obj.id}>
+            {/* Function extensions beyond domain (like equivalent fractions) */}
+            {visualSettings.showFunctionExtensions && (() => {
+              // Simple helper to evaluate function safely
+              const evaluateFunction = (equation: string, x: number): number | null => {
+                try {
+                  const safeEquation = equation
+                    .replace(/\bx\b/g, `(${x})`)
+                    .replace(/\^/g, '**')
+                    .replace(/sin/g, 'Math.sin')
+                    .replace(/cos/g, 'Math.cos')
+                    .replace(/tan/g, 'Math.tan')
+                    .replace(/log/g, 'Math.log')
+                    .replace(/ln/g, 'Math.log')
+                    .replace(/exp/g, 'Math.exp')
+                    .replace(/sqrt/g, 'Math.sqrt')
+                    .replace(/abs/g, 'Math.abs')
+                    .replace(/pi/g, 'Math.PI')
+                    .replace(/e\b/g, 'Math.E');
+                  
+                  const func = new Function('x', `return ${safeEquation}`);
+                  const y = func(x);
+                  return (typeof y === 'number' && !isNaN(y) && isFinite(y)) ? y : null;
+                } catch (e) {
+                  return null;
+                }
+              };
+              
+              // Calculate viewport bounds for extensions
+              const viewBounds = {
+                left: viewport.center.x - (canvasSize.width / 2) / viewport.zoom,
+                right: viewport.center.x + (canvasSize.width / 2) / viewport.zoom
+              };
+              
+              const equation = functionObj.properties.equation;
+              const extensionPaths = [];
+              
+              // Left extension (dashed line beyond domain start)
+              if (functionObj.properties.domain.min > viewBounds.left) {
+                const leftPoints = [];
+                const startX = Math.max(viewBounds.left, functionObj.properties.domain.min - 6);
+                const step = (functionObj.properties.domain.min - startX) / 15;
+                
+                for (let x = startX; x <= functionObj.properties.domain.min; x += step) {
+                  const y = evaluateFunction(equation, x);
+                  if (y !== null) {
+                    leftPoints.push(worldToScreen({ x, y }));
+                  }
+                }
+                
+                if (leftPoints.length > 1) {
+                  const leftPath = leftPoints.reduce((path, point, idx) => 
+                    path + (idx === 0 ? `M ${point.x} ${point.y}` : ` L ${point.x} ${point.y}`), '');
+                  extensionPaths.push(leftPath);
+                }
+              }
+              
+              // Right extension (dashed line beyond domain end)
+              if (functionObj.properties.domain.max < viewBounds.right) {
+                const rightPoints = [];
+                const endX = Math.min(viewBounds.right, functionObj.properties.domain.max + 6);
+                const step = (endX - functionObj.properties.domain.max) / 15;
+                
+                for (let x = functionObj.properties.domain.max; x <= endX; x += step) {
+                  const y = evaluateFunction(equation, x);
+                  if (y !== null) {
+                    rightPoints.push(worldToScreen({ x, y }));
+                  }
+                }
+                
+                if (rightPoints.length > 1) {
+                  const rightPath = rightPoints.reduce((path, point, idx) => 
+                    path + (idx === 0 ? `M ${point.x} ${point.y}` : ` L ${point.x} ${point.y}`), '');
+                  extensionPaths.push(rightPath);
+                }
+              }
+              
+              return (
+                <g>
+                  {/* Render extension paths with subtle dashed styling */}
+                  {extensionPaths.map((extPath, idx) => (
+                    <path
+                      key={`ext-${idx}`}
+                      d={extPath}
+                      fill="none"
+                      stroke={functionObj.properties.color || "#2563eb"}
+                      strokeWidth={1}
+                      strokeDasharray="4,4"
+                      opacity={0.5}
+                      strokeLinecap="round"
+                    />
+                  ))}
+                </g>
+              );
+            })()}
+            
+            {/* Selection glow effect */}
+            {isSelected && (
+              <path
+                d={pathData}
+                fill="none"
+                stroke="#60A5FA"
+                strokeWidth={6}
+                opacity={0.4}
+              />
+            )}
+            
+            {/* Invisible wider path for better hover detection */}
+            <path
+              d={pathData}
+              fill="none"
+              stroke="transparent"
+              strokeWidth={12}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ pointerEvents: 'stroke' }}
+              onMouseEnter={() => setHoveredFunction(obj.id)}
+              onMouseLeave={() => {
+                setHoveredFunction(null);
+                setFunctionHoverPoint(null);
+              }}
+              onMouseMove={(e) => {
+                if (hoveredFunction === obj.id) {
+                  const rect = e.currentTarget.ownerSVGElement?.getBoundingClientRect();
+                  if (rect) {
+                    const screenX = e.clientX - rect.left;
+                    const screenY = e.clientY - rect.top;
+                    
+                    // Convert to world coordinates
+                    const worldX = viewport.center.x + (screenX - canvasSize.width / 2) / viewport.zoom;
+                    const worldY = viewport.center.y - (screenY - canvasSize.height / 2) / viewport.zoom;
+                    
+                    // Find closest point on the function curve
+                    let closestPoint = null;
+                    let minDistance = Infinity;
+                    
+                    for (const point of points) {
+                      const screenPoint = worldToScreen(point);
+                      const distance = Math.sqrt(
+                        (screenX - screenPoint.x) ** 2 + (screenY - screenPoint.y) ** 2
+                      );
+                      if (distance < minDistance) {
+                        minDistance = distance;
+                        closestPoint = point;
+                      }
+                    }
+                    
+                    if (closestPoint) {
+                      setFunctionHoverPoint(closestPoint);
+                    }
+                  }
+                }
+              }}
+            />
+            
+            {/* Function curve */}
+            <path
+              d={pathData}
+              fill="none"
+              stroke={isSelected ? "#1D4ED8" : functionObj.properties.color || "#2563eb"}
+              strokeWidth={isSelected ? 3 : functionObj.properties.strokeWidth || 2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ pointerEvents: 'none' }}
+            />
+            
+            {/* Domain endpoints when selected */}
+            {isSelected && (
+              <g>
+                {/* Start domain handle */}
+                <circle
+                  cx={domainStart.x}
+                  cy={domainStart.y}
+                  r="6"
+                  fill="#1D4ED8"
+                  stroke="white"
+                  strokeWidth="2"
+                  opacity={0.8}
+                />
+                
+                {/* End domain handle */}
+                <circle
+                  cx={domainEnd.x}
+                  cy={domainEnd.y}
+                  r="6"
+                  fill="#1D4ED8"
+                  stroke="white"
+                  strokeWidth="2"
+                  opacity={0.8}
+                />
+              </g>
+            )}
+            
+            {/* Function coordinate display on hover */}
+            {hoveredFunction === obj.id && functionHoverPoint && (
+              <g>
+                {/* Highlight point on curve */}
+                <circle
+                  cx={worldToScreen(functionHoverPoint).x}
+                  cy={worldToScreen(functionHoverPoint).y}
+                  r="4"
+                  fill={functionObj.properties.color || "#2563eb"}
+                  stroke="white"
+                  strokeWidth="2"
+                />
+                
+                {/* Coordinate and equation label */}
+                <rect
+                  x={worldToScreen(functionHoverPoint).x - 70}
+                  y={worldToScreen(functionHoverPoint).y - 55}
+                  width="140"
+                  height="45"
+                  fill="rgba(255, 255, 255, 0.95)"
+                  stroke="#374151"
+                  strokeWidth="1"
+                  rx="4"
+                />
+                <text
+                  x={worldToScreen(functionHoverPoint).x}
+                  y={worldToScreen(functionHoverPoint).y - 40}
+                  fontSize={scaledFontSize(9)}
+                  fontWeight="600"
+                  fill="#374151"
+                  textAnchor="middle"
+                >
+                  ({formatCoordinate(functionHoverPoint.x, gridSize)}, {formatCoordinate(functionHoverPoint.y, gridSize)})
+                </text>
+                <text
+                  x={worldToScreen(functionHoverPoint).x}
+                  y={worldToScreen(functionHoverPoint).y - 28}
+                  fontSize={scaledFontSize(8)}
+                  fontWeight="500"
+                  fill="#374151"
+                  textAnchor="middle"
+                >
+                  f({formatCoordinate(functionHoverPoint.x, gridSize)}) = {formatCoordinate(functionHoverPoint.y, gridSize)}
+                </text>
+                <text
+                  x={worldToScreen(functionHoverPoint).x}
+                  y={worldToScreen(functionHoverPoint).y - 16}
+                  fontSize={scaledFontSize(8)}
+                  fontWeight="400"
+                  fill="#666"
+                  textAnchor="middle"
+                >
+                  f(x) = {functionObj.properties.equation}
+                </text>
+              </g>
+            )}
+            
+            {/* Function equation label */}
+            {(isSelected || hoveredEndpoint === obj.id) && (
+              <g>
+                <rect
+                  x={domainStart.x - 40}
+                  y={domainStart.y - 35}
+                  width="80"
+                  height="25"
+                  fill="rgba(255, 255, 255, 0.95)"
+                  stroke="#374151"
+                  strokeWidth="1"
+                  rx="4"
+                />
+                <text
+                  x={domainStart.x}
+                  y={domainStart.y - 20}
+                  fontSize={scaledFontSize(10)}
+                  fontWeight="600"
+                  fill="#374151"
+                  textAnchor="middle"
+                >
+                  f(x) = {functionObj.properties.equation}
+                </text>
+              </g>
+            )}
+          </g>
+        );
+
       default:
         return null;
     }

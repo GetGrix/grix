@@ -380,66 +380,101 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                           >
                             {formatCoordinate(endY, gridSize)} × {formatCoordinate(endX, gridSize)} = {formatCoordinate(area, gridSize)}
                           </text>
-                          
-                          {/* Horizontal division markers between y-axis and x=1 line */}
-                          {(() => {
-                            // Only show if we're looking at a line from origin to show division concept
-                            const isFromOrigin = Math.abs(obj.properties.startPoint.x) < 0.001 && Math.abs(obj.properties.startPoint.y) < 0.001;
-                            if (!isFromOrigin || endX <= 0) return null;
-                            
-                            // Calculate the division answer (slope)
-                            const divisionAnswer = endY / endX;
-                            
-                            // Generate horizontal lines at multiples of the division answer
-                            const xOneScreen = worldToScreen({ x: 1, y: 0 });
-                            const markers = [];
-                            
-                            // Start from the division answer and go up to the endpoint y-value
-                            for (let multiple = 1; multiple * divisionAnswer <= endY; multiple++) {
-                              const yValue = multiple * divisionAnswer;
-                              const yScreen = worldToScreen({ x: 0, y: yValue }).y;
-                              
-                              // Check if this is the division answer line
-                              const isAnswerLine = Math.abs(yValue - divisionAnswer) < 0.01;
-                              
-                              markers.push(
-                                <g key={`division-marker-${multiple}`}>
-                                  {/* Light horizontal line from y-axis to x=1 */}
-                                  <line
-                                    x1={originScreen.x}
-                                    y1={yScreen}
-                                    x2={xOneScreen.x}
-                                    y2={yScreen}
-                                    stroke={isSelected ? "#1D4ED8" : "#2563eb"}
-                                    strokeWidth="1"
-                                    opacity="0.3"
-                                    strokeDasharray={isAnswerLine ? "4,2" : "2,2"}
-                                  />
-                                  
-                                  {/* Label above the line (don't label the answer line) */}
-                                  {!isAnswerLine && (
-                                    <text
-                                      x={xOneScreen.x + 8}
-                                      y={yScreen - 5}
-                                      fontSize={scaledFontSize(8)}
-                                      fontWeight="400"
-                                      fill={isSelected ? "#1D4ED8" : "#2563eb"}
-                                      textAnchor="start"
-                                      opacity="0.5"
-                                    >
-                                      {formatMathValue(yValue)}
-                                    </text>
-                                  )}
-                                </g>
-                              );
-                            }
-                            
-                            return markers;
-                          })()}
                         </g>
                       );
                     }
                     return null;
+                  })()}
+                  
+                  {/* Division multiples visualization - horizontal lines and optional shading */}
+                  {visualSettings.showDivisionMultiples && (() => {
+                    // Only show for lines from origin to show division concept
+                    const isFromOrigin = Math.abs(obj.properties.startPoint.x) < 0.001 && Math.abs(obj.properties.startPoint.y) < 0.001;
+                    if (!isFromOrigin || endX <= 0) return null;
+                    
+                    // Calculate the division answer (slope)
+                    const divisionAnswer = endY / endX;
+                    
+                    // Performance safeguards to prevent too many lines
+                    const minDivisionAnswer = 0.15; // Don't show lines if slope is too small
+                    const maxDivisionLines = 25; // Maximum number of division lines to show
+                    
+                    // Skip if division answer is too small (would create too many lines)
+                    if (divisionAnswer < minDivisionAnswer) return null;
+                    
+                    // Generate horizontal lines at multiples of the division answer
+                    const originScreen = worldToScreen({ x: 0, y: 0 });
+                    const xOneScreen = worldToScreen({ x: 1, y: 0 });
+                    const markers = [];
+                    
+                    // Calculate how many lines we would show and limit it
+                    const maxMultiple = Math.min(
+                      Math.floor(endY / divisionAnswer),
+                      maxDivisionLines
+                    );
+                    
+                    // Start from the division answer and go up to the endpoint y-value (or max lines)
+                    for (let multiple = 1; multiple <= maxMultiple; multiple++) {
+                      const yValue = multiple * divisionAnswer;
+                      const yScreen = worldToScreen({ x: 0, y: yValue }).y;
+                      
+                      // Check if this is the division answer line
+                      const isAnswerLine = Math.abs(yValue - divisionAnswer) < 0.01;
+                      
+                      // Add shaded rectangle if area rectangle is off
+                      if (!visualSettings.showAreaRectangle) {
+                        const rectHeight = Math.abs(yScreen - originScreen.y) / multiple;
+                        const rectWidth = Math.abs(xOneScreen.x - originScreen.x);
+                        
+                        markers.push(
+                          <rect
+                            key={`division-box-${multiple}`}
+                            x={originScreen.x}
+                            y={yScreen}
+                            width={rectWidth}
+                            height={rectHeight}
+                            fill={isSelected ? "#1D4ED8" : "#2563eb"}
+                            opacity="0.08"
+                            stroke={isSelected ? "#1D4ED8" : "#2563eb"}
+                            strokeWidth="0.5"
+                            strokeOpacity="0.15"
+                          />
+                        );
+                      }
+                      
+                      markers.push(
+                        <g key={`division-marker-${multiple}`}>
+                          {/* Light horizontal line from y-axis to x=1 */}
+                          <line
+                            x1={originScreen.x}
+                            y1={yScreen}
+                            x2={xOneScreen.x}
+                            y2={yScreen}
+                            stroke={isSelected ? "#1D4ED8" : "#2563eb"}
+                            strokeWidth="1"
+                            opacity="0.3"
+                            strokeDasharray={isAnswerLine ? "4,2" : "2,2"}
+                          />
+                          
+                          {/* Label above the line (don't label the answer line) */}
+                          {!isAnswerLine && (
+                            <text
+                              x={xOneScreen.x + 8}
+                              y={yScreen - 5}
+                              fontSize={scaledFontSize(8)}
+                              fontWeight="400"
+                              fill={isSelected ? "#1D4ED8" : "#2563eb"}
+                              textAnchor="start"
+                              opacity="0.5"
+                            >
+                              {formatMathValue(yValue)}
+                            </text>
+                          )}
+                        </g>
+                      );
+                    }
+                    
+                    return <g>{markers}</g>;
                   })()}
                   
                   {/* Rise/Run Triangle for slope visualization */}

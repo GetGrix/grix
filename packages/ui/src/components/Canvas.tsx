@@ -525,7 +525,6 @@ export function Canvas({
 
     // Listen for tool creation completion to auto-return to pan mode
     const handleCreationComplete = (data: { toolId: string; objectId: string }) => {
-      console.log('Object created, returning to pan mode:', data);
       clearSelection();
       setActiveTool(null);
     };

@@ -59,6 +59,11 @@ export function SettingsPanel() {
           description: 'Soft rectangle showing multiplication',
         },
         {
+          key: 'showDivisionMultiples',
+          label: 'Division Multiples',
+          description: 'Horizontal lines showing division answer multiples',
+        },
+        {
           key: 'showRiseRunTriangle',
           label: 'Rise/Run Triangle',
           description: 'Triangle showing slope components',

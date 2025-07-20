@@ -5,6 +5,7 @@ interface VisualizationSettings {
   showEquivalentFractions: boolean;
   showLengthMultiples: boolean;
   showAreaRectangle: boolean;
+  showDivisionMultiples: boolean;
   showRiseRunTriangle: boolean;
   showDistanceMarkers: boolean;
   showAngleArc: boolean;
@@ -54,6 +55,7 @@ const defaultSettings: VisualizationSettings = {
   showEquivalentFractions: true,
   showLengthMultiples: true,
   showAreaRectangle: true,
+  showDivisionMultiples: true,
   showRiseRunTriangle: false,
   showDistanceMarkers: false,
   showAngleArc: false,

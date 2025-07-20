@@ -84,6 +84,14 @@ button:disabled {
   transform: scale(1.05);
 }
 
+/* Settings panel mobile scrolling fix */
+.settings-panel, 
+.settings-panel *,
+.settings-scrollable {
+  touch-action: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Canvas-specific styles */
 [data-grix-canvas] {
   position: relative;

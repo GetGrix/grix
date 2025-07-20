@@ -1,0 +1,262 @@
+{
+  "examples": [
+    {
+      "id": "basic-slope",
+      "title": "Basic Slope Visualization",
+      "description": "Explore how rise over run creates slope",
+      "difficulty": "beginner",
+      "category": "slopes",
+      "objects": [
+        {
+          "type": "ray",
+          "properties": {
+            "startPoint": { "x": 0, "y": 0 },
+            "endPoint": { "x": 4, "y": 3 }
+          }
+        }
+      ],
+      "settings": {
+        "showRiseRunTriangle": true,
+        "showEquivalentFractions": true,
+        "showDivisionAnswer": true,
+        "showReferenceLineY_equals_X": true
+      },
+      "viewport": {
+        "center": { "x": 2, "y": 1.5 },
+        "zoom": 30
+      }
+    },
+    {
+      "id": "area-multiplication",
+      "title": "Area as Multiplication",
+      "description": "See how rectangles demonstrate multiplication",
+      "difficulty": "beginner",
+      "category": "multiplication",
+      "objects": [
+        {
+          "type": "rectangle",
+          "properties": {
+            "x": 1,
+            "y": 1,
+            "width": 4,
+            "height": 3,
+            "area": 12
+          }
+        }
+      ],
+      "settings": {
+        "showFactorPairs": true,
+        "showPrimeComposite": true,
+        "showIntegerGridLines": true
+      },
+      "viewport": {
+        "center": { "x": 3, "y": 2.5 },
+        "zoom": 25
+      }
+    },
+    {
+      "id": "equivalent-fractions",
+      "title": "Equivalent Fractions",
+      "description": "Discover patterns in equivalent fractions",
+      "difficulty": "intermediate",
+      "category": "fractions",
+      "objects": [
+        {
+          "type": "ray",
+          "properties": {
+            "startPoint": { "x": 0, "y": 0 },
+            "endPoint": { "x": 6, "y": 4 }
+          }
+        }
+      ],
+      "settings": {
+        "showEquivalentFractions": true,
+        "showDivisionAnswer": true,
+        "showLengthMultiples": true,
+        "showReferenceLineY_equals_X": true
+      },
+      "viewport": {
+        "center": { "x": 3, "y": 2 },
+        "zoom": 20
+      }
+    },
+    {
+      "id": "gcf-visualization",
+      "title": "Greatest Common Factor",
+      "description": "See how GCF creates square tilings",
+      "difficulty": "intermediate",
+      "category": "number-theory",
+      "objects": [
+        {
+          "type": "rectangle",
+          "properties": {
+            "x": 0,
+            "y": 0,
+            "width": 8,
+            "height": 6,
+            "area": 48
+          }
+        }
+      ],
+      "settings": {
+        "showGCF": true,
+        "showFactorPairs": true,
+        "showIntegerGridLines": true
+      },
+      "viewport": {
+        "center": { "x": 4, "y": 3 },
+        "zoom": 20
+      }
+    },
+    {
+      "id": "commutative-property",
+      "title": "Commutative Property",
+      "description": "Multiplication order doesn't matter",
+      "difficulty": "beginner",
+      "category": "multiplication",
+      "objects": [
+        {
+          "type": "rectangle",
+          "properties": {
+            "x": 2,
+            "y": 1,
+            "width": 5,
+            "height": 3,
+            "area": 15
+          }
+        }
+      ],
+      "settings": {
+        "showCommutativeProperty": true,
+        "showIntegerGridLines": true
+      },
+      "viewport": {
+        "center": { "x": 4, "y": 2.5 },
+        "zoom": 25
+      }
+    },
+    {
+      "id": "distributive-property",
+      "title": "Distributive Property",
+      "description": "Breaking apart multiplication: a(b+c) = ab+ac",
+      "difficulty": "intermediate",
+      "category": "algebra",
+      "objects": [
+        {
+          "type": "rectangle",
+          "properties": {
+            "x": 1,
+            "y": 1,
+            "width": 7,
+            "height": 4,
+            "area": 28
+          }
+        }
+      ],
+      "settings": {
+        "showDistributiveProperty": true,
+        "showIntegerGridLines": true
+      },
+      "viewport": {
+        "center": { "x": 4.5, "y": 3 },
+        "zoom": 22
+      }
+    },
+    {
+      "id": "angle-measurement",
+      "title": "Angle Measurement",
+      "description": "Measure angles with arc visualization",
+      "difficulty": "intermediate",
+      "category": "geometry",
+      "objects": [
+        {
+          "type": "ray",
+          "properties": {
+            "startPoint": { "x": 0, "y": 0 },
+            "endPoint": { "x": 5, "y": 3 }
+          }
+        }
+      ],
+      "settings": {
+        "showAngleArc": true,
+        "showDistanceMarkers": true,
+        "showRiseRunTriangle": true,
+        "showReferenceLineY_equals_X": true
+      },
+      "viewport": {
+        "center": { "x": 2.5, "y": 1.5 },
+        "zoom": 25
+      }
+    },
+    {
+      "id": "prime-vs-composite",
+      "title": "Prime vs Composite Numbers",
+      "description": "Explore prime and composite number patterns",
+      "difficulty": "intermediate",
+      "category": "number-theory",
+      "objects": [
+        {
+          "type": "rectangle",
+          "properties": {
+            "x": 0,
+            "y": 3,
+            "width": 7,
+            "height": 1,
+            "area": 7
+          }
+        },
+        {
+          "type": "rectangle",
+          "properties": {
+            "x": 0,
+            "y": 1,
+            "width": 4,
+            "height": 2,
+            "area": 8
+          }
+        }
+      ],
+      "settings": {
+        "showPrimeComposite": true,
+        "showFactorPairs": true,
+        "showIntegerGridLines": true
+      },
+      "viewport": {
+        "center": { "x": 3.5, "y": 2.5 },
+        "zoom": 28
+      }
+    }
+  ],
+  "categories": [
+    {
+      "id": "slopes",
+      "name": "Slopes & Lines",
+      "description": "Explore linear relationships and slope concepts"
+    },
+    {
+      "id": "multiplication",
+      "name": "Multiplication",
+      "description": "Visual multiplication using area models"
+    },
+    {
+      "id": "fractions",
+      "name": "Fractions",
+      "description": "Understand fractions through visual patterns"
+    },
+    {
+      "id": "number-theory",
+      "name": "Number Theory",
+      "description": "Explore properties of numbers and factors"
+    },
+    {
+      "id": "algebra",
+      "name": "Algebra",
+      "description": "Algebraic properties and relationships"
+    },
+    {
+      "id": "geometry",
+      "name": "Geometry",
+      "description": "Angles, distances, and geometric concepts"
+    }
+  ]
+}

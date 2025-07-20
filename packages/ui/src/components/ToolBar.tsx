@@ -132,20 +132,6 @@ export function ToolBar({ className = '' }: ToolBarProps) {
         )}
       </div>
 
-      {/* Status */}
-      <div className="ml-auto flex items-center gap-4 text-sm text-gray-500">
-        {activeTool ? (
-          <span className="flex items-center gap-1">
-            <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-            {activeToolInfo?.name || 'Active Tool'}
-          </span>
-        ) : (
-          <span className="flex items-center gap-1">
-            <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
-            Click Build to start creating
-          </span>
-        )}
-      </div>
     </div>
   );
 }

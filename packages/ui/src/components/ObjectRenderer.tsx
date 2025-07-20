@@ -368,6 +368,18 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                             strokeOpacity="0.15"
                           />
                           
+                          {/* Area label at top center */}
+                          <text
+                            x={rectX + rectWidth / 2}
+                            y={rectY + 15}
+                            fontSize={scaledFontSize(10)}
+                            fontWeight="400"
+                            fill={isSelected ? "#1D4ED8" : "#2563eb"}
+                            textAnchor="middle"
+                            opacity="0.6"
+                          >
+                            {formatCoordinate(endY, gridSize)} × {formatCoordinate(endX, gridSize)} = {formatCoordinate(area, gridSize)}
+                          </text>
                         </g>
                       );
                     }
@@ -943,46 +955,87 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                 const lcmValue = lcm(width, height);
                 
                 if (lcmValue > Math.max(width, height) && lcmValue <= 100) {
-                  // Show LCM rectangle outline
+                  // Show LCM rectangle outline - positioned up and to the right from bottom-left corner
                   const lcmWidth = lcmValue * viewport.zoom;
                   const lcmHeight = lcmValue * viewport.zoom;
+                  
+                  // Position LCM box starting from bottom-left corner (topLeft.x, topLeft.y + rectHeight)
+                  const lcmX = topLeft.x;
+                  const lcmY = topLeft.y + rectHeight - lcmHeight; // Go up from bottom-left
+                  
+                  // Calculate how many of each rectangle fit
+                  const horizontalCount = lcmValue / width;
+                  const verticalCount = lcmValue / height;
+                  
+                  const shadowElements = [];
+                  
+                  // Add shadow duplicate rectangles to show tiling
+                  for (let row = 0; row < verticalCount; row++) {
+                    for (let col = 0; col < horizontalCount; col++) {
+                      const shadowX = lcmX + col * (width * viewport.zoom);
+                      const shadowY = lcmY + row * (height * viewport.zoom);
+                      
+                      shadowElements.push(
+                        <rect
+                          key={`shadow-${row}-${col}`}
+                          x={shadowX}
+                          y={shadowY}
+                          width={width * viewport.zoom}
+                          height={height * viewport.zoom}
+                          fill="rgba(245, 158, 11, 0.1)"
+                          stroke="#F59E0B"
+                          strokeWidth="1"
+                          strokeDasharray="2,2"
+                          opacity="0.6"
+                          pointerEvents="none"
+                        />
+                      );
+                    }
+                  }
                   
                   educationalElements.push(
                     <g key="lcm">
                       {/* LCM square outline */}
                       <rect
-                        x={topLeft.x - 10}
-                        y={topLeft.y - 10}
+                        x={lcmX}
+                        y={lcmY}
                         width={lcmWidth}
                         height={lcmHeight}
                         fill="none"
                         stroke="#F59E0B"
                         strokeWidth="2"
                         strokeDasharray="5,5"
-                        opacity="0.7"
+                        opacity="0.8"
+                        pointerEvents="none"
                       />
-                      {/* Show how many of each rectangle fit */}
+                      
+                      {/* Shadow duplicate rectangles */}
+                      {shadowElements}
+                      
+                      {/* Labels */}
                       <text
-                        x={topLeft.x + lcmWidth / 2}
-                        y={topLeft.y - 35}
+                        x={lcmX + lcmWidth / 2}
+                        y={lcmY - 15}
                         fontSize={scaledFontSize(10)}
                         fontWeight="600"
                         fill="#F59E0B"
                         textAnchor="middle"
                         opacity="0.9"
+                        pointerEvents="none"
                       >
                         LCM({width}, {height}) = {lcmValue}
                       </text>
                       <text
-                        x={topLeft.x + lcmWidth / 2}
-                        y={topLeft.y - 20}
+                        x={lcmX + lcmWidth / 2}
+                        y={lcmY - 2}
                         fontSize={scaledFontSize(8)}
                         fontWeight="500"
                         fill="#F59E0B"
                         textAnchor="middle"
                         opacity="0.7"
+                        pointerEvents="none"
                       >
-                        {lcmValue / width} × {width} or {lcmValue / height} × {height}
+                        {horizontalCount} × {verticalCount} = {horizontalCount * verticalCount} rectangles
                       </text>
                     </g>
                   );

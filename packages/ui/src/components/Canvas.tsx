@@ -8,6 +8,8 @@ import { ObjectRenderer } from './ObjectRenderer.js';
 import { DebugInfo } from './DebugInfo.js';
 import { ContextMenu } from './ContextMenu.js';
 import { SettingsPanel } from './SettingsPanel.js';
+import { ExamplesDropdown } from './ExamplesDropdown.js';
+import { TutorialOverlay } from './TutorialOverlay.js';
 import { useTransformationStore } from '../store/transformationStore.js';
 import type { UnifiedPointerEvent, Point } from '@getgrix/core';
 import type { GestureEvent } from '../hooks/useInputSystem.js';
@@ -287,16 +289,47 @@ export function Canvas({
   const handleGesture = useCallback((gesture: GestureEvent) => {
     switch (gesture.type) {
       case 'pinch':
-        if (gesture.scale) {
-          const newZoom = Math.max(0.1, Math.min(10, viewport.zoom * gesture.scale));
-          setViewport({ zoom: newZoom });
+        if (gesture.scale && gesture.center) {
+          // Mobile-optimized zoom handling - detect mobile through event properties
+          const objectCount = objects.length;
+          
+          // Dampen zoom for touch devices to prevent aggressive scaling
+          let adjustedScale = gesture.scale;
+          if (gesture.touches && gesture.touches > 1) {
+            // Multi-touch indicates mobile/tablet - apply dampening
+            adjustedScale = 1 + (gesture.scale - 1) * 0.4; // 40% of original scale change
+          }
+          
+          // Performance-based zoom limits (stricter when many objects)
+          const maxZoom = objectCount > 50 ? 100 : objectCount > 20 ? 200 : 500;
+          const minZoom = 0.1;
+          
+          // Calculate new zoom with center point
+          const newZoom = Math.max(minZoom, Math.min(maxZoom, viewport.zoom * adjustedScale));
+          
+          // Zoom towards the center of the pinch gesture
+          if (Math.abs(newZoom - viewport.zoom) > 0.001) {
+            const zoomRatio = newZoom / viewport.zoom;
+            const worldCenter = screenToWorld(gesture.center);
+            
+            // Calculate new center to zoom towards the gesture center
+            const newCenter = {
+              x: worldCenter.x + (viewport.center.x - worldCenter.x) / zoomRatio,
+              y: worldCenter.y + (viewport.center.y - worldCenter.y) / zoomRatio
+            };
+            
+            setViewport({ 
+              zoom: newZoom,
+              center: newCenter
+            });
+          }
         }
         break;
       case 'tap':
         // Handle tap events (tool interactions will be handled by plugins)
         break;
     }
-  }, [viewport.zoom, setViewport]);
+  }, [viewport.zoom, viewport.center, setViewport, objects.length, screenToWorld]);
 
   // Set up input system
   const { capabilities, touchTargetSize } = useInputSystem(
@@ -561,6 +594,12 @@ export function Canvas({
 
       {/* Settings panel */}
       <SettingsPanel />
+
+      {/* Examples dropdown */}
+      <ExamplesDropdown />
+
+      {/* First-visit tutorial overlay */}
+      <TutorialOverlay />
     </div>
   );
 }

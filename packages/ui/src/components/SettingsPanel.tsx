@@ -165,7 +165,7 @@ export function SettingsPanel() {
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full left-0 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg w-80 max-h-[28rem] overflow-y-auto">
+        <div className="settings-panel absolute bottom-full left-0 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg w-80 max-h-[28rem] overflow-y-auto">
           {/* Header */}
           <div className="sticky top-0 bg-white border-b border-gray-100 px-4 py-3 rounded-t-lg">
             <div className="flex items-center justify-between">
@@ -180,7 +180,7 @@ export function SettingsPanel() {
           </div>
 
           {/* Settings Sections */}
-          <div className="p-4 space-y-5">
+          <div className="settings-scrollable p-4 space-y-5">
             {settingSections.map((section, sectionIndex) => (
               <div key={section.title}>
                 {/* Section Header */}

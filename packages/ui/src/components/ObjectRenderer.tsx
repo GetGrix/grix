@@ -309,7 +309,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                 const originalY = endY;
                 
                 // Generate true equivalent fractions by multiplying the original ratio
-                for (let multiple = 2; multiple <= 8; multiple++) {
+                for (let multiple = 2; multiple <= 50; multiple++) {
                   const equivX = originalX * multiple;
                   const equivY = originalY * multiple;
                   
@@ -321,8 +321,8 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                   if (Math.abs(equivX - snapX) < snapSize / 10 && 
                       Math.abs(equivY - snapY) < snapSize / 10 &&
                       snapX > 0 && snapY > 0 && 
-                      snapX <= Math.min(20, Math.abs(maxExtent)) && 
-                      snapY <= Math.min(20, Math.abs(maxExtent))) {
+                      snapX <= Math.min(100, Math.abs(maxExtent)) && 
+                      snapY <= Math.min(100, Math.abs(maxExtent))) {
                     
                     const screenPos = worldToScreen({ x: snapX, y: snapY });
                     
@@ -583,7 +583,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                           {/* Run label */}
                           <text
                             x={(originScreen.x + rightScreen.x) / 2}
-                            y={rightScreen.y + 8}
+                            y={rightScreen.y + 18}
                             fontSize={scaledFontSize(9)}
                             fontWeight="500"
                             fill={isSelected ? "#1D4ED8" : "#2563eb"}
@@ -672,7 +672,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                             textAnchor="start"
                             opacity="0.8"
                           >
-                            d = {lineLength.toFixed(2)}
+                            d = {lineLength.toFixed(3).replace(/\.?0+$/, '')}
                           </text>
                         </g>
                       );
@@ -1130,7 +1130,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                       >
                         GCF({width}, {height}) = {gcf}
                       </text>
-                      {/* Square count */}
+                      {/* Square count with side length */}
                       <text
                         x={topLeft.x + rectWidth / 2}
                         y={topLeft.y - 10}
@@ -1140,7 +1140,7 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
                         textAnchor="middle"
                         opacity="0.7"
                       >
-                        {tilesY} × {tilesX} = {tilesX * tilesY} squares
+                        {tilesY} × {tilesX} squares (side = {gcf})
                       </text>
                     </g>
                   );

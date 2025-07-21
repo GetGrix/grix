@@ -74,5 +74,9 @@
   "examples.category.linearalgebra": "線形代数",
   "examples.category.discrete": "離散数学",
   "examples.category.probability": "確率",
-  "examples.category.functions": "関数"
+  "examples.category.functions": "関数",
+  "settings.referenceLineYX": "y=x 参照線",
+  "settings.referenceLineYX.description": "比較用の紫の対角線",
+  "settings.referenceLineY_equals_X": "y=x 参照線",
+  "settings.referenceLineY_equals_X.description": "比較用の紫の対角線"
 }

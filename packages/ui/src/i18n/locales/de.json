@@ -127,6 +127,8 @@
   "settings.latticePoints.description": "Punkte bei allen ganzzahligen Koordinaten",
   "settings.referenceLineYX": "y=x Referenzlinie",
   "settings.referenceLineYX.description": "Violette diagonale Linie zum Vergleich",
+  "settings.referenceLineY_equals_X": "y=x Referenzlinie",
+  "settings.referenceLineY_equals_X.description": "Violette diagonale Linie zum Vergleich",
   "settings.tangentLines": "Tangentiallinien",
   "settings.tangentLines.description": "Tangentiallinie und Steigung beim Hovern zeigen",
   "settings.functionExtensions": "Funktions-Erweiterungen",

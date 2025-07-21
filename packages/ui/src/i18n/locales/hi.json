@@ -74,5 +74,9 @@
   "examples.category.linearalgebra": "रैखिक बीजगणित",
   "examples.category.discrete": "असतत गणित",
   "examples.category.probability": "संभावना",
-  "examples.category.functions": "फ़ंक्शन"
+  "examples.category.functions": "फ़ंक्शन",
+  "settings.referenceLineYX": "y=x संदर्भ रेखा",
+  "settings.referenceLineYX.description": "तुलना के लिए बैंगनी तिर्यक रेखा",
+  "settings.referenceLineY_equals_X": "y=x संदर्भ रेखा",
+  "settings.referenceLineY_equals_X.description": "तुलना के लिए बैंगनी तिर्यक रेखा"
 }

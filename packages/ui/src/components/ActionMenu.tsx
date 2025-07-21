@@ -34,10 +34,13 @@ export function ActionMenu({ onClearBoard, onExportImage, onImportState, isOpen:
   useEffect(() => {
     function handleClickOutside(event: MouseEvent | TouchEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        if (onToggle) {
-          onToggle();
-        } else {
-          setInternalIsOpen(false);
+        // Only close if the menu is actually open
+        if (isOpen) {
+          if (onToggle) {
+            onToggle();
+          } else {
+            setInternalIsOpen(false);
+          }
         }
         setShowClearConfirmation(false);
       }

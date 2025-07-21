@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { storageManager } from '../utils/storageManager.js';
+import { create } from "zustand";
+import { storageManager } from "../utils/storageManager.js";
 
 interface VisualizationSettings {
   // Origin line enhancements
@@ -11,13 +11,13 @@ interface VisualizationSettings {
   showDistanceMarkers: boolean;
   showAngleArc: boolean;
   showCoordinateProjections: boolean;
-  
+
   // Circle enhancements
   showTangentLines: boolean;
-  
+
   // Function enhancements
   showFunctionExtensions: boolean;
-  
+
   // Triangle enhancements
   showTriangleAngles: boolean;
   showSOHCAHTOA: boolean;
@@ -26,14 +26,14 @@ interface VisualizationSettings {
   showTriangleAltitudes: boolean;
   showSpecialTriangles: boolean;
   showPythagoreanSquares: boolean;
-  
+
   // Division visualization
   showDivisionAnswer: boolean;
-  
+
   // Grid enhancements
   showLatticePoints: boolean;
   showReferenceLineY_equals_X: boolean;
-  
+
   // Rectangle-based educational concepts
   showFactorPairs: boolean;
   showCommutativeProperty: boolean;
@@ -41,21 +41,21 @@ interface VisualizationSettings {
   showPrimeComposite: boolean;
   showGCF: boolean;
   showLCM: boolean;
-  
+
   // Display settings
   fontScale: number; // 1.0 = normal, 1.5 = 50% bigger, etc.
   gridScale: number; // 1.0 = normal, 2.0 = 2x denser, 0.5 = 2x sparser
-  
+
   // Snapping settings
-  snapPrecision: 'adaptive' | 'whole' | 'half' | 'quarter' | 'tenth'; // Controls snapping granularity
-  
+  snapPrecision: "adaptive" | "whole" | "half" | "quarter" | "tenth"; // Controls snapping granularity
+
   // Coordinate system settings
-  coordinateSystem: 'cartesian' | 'polar' | 'both';
+  coordinateSystem: "cartesian" | "polar" | "both";
   showPolarGrid: boolean;
   customOrigin: { x: number; y: number } | null; // null = default (0,0)
-  
+
   // Zoom behavior settings
-  zoomSensitivity: 'low' | 'medium' | 'high';
+  zoomSensitivity: "low" | "medium" | "high";
 }
 
 interface VisualizationStore extends VisualizationSettings {
@@ -63,15 +63,17 @@ interface VisualizationStore extends VisualizationSettings {
   toggleSetting: (setting: keyof VisualizationSettings) => void;
   setFontScale: (scale: number) => void;
   setGridScale: (scale: number) => void;
-  setSnapPrecision: (precision: 'adaptive' | 'whole' | 'half' | 'quarter' | 'tenth') => void;
-  setCoordinateSystem: (system: 'cartesian' | 'polar' | 'both') => void;
+  setSnapPrecision: (
+    precision: "adaptive" | "whole" | "half" | "quarter" | "tenth"
+  ) => void;
+  setCoordinateSystem: (system: "cartesian" | "polar" | "both") => void;
   setCustomOrigin: (origin: { x: number; y: number } | null) => void;
-  setZoomSensitivity: (sensitivity: 'low' | 'medium' | 'high') => void;
+  setZoomSensitivity: (sensitivity: "low" | "medium" | "high") => void;
   resetToDefaults: () => void;
 }
 
 const defaultSettings: VisualizationSettings = {
-  // Origin line enhancements - enable all except Angle Arc by default
+  // Origin line enhancements - enable key features by default
   showEquivalentFractions: true,
   showLengthMultiples: true,
   showAreaRectangle: true,
@@ -80,13 +82,13 @@ const defaultSettings: VisualizationSettings = {
   showDistanceMarkers: true,
   showAngleArc: false,
   showCoordinateProjections: true,
-  
+
   // Circle enhancements
   showTangentLines: false,
-  
+
   // Function enhancements
   showFunctionExtensions: true,
-  
+
   // Triangle enhancements
   showTriangleAngles: true,
   showSOHCAHTOA: false,
@@ -95,14 +97,14 @@ const defaultSettings: VisualizationSettings = {
   showTriangleAltitudes: false,
   showSpecialTriangles: true,
   showPythagoreanSquares: false,
-  
+
   // Division visualization
   showDivisionAnswer: true,
-  
+
   // Grid enhancements
   showLatticePoints: false,
   showReferenceLineY_equals_X: true,
-  
+
   // Rectangle-based educational concepts
   showFactorPairs: false,
   showCommutativeProperty: false,
@@ -110,21 +112,21 @@ const defaultSettings: VisualizationSettings = {
   showPrimeComposite: false,
   showGCF: true,
   showLCM: false,
-  
+
   // Display settings
   fontScale: 1.0,
   gridScale: 1.0,
-  
+
   // Snapping settings
-  snapPrecision: 'whole',
-  
+  snapPrecision: "whole",
+
   // Coordinate system settings
-  coordinateSystem: 'cartesian',
+  coordinateSystem: "cartesian",
   showPolarGrid: false,
   customOrigin: null,
-  
+
   // Zoom behavior settings
-  zoomSensitivity: 'medium',
+  zoomSensitivity: "medium",
 };
 
 export const useVisualizationStore = create<VisualizationStore>((set) => ({
@@ -132,7 +134,7 @@ export const useVisualizationStore = create<VisualizationStore>((set) => ({
 
   toggleSetting: (setting) => {
     set((state) => ({
-      [setting]: !state[setting]
+      [setting]: !state[setting],
     }));
     storageManager.scheduleSave();
   },

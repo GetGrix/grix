@@ -11,38 +11,7 @@ interface Tool {
   description: string;
 }
 
-const buildTools: Tool[] = [
-  {
-    id: 'ray-tool',
-    name: 'Line Builder',
-    icon: '📏',
-    description: 'Create and edit lines to explore slopes and fractions'
-  },
-  {
-    id: 'rectangle-tool',
-    name: 'Rectangle Builder',
-    icon: '⬜',
-    description: 'Create rectangles to explore area and multiplication'
-  },
-  {
-    id: 'circle-tool',
-    name: 'Circle Builder',
-    icon: '⭕',
-    description: 'Create circles to explore circumference and area'
-  },
-  {
-    id: 'triangle-tool',
-    name: 'Triangle Builder',
-    icon: '🔺',
-    description: 'Create triangles to explore angles and trigonometry'
-  },
-  {
-    id: 'function-tool',
-    name: 'Function Grapher',
-    icon: '📈',
-    description: 'Create function graphs like parabolas, sine waves, and more'
-  }
-];
+// Move buildTools inside component to access translations
 
 interface ToolBarProps {
   className?: string;
@@ -54,6 +23,39 @@ export function ToolBar({ className = '' }: ToolBarProps) {
   const { t } = useTranslation();
   const isDropdownOpen = openMenu === 'build';
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const buildTools: Tool[] = [
+    {
+      id: 'ray-tool',
+      name: t('tools.line'),
+      icon: '📏',
+      description: t('tools.line.description')
+    },
+    {
+      id: 'rectangle-tool',
+      name: t('tools.rectangle'),
+      icon: '⬜',
+      description: t('tools.rectangle.description')
+    },
+    {
+      id: 'circle-tool',
+      name: t('tools.circle'),
+      icon: '⭕',
+      description: t('tools.circle.description')
+    },
+    {
+      id: 'triangle-tool',
+      name: t('tools.triangle'),
+      icon: '🔺',
+      description: t('tools.triangle.description')
+    },
+    {
+      id: 'function-tool',
+      name: t('tools.function'),
+      icon: '📈',
+      description: t('tools.function.description')
+    }
+  ];
 
   const handleToolSelect = (toolId: string) => {
     setActiveTool(toolId);
@@ -182,7 +184,7 @@ export function ToolBar({ className = '' }: ToolBarProps) {
                     className="w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-50 rounded-b-lg transition-colors text-gray-600"
                   >
                     <span className="text-lg">✕</span>
-                    <span className="text-sm">Clear selection</span>
+                    <span className="text-sm">{t('toolbar.panMode')}</span>
                   </button>
                 </>
               )}

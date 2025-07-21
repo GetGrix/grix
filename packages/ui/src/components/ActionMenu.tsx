@@ -30,9 +30,9 @@ export function ActionMenu({ onClearBoard, onExportImage, onImportState, isOpen:
     }
   };
 
-  // Close menu when clicking outside
+  // Close menu when clicking/touching outside
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         if (onToggle) {
           onToggle();
@@ -44,11 +44,16 @@ export function ActionMenu({ onClearBoard, onExportImage, onImportState, isOpen:
     }
 
     if (isOpen) {
+      // Listen for both mouse and touch events to handle all devices
       document.addEventListener('mousedown', handleClickOutside, true);
       document.addEventListener('click', handleClickOutside, true);
+      document.addEventListener('touchstart', handleClickOutside, true);
+      document.addEventListener('touchend', handleClickOutside, true);
       return () => {
         document.removeEventListener('mousedown', handleClickOutside, true);
         document.removeEventListener('click', handleClickOutside, true);
+        document.removeEventListener('touchstart', handleClickOutside, true);
+        document.removeEventListener('touchend', handleClickOutside, true);
       };
     }
   }, [isOpen, onToggle]);

@@ -52,12 +52,16 @@ export function useInputSystem(
     startDistance: number;
     lastTapTime: number;
     tapCount: number;
+    initialCenter: { x: number; y: number } | null;
+    wasRecentlyGesturing: boolean;
   }>({
     isGesturing: false,
     startTime: 0,
     startDistance: 0,
     lastTapTime: 0,
-    tapCount: 0
+    tapCount: 0,
+    initialCenter: null,
+    wasRecentlyGesturing: false
   });
 
   // Calculate distance between two touches
@@ -109,11 +113,14 @@ export function useInputSystem(
       // Handle gesture detection
       if (defaultConfig.enableGestures && newPointers.size >= 2) {
         const distance = getTouchDistance(newPointers);
+        const center = getTouchCenter(newPointers);
         setGestureState(prevState => ({
           ...prevState,
           isGesturing: true,
           startTime: event.timeStamp,
-          startDistance: distance
+          startDistance: distance,
+          initialCenter: center,
+          wasRecentlyGesturing: false
         }));
       }
       
@@ -147,18 +154,28 @@ export function useInputSystem(
       // Handle gesture detection during move
       if (defaultConfig.enableGestures && newPointers.size >= 2) {
         const currentDistance = getTouchDistance(newPointers);
-        const center = getTouchCenter(newPointers);
+        const currentCenter = getTouchCenter(newPointers);
         
-        if (gestureState.isGesturing && gestureState.startDistance > 0) {
+        if (gestureState.isGesturing && gestureState.startDistance > 0 && gestureState.initialCenter) {
           const scale = currentDistance / gestureState.startDistance;
+          
+          // Use stable center based on initial touch positions to prevent jumping
+          // Interpolate between initial center and current center for smoother experience
+          const stableCenter = {
+            x: gestureState.initialCenter.x * 0.7 + currentCenter.x * 0.3,
+            y: gestureState.initialCenter.y * 0.7 + currentCenter.y * 0.3
+          };
           
           handlers.onGesture?.({
             type: 'pinch',
-            center,
+            center: stableCenter,
             scale,
             touches: newPointers.size
           });
         }
+      } else if (newPointers.size === 1 && gestureState.wasRecentlyGesturing) {
+        // Don't emit pan events immediately after multi-touch to prevent jumping
+        // Set a flag to ignore single-finger movements briefly after gesture ends
       } else if (newPointers.size === 1 && gestureState.isGesturing) {
         // Single finger pan during gesture
         const center = getTouchCenter(newPointers);
@@ -193,10 +210,28 @@ export function useInputSystem(
       const newPointers = new Map(prev);
       newPointers.delete(event.pointerId);
       
+      // Reset gesture state when going from multi-touch to single or no touch
+      if (newPointers.size < 2 && gestureState.isGesturing) {
+        setGestureState(prevState => ({
+          ...prevState,
+          isGesturing: false,
+          wasRecentlyGesturing: true,
+          initialCenter: null
+        }));
+        
+        // Clear the recently gesturing flag after a short delay
+        setTimeout(() => {
+          setGestureState(prevState => ({
+            ...prevState,
+            wasRecentlyGesturing: false
+          }));
+        }, 100);
+      }
+      
       // Handle tap detection
       if (defaultConfig.enableGestures && newPointers.size === 0) {
         const timeDiff = event.timeStamp - gestureState.startTime;
-        const isQuickTap = timeDiff < 200;
+        const isQuickTap = timeDiff < 200 && !gestureState.wasRecentlyGesturing;
         const timeSinceLastTap = event.timeStamp - gestureState.lastTapTime;
         
         if (isQuickTap && !gestureState.isGesturing) {

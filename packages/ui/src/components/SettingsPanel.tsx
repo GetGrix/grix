@@ -59,182 +59,189 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
     }
   }, [isOpen, onToggle]);
 
+  // Helper function to convert camelCase to translation key
+  const getSettingTranslationKey = (key: string) => {
+    // Convert showEquivalentFractions to equivalentFractions
+    const cleanKey = key.replace(/^show/, '');
+    return cleanKey.charAt(0).toLowerCase() + cleanKey.slice(1);
+  };
+
   const allSettingSections: SettingSection[] = [
     {
-      title: 'Origin Lines',
-      subtitle: 'Enhancements for lines from (0,0)',
+      title: t('settings.sections.originLines'),
+      subtitle: t('settings.sections.originLines.subtitle'),
       settings: [
         {
           key: 'showEquivalentFractions',
-          label: 'Equivalent Fractions',
-          description: 'Green circles showing equivalent fractions',
+          label: t('settings.equivalentFractions'),
+          description: t('settings.equivalentFractions.description'),
         },
         {
           key: 'showLengthMultiples',
-          label: 'Length Multiples',
-          description: 'Small dots at 2×, 3×, 4× line length',
+          label: t('settings.lengthMultiples'),
+          description: t('settings.lengthMultiples.description'),
         },
         {
           key: 'showAreaRectangle',
-          label: 'Area Rectangle',
-          description: 'Soft rectangle showing multiplication',
+          label: t('settings.areaRectangle'),
+          description: t('settings.areaRectangle.description'),
         },
         {
           key: 'showDivisionMultiples',
-          label: 'Division Multiples',
-          description: 'Horizontal lines showing division answer multiples',
+          label: t('settings.divisionMultiples'),
+          description: t('settings.divisionMultiples.description'),
         },
         {
           key: 'showRiseRunTriangle',
-          label: 'Rise/Run Triangle',
-          description: 'Triangle showing slope components',
+          label: t('settings.riseRunTriangle'),
+          description: t('settings.riseRunTriangle.description'),
         },
         {
           key: 'showDistanceMarkers',
-          label: 'Distance Markers',
-          description: 'Radial quarter-circles at unit distances',
+          label: t('settings.distanceMarkers'),
+          description: t('settings.distanceMarkers.description'),
         },
         {
           key: 'showAngleArc',
-          label: 'Angle Arc',
-          description: 'Arc showing angle from x-axis with measurement',
+          label: t('settings.angleArc'),
+          description: t('settings.angleArc.description'),
         },
         {
           key: 'showCoordinateProjections',
-          label: 'Coordinate Projection Lines',
-          description: 'Dashed lines from endpoint to axes showing x,y values',
+          label: t('settings.coordinateProjections'),
+          description: t('settings.coordinateProjections.description'),
         },
       ],
     },
     {
-      title: 'Division & Fractions',
-      subtitle: 'Visual fraction and division concepts',
+      title: t('settings.sections.divisionFractions'),
+      subtitle: t('settings.sections.divisionFractions.subtitle'),
       settings: [
         {
           key: 'showDivisionAnswer',
-          label: 'Slope/Division Answer Line (x=1)',
-          description: 'Blue dot showing slope value and division answer at x=1',
+          label: t('settings.divisionAnswer'),
+          description: t('settings.divisionAnswer.description'),
         },
       ],
     },
     {
-      title: 'Grid & Reference',
-      subtitle: 'Grid enhancements and reference lines',
+      title: t('settings.sections.gridReference'),
+      subtitle: t('settings.sections.gridReference.subtitle'),
       settings: [
         {
           key: 'showLatticePoints',
-          label: 'Lattice Points',
-          description: 'Dots at all integer coordinates',
+          label: t('settings.latticePoints'),
+          description: t('settings.latticePoints.description'),
         },
         {
           key: 'showReferenceLineY_equals_X',
-          label: 'y=x Reference Line',
-          description: 'Purple diagonal line for comparison',
+          label: t('settings.referenceLineY_equals_X'),
+          description: t('settings.referenceLineY_equals_X.description'),
         },
       ],
     },
     {
-      title: 'Circle Concepts',
-      subtitle: 'Visual features for circles and curves',
+      title: t('settings.sections.circleConcepts'),
+      subtitle: t('settings.sections.circleConcepts.subtitle'),
       settings: [
         {
           key: 'showTangentLines',
-          label: 'Tangent Lines',
-          description: 'Show tangent line and slope on hover',
+          label: t('settings.tangentLines'),
+          description: t('settings.tangentLines.description'),
         },
       ],
     },
     {
-      title: 'Function Concepts',
-      subtitle: 'Mathematical function visualization features',
+      title: t('settings.sections.functionConcepts'),
+      subtitle: t('settings.sections.functionConcepts.subtitle'),
       settings: [
         {
           key: 'showFunctionExtensions',
-          label: 'Function Extensions',
-          description: 'Show subtle curve extensions beyond domain endpoints',
+          label: t('settings.functionExtensions'),
+          description: t('settings.functionExtensions.description'),
         },
       ],
     },
     {
-      title: 'Triangle Concepts',
-      subtitle: 'Trigonometry and geometry learning features',
+      title: t('settings.sections.triangleConcepts'),
+      subtitle: t('settings.sections.triangleConcepts.subtitle'),
       settings: [
         {
           key: 'showTriangleAngles',
-          label: 'Angle Measurements',
-          description: 'Show all three angles with degree values',
+          label: t('settings.triangleAngles'),
+          description: t('settings.triangleAngles.description'),
         },
         {
           key: 'showTriangleClassification',
-          label: 'Triangle Classification',
-          description: 'Label triangle type (scalene, isosceles, etc.)',
+          label: t('settings.triangleClassification'),
+          description: t('settings.triangleClassification.description'),
         },
         {
           key: 'showSpecialTriangles',
-          label: 'Special Triangles',
-          description: 'Highlight 30-60-90 and 45-45-90 triangles',
+          label: t('settings.specialTriangles'),
+          description: t('settings.specialTriangles.description'),
         },
         {
           key: 'showSOHCAHTOA',
-          label: 'SOH-CAH-TOA Visualization',
-          description: 'Highlight opposite, adjacent, hypotenuse sides',
+          label: t('settings.SOHCAHTOA'),
+          description: t('settings.SOHCAHTOA.description'),
         },
         {
           key: 'showTrigValues',
-          label: 'Trigonometric Values',
-          description: 'Show sin, cos, tan values on hover',
+          label: t('settings.trigValues'),
+          description: t('settings.trigValues.description'),
         },
         {
           key: 'showTriangleAltitudes',
-          label: 'Altitude Lines',
-          description: 'Show perpendicular height lines',
+          label: t('settings.triangleAltitudes'),
+          description: t('settings.triangleAltitudes.description'),
         },
         {
           key: 'showPythagoreanSquares',
-          label: 'Pythagorean Squares',
-          description: 'Show a² + b² = c² with actual squares (right triangles)',
+          label: t('settings.pythagoreanSquares'),
+          description: t('settings.pythagoreanSquares.description'),
         },
       ],
     },
     {
-      title: 'Rectangle Concepts',
-      subtitle: 'Educational features for rectangles and areas',
+      title: t('settings.sections.rectangleConcepts'),
+      subtitle: t('settings.sections.rectangleConcepts.subtitle'),
       settings: [
         {
           key: 'showFactorPairs',
-          label: 'Factor Pairs',
-          description: 'Show all rectangles with the same area',
+          label: t('settings.factorPairs'),
+          description: t('settings.factorPairs.description'),
         },
         {
           key: 'showCommutativeProperty',
-          label: 'Commutative Property',
-          description: 'Show flipped rectangle (w×h = h×w)',
+          label: t('settings.commutativeProperty'),
+          description: t('settings.commutativeProperty.description'),
         },
         {
           key: 'showDistributiveProperty',
-          label: 'Distributive Property',
-          description: 'Split rectangle to show a(b+c) = ab+ac',
+          label: t('settings.distributiveProperty'),
+          description: t('settings.distributiveProperty.description'),
         },
         {
           key: 'showPrimeComposite',
-          label: 'Prime vs Composite',
-          description: 'Badge showing if area is prime or composite',
+          label: t('settings.primeComposite'),
+          description: t('settings.primeComposite.description'),
         },
         {
           key: 'showGCF',
-          label: 'Greatest Common Factor',
-          description: 'Largest square tiling both dimensions',
+          label: t('settings.GCF'),
+          description: t('settings.GCF.description'),
         },
         {
           key: 'showLCM',
-          label: 'Least Common Multiple',
-          description: 'Smallest rectangle fitting both dimensions',
+          label: t('settings.LCM'),
+          description: t('settings.LCM.description'),
         },
       ],
     },
     {
-      title: 'Display',
-      subtitle: 'Adjust visibility for classrooms and large screens',
+      title: t('settings.sections.display'),
+      subtitle: t('settings.sections.display.subtitle'),
       settings: [], // No checkboxes for this section
     },
   ];
@@ -333,11 +340,11 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
                   ))}
                   
                   {/* Font Scale Control for Display section */}
-                  {section.title === 'Display' && (
+                  {section.title === t('settings.sections.display') && (
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <label className="text-sm font-medium text-gray-700">
-                          Font Size
+                          {t('settings.fontSize')}
                         </label>
                         <span className="text-xs text-gray-500 font-mono">
                           {Math.round(visualizationStore.fontScale * 100)}%
@@ -357,21 +364,21 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
                         <span className="text-sm text-gray-600">A</span>
                       </div>
                       <div className="text-xs text-gray-500 leading-relaxed">
-                        Increase font size for better visibility on TVs and projectors
+                        {t('settings.fontSize.description')}
                       </div>
                       
                       {/* Grid Scale Control */}
                       <div className="space-y-3 pt-4 border-t border-gray-100">
                         <div className="flex items-center justify-between">
                           <label className="text-sm font-medium text-gray-700">
-                            Grid Density
+                            {t('settings.gridDensity')}
                           </label>
                           <span className="text-xs text-gray-500 font-mono">
                             {Math.round(visualizationStore.gridScale * 100)}%
                           </span>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="text-xs text-gray-400">Sparse</span>
+                          <span className="text-xs text-gray-400">{t('settings.gridSparse')}</span>
                           <input
                             type="range"
                             min="0.2"
@@ -381,23 +388,23 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
                             onChange={(e) => setGridScale(parseFloat(e.target.value))}
                             className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
                           />
-                          <span className="text-xs text-gray-600">Dense</span>
+                          <span className="text-xs text-gray-600">{t('settings.gridDense')}</span>
                         </div>
                         <div className="text-xs text-gray-500 leading-relaxed">
-                          Adjust grid line spacing for different zoom levels and detail needs
+                          {t('settings.gridDensity.description')}
                         </div>
                       </div>
                       
                       {/* Coordinate System Control */}
                       <div className="space-y-3 pt-4 border-t border-gray-100">
                         <label className="text-sm font-medium text-gray-700">
-                          Coordinate System
+                          {t('settings.coordinateSystem')}
                         </label>
                         <div className="space-y-2">
                           {[
-                            { value: 'cartesian', label: 'Cartesian Only', desc: 'Standard x-y grid' },
-                            { value: 'polar', label: 'Polar Only', desc: 'Circular coordinate system' },
-                            { value: 'both', label: 'Both Systems', desc: 'Overlay polar on Cartesian' }
+                            { value: 'cartesian', label: t('settings.cartesianOnly'), desc: t('settings.cartesianOnly.description') },
+                            { value: 'polar', label: t('settings.polarOnly'), desc: t('settings.polarOnly.description') },
+                            { value: 'both', label: t('settings.bothSystems'), desc: t('settings.bothSystems.description') }
                           ].map(option => (
                             <label key={option.value} className="flex items-start gap-3 cursor-pointer group">
                               <input
@@ -424,15 +431,15 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
                       {/* Snap Precision Control */}
                       <div className="space-y-3 pt-4 border-t border-gray-100">
                         <label className="text-sm font-medium text-gray-700">
-                          Snap Precision
+                          {t('settings.snapPrecision')}
                         </label>
                         <div className="space-y-2">
                           {[
-                            { value: 'adaptive', label: 'Adaptive', desc: 'Automatically adjusts based on zoom level' },
-                            { value: 'whole', label: 'Whole Numbers', desc: 'Snap to 1, 2, 3, etc.' },
-                            { value: 'half', label: 'Half Units', desc: 'Snap to 0.5, 1.0, 1.5, etc.' },
-                            { value: 'quarter', label: 'Quarter Units', desc: 'Snap to 0.25, 0.5, 0.75, etc.' },
-                            { value: 'tenth', label: 'Tenth Units', desc: 'Snap to 0.1, 0.2, 0.3, etc.' }
+                            { value: 'adaptive', label: t('settings.adaptive'), desc: t('settings.adaptive.description') },
+                            { value: 'whole', label: t('settings.wholeNumbers'), desc: t('settings.wholeNumbers.description') },
+                            { value: 'half', label: t('settings.halfUnits'), desc: t('settings.halfUnits.description') },
+                            { value: 'quarter', label: t('settings.quarterUnits'), desc: t('settings.quarterUnits.description') },
+                            { value: 'tenth', label: t('settings.tenthUnits'), desc: t('settings.tenthUnits.description') }
                           ].map(option => (
                             <label key={option.value} className="flex items-start gap-3 cursor-pointer group">
                               <input
@@ -455,20 +462,20 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
                           ))}
                         </div>
                         <div className="text-xs text-gray-500 leading-relaxed">
-                          Controls where objects can be placed when snap-to-grid is enabled
+                          {t('settings.snapPrecision.description')}
                         </div>
                       </div>
                       
                       {/* Zoom Sensitivity */}
                       <div className="space-y-3 pt-4 border-t border-gray-100">
                         <label className="text-sm font-medium text-gray-700">
-                          Zoom Sensitivity
+                          {t('settings.zoomSensitivity')}
                         </label>
                         <div className="grid grid-cols-1 gap-1">
                           {[
-                            { value: 'low', label: 'Low', desc: 'Gentle zoom, harder to get lost' },
-                            { value: 'medium', label: 'Medium', desc: 'Balanced zoom behavior' },
-                            { value: 'high', label: 'High', desc: 'Responsive zoom, full control' }
+                            { value: 'low', label: t('settings.low'), desc: t('settings.low.description') },
+                            { value: 'medium', label: t('settings.medium'), desc: t('settings.medium.description') },
+                            { value: 'high', label: t('settings.high'), desc: t('settings.high.description') }
                           ].map(option => (
                             <label key={option.value} className="flex items-start gap-3 p-2 rounded hover:bg-gray-50 cursor-pointer group">
                               <input
@@ -491,14 +498,14 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
                           ))}
                         </div>
                         <div className="text-xs text-gray-500 leading-relaxed">
-                          Controls how responsive zoom gestures are on mobile devices
+                          {t('settings.zoomSensitivity.description')}
                         </div>
                       </div>
                       
                       {/* Language Selector */}
                       <div className="space-y-3 pt-4 border-t border-gray-100">
                         <label className="text-sm font-medium text-gray-700">
-                          Language / Idioma
+                          {t('settings.language')}
                         </label>
                         <select
                           value={language}
@@ -512,7 +519,7 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
                           ))}
                         </select>
                         <div className="text-xs text-gray-500 leading-relaxed">
-                          Help translate Grix to your language! Visit our GitHub page.
+                          {t('settings.language.description')}
                         </div>
                       </div>
                     </div>
@@ -525,7 +532,7 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
           {/* Footer */}
           <div className="sticky bottom-0 bg-gray-50 border-t border-gray-100 px-4 py-2 rounded-b-lg">
             <p className="text-xs text-gray-500 text-center">
-              Toggle features to explore different mathematical concepts
+              {t('settings.footerText')}
             </p>
           </div>
         </div>

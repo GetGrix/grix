@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useTranslation } from '../i18n/useTranslation.js';
 
 export function InfoModal() {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -53,7 +55,7 @@ export function InfoModal() {
       <button
         onClick={() => setIsOpen(true)}
         className="fixed bottom-4 right-20 z-40 w-10 h-10 bg-white border border-gray-200 rounded-full shadow-lg hover:bg-gray-50 transition-all hover:shadow-xl flex items-center justify-center"
-        title="About Grix"
+        title={t('info.about')}
       >
         <span className="text-sm font-bold text-blue-600">ℹ️</span>
       </button>
@@ -99,7 +101,7 @@ export function InfoModal() {
                   <circle cx="16" cy="16" r="2" fill="#FFFFFF" />
                   <circle cx="24" cy="8" r="1.5" fill="#22C55E" />
                 </svg>
-                <h2 className="text-xl font-bold text-gray-900">About Grix</h2>
+                <h2 className="text-xl font-bold text-gray-900">{t('info.about')}</h2>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
@@ -114,45 +116,34 @@ export function InfoModal() {
               {/* Description */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  Mathematical Visualization Playground
+                  {t('info.subtitle')}
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Grix is a playground-first mathematical grid system that
-                  scales from 3rd-grade fractions to professional linear
-                  algebra. Explore slopes, areas, trigonometry, functions, and
-                  more through interactive visual learning.
+                  {t('info.description')}
                 </p>
               </div>
 
               {/* Key Features */}
               <div>
                 <h4 className="text-md font-semibold text-gray-800 mb-2">
-                  Key Features
+                  {t('info.keyFeatures')}
                 </h4>
                 <ul className="text-gray-600 space-y-1 text-sm">
-                  <li>• Interactive mathematical shapes and functions</li>
-                  <li>• Real-time visualization of mathematical concepts</li>
-                  <li>
-                    • Educational features for fractions, geometry, and algebra
-                  </li>
-                  <li>
-                    • Touch-friendly interface for tablets and mobile devices
-                  </li>
-                  <li>
-                    • Progressive complexity from elementary to advanced math
-                  </li>
+                  <li>• {t('info.features.interactive')}</li>
+                  <li>• {t('info.features.realtime')}</li>
+                  <li>• {t('info.features.educational')}</li>
+                  <li>• {t('info.features.touch')}</li>
+                  <li>• {t('info.features.progressive')}</li>
                 </ul>
               </div>
 
               {/* Open Source */}
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                 <h4 className="text-md font-semibold text-green-800 mb-2">
-                  🌟 Free & Open Source
+                  🌟 {t('info.opensource')}
                 </h4>
                 <p className="text-green-700 text-sm mb-3">
-                  Grix is completely free to use and open source under the MIT
-                  License. Anyone can contribute, modify, or use it for any
-                  purpose including commercial.
+                  {t('info.opensource.description')}
                 </p>
                 <a
                   href="https://github.com/getgrix/grix"
@@ -161,18 +152,17 @@ export function InfoModal() {
                   className="inline-flex items-center gap-2 text-green-700 hover:text-green-800 font-medium text-sm underline"
                 >
                   <span>📁</span>
-                  View on GitHub
+{t('info.viewGithub')}
                 </a>
               </div>
 
               {/* Contact */}
               <div>
                 <h4 className="text-md font-semibold text-gray-800 mb-2">
-                  Get in Touch
+                  {t('info.contact')}
                 </h4>
                 <p className="text-gray-600 text-sm mb-2">
-                  Have questions, suggestions, or want to contribute? We'd love
-                  to hear from you!
+                  {t('info.contact.description')}
                 </p>
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-500">📧</span>
@@ -193,7 +183,7 @@ export function InfoModal() {
               {/* Version Info */}
               <div className="pt-4 border-t border-gray-200">
                 <p className="text-xs text-gray-500 text-center">
-                  Made with ❤️ for mathematical learning
+                  {t('info.madeWith')}
                 </p>
               </div>
             </div>

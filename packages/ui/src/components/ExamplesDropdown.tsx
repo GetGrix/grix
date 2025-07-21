@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { examplesManager, type Example, type ExampleCategory } from '../utils/examplesManager.js';
 import { useMenuState } from '../context/MenuStateContext.js';
+import { useTranslation } from '../i18n/useTranslation.js';
 
 export function ExamplesDropdown() {
+  const { t } = useTranslation();
   const { openMenu, setOpenMenu } = useMenuState();
   const isOpen = openMenu === 'examples';
   const [examples, setExamples] = useState<Example[]>([]);
@@ -105,16 +107,60 @@ export function ExamplesDropdown() {
     }
   };
 
+  // Helper function to get translated category name
+  const getCategoryName = (category: ExampleCategory) => {
+    // Map common category IDs to translation keys (normalize the keys)
+    const categoryKeyMap: { [key: string]: string } = {
+      'fractions': 'examples.category.fractions',
+      'geometry': 'examples.category.geometry', 
+      'algebra': 'examples.category.algebra',
+      'trigonometry': 'examples.category.trigonometry',
+      'calculus': 'examples.category.calculus',
+      'statistics': 'examples.category.statistics',
+      'basics': 'examples.category.basics',
+      'advanced': 'examples.category.advanced',
+      'number theory': 'examples.category.numbertheory',
+      'numbertheory': 'examples.category.numbertheory',
+      'number-theory': 'examples.category.numbertheory',
+      'precalculus': 'examples.category.precalculus',
+      'pre-calculus': 'examples.category.precalculus',
+      'linearalgebra': 'examples.category.linearalgebra',
+      'linear algebra': 'examples.category.linearalgebra',
+      'linear-algebra': 'examples.category.linearalgebra',
+      'discrete': 'examples.category.discrete',
+      'discrete math': 'examples.category.discrete',
+      'discrete-math': 'examples.category.discrete',
+      'discretemath': 'examples.category.discrete',
+      'probability': 'examples.category.probability',
+      'functions': 'examples.category.functions'
+    };
+
+    // Normalize the category ID (lowercase, remove spaces and special chars)
+    const normalizedId = category.id.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const normalizedName = category.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+    
+    // Try to get translated name using ID first, then name, then fall back to original name
+    const translationKey = categoryKeyMap[normalizedId] || categoryKeyMap[normalizedName];
+    
+    if (translationKey) {
+      const translated = t(translationKey);
+      // If translation returns the key itself (meaning it wasn't found), use original name
+      return translated === translationKey ? category.name : translated;
+    }
+    
+    return category.name;
+  };
+
   return (
     <div ref={dropdownRef} className="relative z-50">
       <button
         onClick={() => setOpenMenu(openMenu === 'examples' ? null : 'examples')}
         className="flex items-center gap-2 px-4 py-2 rounded-lg border transition-all bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"
-        title="Mathematical Examples"
+        title={t('toolbar.examples')}
         disabled={isLoading}
       >
         <span className="text-lg">📚</span>
-        <span className="text-sm font-medium text-gray-700">Examples</span>
+        <span className="text-sm font-medium text-gray-700">{t('toolbar.examples')}</span>
         <span className={`text-xs transition-transform ${isOpen ? 'rotate-180' : ''}`}>
           ▼
         </span>
@@ -125,13 +171,13 @@ export function ExamplesDropdown() {
           {/* Header */}
           <div className="sticky top-0 bg-white border-b border-gray-100 px-4 py-3 rounded-t-lg">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-gray-800">Mathematical Examples</h3>
+              <h3 className="text-sm font-semibold text-gray-800">{t('tutorial.examples.title')}</h3>
               <button
                 onClick={handleClearCanvas}
                 className="text-xs text-red-600 hover:text-red-800 font-medium"
                 disabled={isLoading}
               >
-                Clear All
+{t('actions.clearBoard')}
               </button>
             </div>
             
@@ -143,10 +189,16 @@ export function ExamplesDropdown() {
                 className="w-full text-xs border border-gray-200 rounded px-2 py-1 bg-white"
                 disabled={isLoading}
               >
-                <option value="all">All Categories</option>
+                <option value="all">
+                  {(() => {
+                    const translated = t('examples.allCategories');
+                    // Fallback in case translation fails
+                    return translated === 'examples.allCategories' ? 'All Categories' : translated;
+                  })()}
+                </option>
                 {categories.map(category => (
                   <option key={category.id} value={category.id}>
-                    {category.name}
+                    {getCategoryName(category)}
                   </option>
                 ))}
               </select>
@@ -164,11 +216,11 @@ export function ExamplesDropdown() {
           <div className="overflow-y-auto max-h-80 examples-scrollable">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
-                <div className="text-sm text-gray-500">Loading examples...</div>
+                <div className="text-sm text-gray-500">{t('tutorial.loading')}</div>
               </div>
             ) : filteredExamples.length === 0 ? (
               <div className="flex items-center justify-center py-8">
-                <div className="text-sm text-gray-500">No examples available</div>
+                <div className="text-sm text-gray-500">{t('examples.noExamples')}</div>
               </div>
             ) : (
               <div className="p-2 space-y-1">
@@ -198,7 +250,10 @@ export function ExamplesDropdown() {
                         {categories.find(cat => cat.id === example.category) && (
                           <div className="flex items-center gap-1 mt-2">
                             <span className="text-xs text-gray-400">
-                              {categories.find(cat => cat.id === example.category)?.name}
+                              {(() => {
+                                const category = categories.find(cat => cat.id === example.category);
+                                return category ? getCategoryName(category) : '';
+                              })()}
                             </span>
                             <span className="text-xs text-gray-300">•</span>
                             <span className="text-xs text-gray-400">

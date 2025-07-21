@@ -826,42 +826,81 @@ export function ObjectRenderer({ objects, viewport, touchTargetSize, worldToScre
             />
             
             {/* Corner handles for resizing - all four corners */}
-            <circle
-              cx={topLeft.x}
-              cy={topLeft.y}
-              r={touchTargetSize / 6}
-              fill={isSelected ? "#16A34A" : "#22c55e"}
-              stroke={isSelected ? "#60A5FA" : "none"}
-              strokeWidth={isSelected ? 2 : 0}
-              style={{ cursor: 'nw-resize' }}
-            />
-            <circle
-              cx={topLeft.x + rectWidth}
-              cy={topLeft.y}
-              r={touchTargetSize / 6}
-              fill={isSelected ? "#16A34A" : "#22c55e"}
-              stroke={isSelected ? "#60A5FA" : "none"}
-              strokeWidth={isSelected ? 2 : 0}
-              style={{ cursor: 'ne-resize' }}
-            />
-            <circle
-              cx={topLeft.x}
-              cy={topLeft.y + rectHeight}
-              r={touchTargetSize / 6}
-              fill={isSelected ? "#16A34A" : "#22c55e"}
-              stroke={isSelected ? "#60A5FA" : "none"}
-              strokeWidth={isSelected ? 2 : 0}
-              style={{ cursor: 'sw-resize' }}
-            />
-            <circle
-              cx={topLeft.x + rectWidth}
-              cy={topLeft.y + rectHeight}
-              r={touchTargetSize / 6}
-              fill={isSelected ? "#16A34A" : "#22c55e"}
-              stroke={isSelected ? "#60A5FA" : "none"}
-              strokeWidth={isSelected ? 2 : 0}
-              style={{ cursor: 'se-resize' }}
-            />
+            {/* Use larger touch targets on mobile with invisible overlay for easier interaction */}
+            <g>
+              {/* Visible handle circles */}
+              <circle
+                cx={topLeft.x}
+                cy={topLeft.y}
+                r={Math.max(6, touchTargetSize / 6)}
+                fill={isSelected ? "#16A34A" : "#22c55e"}
+                stroke={isSelected ? "#60A5FA" : "none"}
+                strokeWidth={isSelected ? 2 : 0}
+                style={{ cursor: 'nw-resize' }}
+              />
+              {/* Larger invisible touch target */}
+              <circle
+                cx={topLeft.x}
+                cy={topLeft.y}
+                r={touchTargetSize / 2}
+                fill="transparent"
+                style={{ cursor: 'nw-resize' }}
+              />
+            </g>
+            <g>
+              <circle
+                cx={topLeft.x + rectWidth}
+                cy={topLeft.y}
+                r={Math.max(6, touchTargetSize / 6)}
+                fill={isSelected ? "#16A34A" : "#22c55e"}
+                stroke={isSelected ? "#60A5FA" : "none"}
+                strokeWidth={isSelected ? 2 : 0}
+                style={{ cursor: 'ne-resize' }}
+              />
+              <circle
+                cx={topLeft.x + rectWidth}
+                cy={topLeft.y}
+                r={touchTargetSize / 2}
+                fill="transparent"
+                style={{ cursor: 'ne-resize' }}
+              />
+            </g>
+            <g>
+              <circle
+                cx={topLeft.x}
+                cy={topLeft.y + rectHeight}
+                r={Math.max(6, touchTargetSize / 6)}
+                fill={isSelected ? "#16A34A" : "#22c55e"}
+                stroke={isSelected ? "#60A5FA" : "none"}
+                strokeWidth={isSelected ? 2 : 0}
+                style={{ cursor: 'sw-resize' }}
+              />
+              <circle
+                cx={topLeft.x}
+                cy={topLeft.y + rectHeight}
+                r={touchTargetSize / 2}
+                fill="transparent"
+                style={{ cursor: 'sw-resize' }}
+              />
+            </g>
+            <g>
+              <circle
+                cx={topLeft.x + rectWidth}
+                cy={topLeft.y + rectHeight}
+                r={Math.max(6, touchTargetSize / 6)}
+                fill={isSelected ? "#16A34A" : "#22c55e"}
+                stroke={isSelected ? "#60A5FA" : "none"}
+                strokeWidth={isSelected ? 2 : 0}
+                style={{ cursor: 'se-resize' }}
+              />
+              <circle
+                cx={topLeft.x + rectWidth}
+                cy={topLeft.y + rectHeight}
+                r={touchTargetSize / 2}
+                fill="transparent"
+                style={{ cursor: 'se-resize' }}
+              />
+            </g>
             
             {/* Coordinate labels for all corners */}
             <text

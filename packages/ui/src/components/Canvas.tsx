@@ -11,9 +11,12 @@ import { SettingsPanel } from './SettingsPanel.js';
 import { TutorialOverlay } from './TutorialOverlay.js';
 import { InfoModal } from './InfoModal.js';
 import { ActionMenu } from './ActionMenu.js';
+import { LineToolTutorial } from './LineToolTutorial.js';
+import { HomeButtonTutorial } from './HomeButtonTutorial.js';
 import { useTransformationStore } from '../store/transformationStore.js';
 import { useVisualizationStore } from '../store/visualizationStore.js';
 import { useMenuState } from '../context/MenuStateContext.js';
+import { storageManager } from '../utils/storageManager.js';
 import type { UnifiedPointerEvent, Point } from '@getgrix/core';
 import type { GestureEvent } from '../hooks/useInputSystem.js';
 import { distanceToLineSegment, pointInTriangle, distanceToCircleEdge } from '../utils/gridUtils.js';
@@ -106,6 +109,13 @@ export function Canvas({
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [userClosedContextMenu, setUserClosedContextMenu] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  
+  // Track line tool tutorial
+  const [showLineToolTutorial, setShowLineToolTutorial] = useState(false);
+  
+  // Track home button tutorial
+  const [showHomeButtonTutorial, setShowHomeButtonTutorial] = useState(false);
+  const homeButtonClickCount = useRef(0);
   
   // Track overlapping selection cycling
   const lastClickRef = useRef({ 
@@ -743,6 +753,23 @@ export function Canvas({
     }
   }, [openMenu, showContextMenu]);
 
+  // Show line tool tutorial on first selection
+  useEffect(() => {
+    if (activeTool === 'ray-tool') {
+      const state = storageManager.loadState();
+      const hasSeenTutorial = state?.tutorialSettings?.lineToolTutorialSeen;
+      
+      if (!hasSeenTutorial) {
+        // Small delay to let the tool selection settle
+        const timeout = setTimeout(() => {
+          setShowLineToolTutorial(true);
+        }, 300);
+        
+        return () => clearTimeout(timeout);
+      }
+    }
+  }, [activeTool]);
+
   const handleContextMenuClose = useCallback(() => {
     setShowContextMenu(false);
     setUserClosedContextMenu(true);
@@ -762,6 +789,14 @@ export function Canvas({
     updateObject(objectId, updates);
   }, [updateObject]);
 
+  const handleLineToolTutorialDismiss = useCallback(() => {
+    setShowLineToolTutorial(false);
+  }, []);
+
+  const handleHomeButtonTutorialDismiss = useCallback(() => {
+    setShowHomeButtonTutorial(false);
+  }, []);
+
   // Zoom controls with infinite range
   const handleZoomIn = useCallback(() => {
     const newZoom = Math.min(1000, viewport.zoom * 1.4);
@@ -779,6 +814,19 @@ export function Canvas({
 
   const handleCenterOnly = useCallback(() => {
     setViewport({ center: { x: 0, y: 0 } });
+    
+    // Show tutorial on first click if not seen
+    homeButtonClickCount.current += 1;
+    if (homeButtonClickCount.current === 1) {
+      const state = storageManager.loadState();
+      const hasSeenTutorial = state?.tutorialSettings?.homeButtonTutorialSeen;
+      
+      if (!hasSeenTutorial) {
+        setTimeout(() => {
+          setShowHomeButtonTutorial(true);
+        }, 300);
+      }
+    }
   }, [setViewport]);
 
   // Scroll wheel handling: zoom with ctrl, pan without ctrl
@@ -912,6 +960,18 @@ export function Canvas({
 
       {/* Info modal */}
       <InfoModal />
+
+      {/* Line tool first-time tutorial */}
+      <LineToolTutorial 
+        isVisible={showLineToolTutorial}
+        onDismiss={handleLineToolTutorialDismiss}
+      />
+
+      {/* Home button first-time tutorial */}
+      <HomeButtonTutorial 
+        isVisible={showHomeButtonTutorial}
+        onDismiss={handleHomeButtonTutorialDismiss}
+      />
     </div>
   );
 }

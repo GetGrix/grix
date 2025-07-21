@@ -19,9 +19,7 @@ export function useTranslation() {
   }, []);
 
   const t = useCallback((key: string, params?: Record<string, string | number>) => {
-    const result = translationManager.t(key, params);
-    console.log(`Translation: ${key} -> ${result} (lang: ${language})`);
-    return result;
+    return translationManager.t(key, params);
   }, [language]); // Re-create when language changes
 
   const changeLanguage = useCallback(async (languageCode: string) => {

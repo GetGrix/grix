@@ -1,0 +1,78 @@
+{
+  "app.name": "Grix",
+  "toolbar.build": "إنشاء",
+  "toolbar.examples": "أمثلة",
+  "tools.line": "منشئ الخطوط",
+  "tools.line.description": "إنشاء وتحرير الخطوط لاستكشاف الميول والكسور",
+  "tools.rectangle": "منشئ المستطيلات",
+  "tools.rectangle.description": "إنشاء مستطيلات لاستكشاف المساحة والضرب",
+  "tools.circle": "منشئ الدوائر",
+  "tools.circle.description": "إنشاء دوائر لاستكشاف المحيط والمساحة",
+  "tools.triangle": "منشئ المثلثات",
+  "tools.triangle.description": "إنشاء مثلثات لاستكشاف الزوايا وحساب المثلثات",
+  "tools.function": "راسم الدوال",
+  "tools.function.description": "إنشاء رسوم بيانية للدوال مثل القطع المكافئ والموجات الجيبية والمزيد",
+  "settings.title": "إعدادات العرض",
+  "settings.resetAll": "إعادة تعيين الكل",
+  "settings.allSettings": "جميع الإعدادات",
+  "context.details": "التفاصيل",
+  "context.delete": "حذف",
+  "context.close": "إغلاق",
+  "context.expand": "توسيع",
+  "context.collapse": "طي",
+  "objects.line": "خط",
+  "objects.rectangle": "مستطيل",
+  "objects.circle": "دائرة",
+  "objects.triangle": "مثلث",
+  "objects.function": "دالة",
+  "math.slope": "ميل",
+  "math.area": "مساحة",
+  "math.radius": "نصف القطر",
+  "math.diameter": "القطر",
+  "math.circumference": "المحيط",
+  "math.perimeter": "المحيط",
+  "math.angle": "زاوية",
+  "math.degrees": "درجات",
+  "actions.title": "الإجراءات والأدوات",
+  "actions.clearBoard": "مسح اللوحة",
+  "actions.clearBoard.description": "إزالة جميع الأشكال وإعادة تعيين الإعدادات",
+  "confirm.clearEverything": "مسح كل شيء؟",
+  "confirm.cancel": "إلغاء",
+  "confirm.clearAll": "مسح الكل",
+  "tutorial.welcome.title": "مرحباً بك في Grix! 🎯",
+  "tutorial.skip": "تخطي التوجيه",
+  "tutorial.next": "التالي",
+  "tutorial.loading": "جاري التحميل...",
+  "info.about": "حول Grix",
+  "info.subtitle": "ملعب التصور الرياضي",
+  "zoom.zoomIn": "تكبير (Ctrl+التمرير لأعلى)",
+  "zoom.zoomOut": "تصغير (Ctrl+التمرير لأسفل)",
+  "zoom.centerView": "توسيط العرض (نقرة واحدة) أو إعادة تعيين التكبير (نقرة مزدوجة)",
+  "error.loadExample": "فشل في تحميل المثال",
+  "common.loading": "جاري التحميل...",
+  "common.shapes": "أشكال",
+  "common.shape": "شكل",
+  "translation.missing": "ترجمة مطلوبة",
+  "settings.language": "Language / اللغة",
+  "settings.language.description": "ساعد في ترجمة Grix إلى لغتك! زر صفحة GitHub الخاصة بنا.",
+  "home.button": "زر الرئيسية",
+  "context.properties": "الخصائص",
+  "tutorial.close": "إغلاق",
+  "info.close": "إغلاق",
+  "examples.noExamples": "لا توجد أمثلة متاحة",
+  "examples.allCategories": "جميع الفئات",
+  "examples.category.fractions": "الكسور",
+  "examples.category.geometry": "الهندسة",
+  "examples.category.algebra": "الجبر",
+  "examples.category.trigonometry": "حساب المثلثات",
+  "examples.category.calculus": "التفاضل والتكامل",
+  "examples.category.statistics": "الإحصاء",
+  "examples.category.basics": "الأساسيات",
+  "examples.category.advanced": "متقدم",
+  "examples.category.numbertheory": "نظرية الأعداد",
+  "examples.category.precalculus": "ما قبل التفاضل والتكامل",
+  "examples.category.linearalgebra": "الجبر الخطي",
+  "examples.category.discrete": "الرياضيات المتقطعة",
+  "examples.category.probability": "الاحتمال",
+  "examples.category.functions": "الدوال"
+}

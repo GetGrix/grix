@@ -17,40 +17,69 @@ export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: Con
   // Initialize collapsed state directly from storage, defaulting to collapsed on mobile
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const state = storageManager.loadState();
-    if (state?.uiSettings?.contextMenuCollapsed !== undefined) {
-      return state.uiSettings.contextMenuCollapsed;
+    const savedCollapsed = state?.uiSettings?.contextMenuCollapsed;
+    
+    // If we have a saved preference in the main storage, use it
+    if (savedCollapsed !== undefined) {
+      return savedCollapsed;
     }
-    // Default to collapsed on mobile, expanded on desktop
-    const defaultCollapsed = isMobile;
     
-    // Save the default value to storage
-    const newState = {
-      ...state,
-      uiSettings: {
-        ...state?.uiSettings,
-        contextMenuCollapsed: defaultCollapsed
+    // Fallback to localStorage for immediate reliability
+    try {
+      const fallbackCollapsed = localStorage.getItem('grix-ui-collapsed');
+      if (fallbackCollapsed !== null) {
+        return fallbackCollapsed === 'true';
       }
-    };
-    storageManager.saveState(newState);
-    storageManager.scheduleSave();
+    } catch (e) {
+      // Handle cases where localStorage is not available
+    }
     
-    return defaultCollapsed;
+    // Otherwise default based on device type
+    return isMobile;
   });
+
+  // Ensure collapsed state is saved to storage on mount if not already set
+  useEffect(() => {
+    const state = storageManager.loadState();
+    if (state?.uiSettings?.contextMenuCollapsed === undefined) {
+      const defaultCollapsed = isMobile;
+      const newState = {
+        ...state,
+        uiSettings: {
+          ...state?.uiSettings,
+          contextMenuCollapsed: defaultCollapsed
+        }
+      };
+      storageManager.saveState(newState);
+      storageManager.scheduleSave();
+      setIsCollapsed(defaultCollapsed);
+    }
+  }, [isMobile]);
 
   // Save collapsed state to storage
   const handleToggleCollapse = () => {
     const newCollapsed = !isCollapsed;
     setIsCollapsed(newCollapsed);
     
+    // Immediately save the new state
     const state = storageManager.loadState() || {};
-    storageManager.saveState({
+    const newState = {
       ...state,
       uiSettings: {
         ...state.uiSettings,
         contextMenuCollapsed: newCollapsed
       }
-    });
+    };
+    storageManager.saveState(newState);
     storageManager.scheduleSave();
+    
+    // Also force a save to localStorage immediately for reliability
+    try {
+      localStorage.setItem('grix-ui-collapsed', newCollapsed.toString());
+    } catch (e) {
+      // Handle cases where localStorage is not available
+      console.warn('Could not save collapsed state to localStorage');
+    }
   };
 
   if (!selectedObject) return null;

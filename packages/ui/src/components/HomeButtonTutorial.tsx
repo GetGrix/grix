@@ -46,14 +46,14 @@ export function HomeButtonTutorial({ isVisible, onDismiss }: HomeButtonTutorialP
         }`}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-green-800 to-blue-900 text-white p-6 rounded-t-2xl relative overflow-hidden">
-          {/* Strong dark overlay for better text contrast */}
-          <div className="absolute inset-0 bg-black/50"></div>
+        <div className="bg-gradient-to-r from-green-600 to-blue-700 text-white p-6 rounded-t-2xl relative overflow-hidden">
+          {/* Dark overlay for better text contrast */}
+          <div className="absolute inset-0 bg-black/20"></div>
           <div className="relative z-10">
-            <h3 className="text-lg font-bold mb-1 text-white drop-shadow-lg">
+            <h3 className="text-lg font-bold mb-1 text-white drop-shadow-sm">
               {t('homebutton.firstTime.title')}
             </h3>
-            <p className="text-white text-sm drop-shadow-md">
+            <p className="text-white/90 text-sm">
               {t('homebutton.firstTime.subtitle')}
             </p>
           </div>

@@ -71,13 +71,13 @@ interface VisualizationStore extends VisualizationSettings {
 }
 
 const defaultSettings: VisualizationSettings = {
-  // Origin line enhancements - start with most basic ones enabled
+  // Origin line enhancements - enable all except Angle Arc by default
   showEquivalentFractions: true,
   showLengthMultiples: true,
   showAreaRectangle: true,
   showDivisionMultiples: true,
-  showRiseRunTriangle: false,
-  showDistanceMarkers: false,
+  showRiseRunTriangle: true,
+  showDistanceMarkers: true,
   showAngleArc: false,
   showCoordinateProjections: true,
   

@@ -12,9 +12,15 @@ export function useTranslation() {
       forceUpdate({}); // Force re-render
     };
 
+    const handleTranslationsReady = () => {
+      forceUpdate({}); // Force re-render when translations are loaded
+    };
+
     window.addEventListener('languageChanged' as any, handleLanguageChange);
+    window.addEventListener('translationsReady' as any, handleTranslationsReady);
     return () => {
       window.removeEventListener('languageChanged' as any, handleLanguageChange);
+      window.removeEventListener('translationsReady' as any, handleTranslationsReady);
     };
   }, []);
 

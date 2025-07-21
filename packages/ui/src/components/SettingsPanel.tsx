@@ -141,8 +141,8 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
       ],
     },
     {
-      title: t('settings.sections.circleConcepts'),
-      subtitle: t('settings.sections.circleConcepts.subtitle'),
+      title: t('settings.sections.circlesConcepts'),
+      subtitle: t('settings.sections.circlesConcepts.subtitle'),
       settings: [
         {
           key: 'showTangentLines',
@@ -183,8 +183,8 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
         },
         {
           key: 'showSOHCAHTOA',
-          label: t('settings.SOHCAHTOA'),
-          description: t('settings.SOHCAHTOA.description'),
+          label: t('settings.sohcahtoa'),
+          description: t('settings.sohcahtoa.description'),
         },
         {
           key: 'showTrigValues',
@@ -229,13 +229,13 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
         },
         {
           key: 'showGCF',
-          label: t('settings.GCF'),
-          description: t('settings.GCF.description'),
+          label: t('settings.gcf'),
+          description: t('settings.gcf.description'),
         },
         {
           key: 'showLCM',
-          label: t('settings.LCM'),
-          description: t('settings.LCM.description'),
+          label: t('settings.lcm'),
+          description: t('settings.lcm.description'),
         },
       ],
     },

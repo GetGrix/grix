@@ -127,6 +127,8 @@
   "settings.latticePoints.description": "Dots at all integer coordinates",
   "settings.referenceLineYX": "y=x Reference Line",
   "settings.referenceLineYX.description": "Purple diagonal line for comparison",
+  "settings.referenceLineY_equals_X": "y=x Reference Line",
+  "settings.referenceLineY_equals_X.description": "Purple diagonal line for comparison",
   "settings.tangentLines": "Tangent Lines",
   "settings.tangentLines.description": "Show tangent line and slope on hover",
   "settings.functionExtensions": "Function Extensions",
@@ -246,5 +248,7 @@
   "homebutton.firstTime.doubleClickDesc": "Resets zoom to default level",
   "homebutton.firstTime.hint": "Try it now to see the difference!",
   "homebutton.firstTime.dismiss": "Got it!",
-  "homebutton.firstTime.dontShow": "Don't show again"
+  "homebutton.firstTime.dontShow": "Don't show again",
+  "endpoint.tooltip.title": "Try dragging the glowing point!",
+  "endpoint.tooltip.message": "Drag it around to see slopes, fractions, and math concepts change live. It's interactive!"
 }

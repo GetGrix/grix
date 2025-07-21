@@ -4,21 +4,38 @@ export class TranslationManager {
   private currentLanguage: string = defaultLanguage;
   private translations: Map<string, Translation> = new Map();
   private fallbackTranslations: Translation = translationKeys;
+  private isInitialized: boolean = false;
   
   constructor() {
-    // Load default language
-    this.loadLanguage(defaultLanguage);
-    
-    // Try to load user's preferred language from storage
-    const savedLanguage = localStorage.getItem('grix-language');
-    if (savedLanguage && languages.some(lang => lang.code === savedLanguage)) {
-      this.setLanguage(savedLanguage);
-    } else {
-      // Try to detect browser language
-      const browserLang = navigator.language.split('-')[0];
-      if (languages.some(lang => lang.code === browserLang)) {
-        this.setLanguage(browserLang);
+    // Initialize asynchronously 
+    this.initialize();
+  }
+
+  private async initialize() {
+    try {
+      // Load default language first
+      await this.loadLanguage(defaultLanguage);
+      
+      // Try to load user's preferred language from storage
+      const savedLanguage = localStorage.getItem('grix-language');
+      if (savedLanguage && languages.some(lang => lang.code === savedLanguage)) {
+        await this.setLanguage(savedLanguage);
+      } else {
+        // Try to detect browser language
+        const browserLang = navigator.language.split('-')[0];
+        if (languages.some(lang => lang.code === browserLang)) {
+          await this.setLanguage(browserLang);
+        }
       }
+      
+      this.isInitialized = true;
+      
+      // Notify components that translations are ready
+      window.dispatchEvent(new CustomEvent('translationsReady'));
+    } catch (error) {
+      console.error('Failed to initialize translations:', error);
+      this.isInitialized = true; // Still set to true to prevent hanging
+      window.dispatchEvent(new CustomEvent('translationsReady'));
     }
   }
 
@@ -30,7 +47,6 @@ export class TranslationManager {
       }
 
       // Dynamic import of language file
-      console.log(`Loading translation for ${languageCode}...`);
       const response = await fetch(`/locales/${languageCode}.json`);
       if (!response.ok) {
         console.warn(`Translation file for ${languageCode} not found`);
@@ -38,7 +54,6 @@ export class TranslationManager {
       }
 
       const translations = await response.json();
-      console.log(`Loaded translations for ${languageCode}:`, Object.keys(translations).slice(0, 5));
       this.translations.set(languageCode, translations);
       return true;
     } catch (error) {

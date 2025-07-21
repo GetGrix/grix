@@ -86,22 +86,29 @@ export function PWAManager({ children }: PWAManagerProps) {
       } else {
         // First time user - create default line from (0,0) to (3,9)
         const canvasStore = useCanvasStore.getState();
-        const defaultLine = {
-          id: `ray_default_${Date.now()}`,
-          type: 'ray' as const,
-          properties: {
-            startPoint: { x: 0, y: 0 },
-            endPoint: { x: 3, y: 9 },
-            slope: 3, // 9/3 = 3
-            yIntercept: 0
-          },
-          visible: true,
-          selected: false,
-          zIndex: 0
-        };
         
-        canvasStore.addObject(defaultLine);
-        console.log('🎯 Grix PWA: Created default line (0,0) to (3,9) for first-time user');
+        // Only create default line if no objects exist (prevents double creation in React dev mode)
+        if (canvasStore.objects.length === 0) {
+          const defaultLine = {
+            id: `ray_default_${Date.now()}`,
+            type: 'ray' as const,
+            properties: {
+              startPoint: { x: 0, y: 0 },
+              endPoint: { x: 3, y: 9 },
+              slope: 3, // 9/3 = 3
+              yIntercept: 0
+            },
+            visible: true,
+            selected: false,
+            zIndex: 0
+          };
+          
+          canvasStore.addObject(defaultLine);
+          console.log('🎯 Grix PWA: Created default line (0,0) to (3,9) for first-time user');
+          
+          // Show endpoint tooltip for first-time users
+          localStorage.setItem('grix-show-endpoint-tooltip', 'true');
+        }
       }
     } catch (error) {
       console.error('❌ Grix PWA: Failed to load saved state:', error);

@@ -34,13 +34,10 @@ export function ActionMenu({ onClearBoard, onExportImage, onImportState, isOpen:
   useEffect(() => {
     function handleClickOutside(event: MouseEvent | TouchEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        // Only close if the menu is actually open
-        if (isOpen) {
-          if (onToggle) {
-            onToggle();
-          } else {
-            setInternalIsOpen(false);
-          }
+        if (onToggle) {
+          onToggle();
+        } else {
+          setInternalIsOpen(false);
         }
         setShowClearConfirmation(false);
       }
@@ -208,7 +205,7 @@ export function ActionMenu({ onClearBoard, onExportImage, onImportState, isOpen:
 
       {/* Action Menu Dropdown */}
       {isOpen && (
-        <div className="absolute bottom-full left-0 mb-2 z-50 bg-white border border-gray-200 rounded-lg shadow-xl min-w-64 max-w-80">
+        <div ref={menuRef} className="absolute bottom-full left-0 mb-2 z-50 bg-white border border-gray-200 rounded-lg shadow-xl min-w-64 max-w-80">
           {/* Header */}
           <div className="px-4 py-3 border-b border-gray-100">
             <h3 className="text-sm font-semibold text-gray-800">Actions & Tools</h3>

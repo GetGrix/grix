@@ -74,5 +74,9 @@
   "examples.category.linearalgebra": "الجبر الخطي",
   "examples.category.discrete": "الرياضيات المتقطعة",
   "examples.category.probability": "الاحتمال",
-  "examples.category.functions": "الدوال"
+  "examples.category.functions": "الدوال",
+  "settings.referenceLineYX": "خط المرجع y=x",
+  "settings.referenceLineYX.description": "خط قطري بنفسجي للمقارنة",
+  "settings.referenceLineY_equals_X": "خط المرجع y=x",
+  "settings.referenceLineY_equals_X.description": "خط قطري بنفسجي للمقارنة"
 }

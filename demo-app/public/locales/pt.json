@@ -127,6 +127,8 @@
   "settings.latticePoints.description": "Pontos em todas as coordenadas inteiras",
   "settings.referenceLineYX": "Linha de Referência y=x",
   "settings.referenceLineYX.description": "Linha diagonal roxa para comparação",
+  "settings.referenceLineY_equals_X": "Linha de Referência y=x",
+  "settings.referenceLineY_equals_X.description": "Linha diagonal roxa para comparação",
   "settings.tangentLines": "Linhas Tangentes",
   "settings.tangentLines.description": "Mostrar linha tangente e inclinação ao passar o mouse",
   "settings.functionExtensions": "Extensões de Função",

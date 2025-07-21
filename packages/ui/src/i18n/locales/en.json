@@ -248,5 +248,7 @@
   "homebutton.firstTime.doubleClickDesc": "Resets zoom to default level",
   "homebutton.firstTime.hint": "Try it now to see the difference!",
   "homebutton.firstTime.dismiss": "Got it!",
-  "homebutton.firstTime.dontShow": "Don't show again"
+  "homebutton.firstTime.dontShow": "Don't show again",
+  "endpoint.tooltip.title": "Try dragging the glowing point!",
+  "endpoint.tooltip.message": "Drag it around to see slopes, fractions, and math concepts change live. It's interactive!"
 }

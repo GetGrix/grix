@@ -127,6 +127,8 @@
   "settings.latticePoints.description": "Points à toutes les coordonnées entières",
   "settings.referenceLineYX": "Ligne de Référence y=x",
   "settings.referenceLineYX.description": "Ligne diagonale violette pour comparaison",
+  "settings.referenceLineY_equals_X": "Ligne de Référence y=x",
+  "settings.referenceLineY_equals_X.description": "Ligne diagonale violette pour comparaison",
   "settings.tangentLines": "Lignes Tangentes",
   "settings.tangentLines.description": "Montrer la ligne tangente et pente au survol",
   "settings.functionExtensions": "Extensions de Fonction",

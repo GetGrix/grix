@@ -13,6 +13,7 @@ import { InfoModal } from './InfoModal.js';
 import { ActionMenu } from './ActionMenu.js';
 import { LineToolTutorial } from './LineToolTutorial.js';
 import { HomeButtonTutorial } from './HomeButtonTutorial.js';
+import { EndpointTooltip } from './EndpointTooltip.js';
 import { useTransformationStore } from '../store/transformationStore.js';
 import { useVisualizationStore } from '../store/visualizationStore.js';
 import { useMenuState } from '../context/MenuStateContext.js';
@@ -80,6 +81,53 @@ export function Canvas({
   
   // Connect to visualization settings
   const { zoomSensitivity } = useVisualizationStore();
+
+  // Endpoint tooltip state
+  const [showEndpointTooltip, setShowEndpointTooltip] = useState(false);
+
+  // Check if we should show the endpoint tooltip for first-time users
+  useEffect(() => {
+    const checkTooltipConditions = () => {
+      const shouldShow = localStorage.getItem('grix-show-endpoint-tooltip');
+      const tutorialCompleted = localStorage.getItem('grix-tutorial-completed');
+      
+      console.log('Endpoint tooltip check:', {
+        shouldShow,
+        tutorialCompleted,
+        willShow: shouldShow === 'true' && tutorialCompleted === 'true'
+      });
+      
+      // Only show after main tutorial is completed (or skipped)
+      if (shouldShow === 'true' && tutorialCompleted === 'true') {
+        console.log('Showing endpoint tooltip in 1 second...');
+        // Wait a moment for the canvas to render, then show tooltip
+        const timer = setTimeout(() => {
+          setShowEndpointTooltip(true);
+        }, 1000);
+        return timer;
+      }
+      return null;
+    };
+
+    // Check immediately
+    const timer = checkTooltipConditions();
+    
+    // Also listen for storage changes (when tutorial gets completed/skipped)
+    const handleStorageChange = (e) => {
+      if (e.key === 'grix-tutorial-completed') {
+        const newTimer = checkTooltipConditions();
+        if (timer) clearTimeout(timer);
+        return newTimer;
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      if (timer) clearTimeout(timer);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   // Update canvas size when dimensions change
   useEffect(() => {
@@ -972,6 +1020,16 @@ export function Canvas({
         isVisible={showHomeButtonTutorial}
         onDismiss={handleHomeButtonTutorialDismiss}
       />
+
+      {/* Endpoint tooltip for first-time users */}
+      {showEndpointTooltip && (
+        <EndpointTooltip
+          onDismiss={() => {
+            setShowEndpointTooltip(false);
+            localStorage.removeItem('grix-show-endpoint-tooltip');
+          }}
+        />
+      )}
     </div>
   );
 }

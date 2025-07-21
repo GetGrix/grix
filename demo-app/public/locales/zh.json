@@ -74,5 +74,9 @@
   "examples.category.linearalgebra": "线性代数",
   "examples.category.discrete": "离散数学",
   "examples.category.probability": "概率",
-  "examples.category.functions": "函数"
+  "examples.category.functions": "函数",
+  "settings.referenceLineYX": "y=x 参考线",
+  "settings.referenceLineYX.description": "用于比较的紫色对角线",
+  "settings.referenceLineY_equals_X": "y=x 参考线",
+  "settings.referenceLineY_equals_X.description": "用于比较的紫色对角线"
 }

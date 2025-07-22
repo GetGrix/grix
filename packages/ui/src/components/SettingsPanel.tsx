@@ -25,7 +25,7 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const panelRef = useRef<HTMLDivElement>(null);
   const visualizationStore = useVisualizationStore();
-  const { toggleSetting, setFontScale, setGridScale, setSnapPrecision, setCoordinateSystem, setZoomSensitivity, resetToDefaults } = visualizationStore;
+  const { toggleSetting, setFontScale, setSnapPrecision, setCoordinateSystem, resetToDefaults } = visualizationStore;
   const { t, language, changeLanguage, availableLanguages } = useTranslation();
 
   const handleToggle = () => {
@@ -67,9 +67,10 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
   };
 
   const allSettingSections: SettingSection[] = [
+    // 1. LINE BUILDER SETTINGS
     {
-      title: t('settings.sections.originLines'),
-      subtitle: t('settings.sections.originLines.subtitle'),
+      title: t('settings.sections.lineBuilder'),
+      subtitle: t('settings.sections.lineBuilder.subtitle'),
       settings: [
         {
           key: 'showEquivalentFractions',
@@ -85,11 +86,6 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
           key: 'showAreaRectangle',
           label: t('settings.areaRectangle'),
           description: t('settings.areaRectangle.description'),
-        },
-        {
-          key: 'showDivisionMultiples',
-          label: t('settings.divisionMultiples'),
-          description: t('settings.divisionMultiples.description'),
         },
         {
           key: 'showRiseRunTriangle',
@@ -111,12 +107,6 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
           label: t('settings.coordinateProjections'),
           description: t('settings.coordinateProjections.description'),
         },
-      ],
-    },
-    {
-      title: t('settings.sections.divisionFractions'),
-      subtitle: t('settings.sections.divisionFractions.subtitle'),
-      settings: [
         {
           key: 'showDivisionAnswer',
           label: t('settings.divisionAnswer'),
@@ -124,25 +114,54 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
         },
       ],
     },
+    
+    // 2. RECTANGLE BUILDER SETTINGS
     {
-      title: t('settings.sections.gridReference'),
-      subtitle: t('settings.sections.gridReference.subtitle'),
+      title: t('settings.sections.rectangleBuilder'),
+      subtitle: t('settings.sections.rectangleBuilder.subtitle'),
       settings: [
         {
-          key: 'showLatticePoints',
-          label: t('settings.latticePoints'),
-          description: t('settings.latticePoints.description'),
+          key: 'showFactorPairs',
+          label: t('settings.factorPairs'),
+          description: t('settings.factorPairs.description'),
         },
         {
-          key: 'showReferenceLineY_equals_X',
-          label: t('settings.referenceLineY_equals_X'),
-          description: t('settings.referenceLineY_equals_X.description'),
+          key: 'showCommutativeProperty',
+          label: t('settings.commutativeProperty'),
+          description: t('settings.commutativeProperty.description'),
+        },
+        {
+          key: 'showDistributiveProperty',
+          label: t('settings.distributiveProperty'),
+          description: t('settings.distributiveProperty.description'),
+        },
+        {
+          key: 'showPrimeComposite',
+          label: t('settings.primeComposite'),
+          description: t('settings.primeComposite.description'),
+        },
+        {
+          key: 'showGCF',
+          label: t('settings.gcf'),
+          description: t('settings.gcf.description'),
+        },
+        {
+          key: 'showLCM',
+          label: t('settings.lcm'),
+          description: t('settings.lcm.description'),
+        },
+        {
+          key: 'showDivisionMultiples',
+          label: t('settings.divisionMultiples'),
+          description: t('settings.divisionMultiples.description'),
         },
       ],
     },
+
+    // 3. CIRCLE BUILDER SETTINGS
     {
-      title: t('settings.sections.circlesConcepts'),
-      subtitle: t('settings.sections.circlesConcepts.subtitle'),
+      title: t('settings.sections.circleBuilder'),
+      subtitle: t('settings.sections.circleBuilder.subtitle'),
       settings: [
         {
           key: 'showTangentLines',
@@ -151,20 +170,11 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
         },
       ],
     },
+
+    // 4. TRIANGLE BUILDER SETTINGS
     {
-      title: t('settings.sections.functionConcepts'),
-      subtitle: t('settings.sections.functionConcepts.subtitle'),
-      settings: [
-        {
-          key: 'showFunctionExtensions',
-          label: t('settings.functionExtensions'),
-          description: t('settings.functionExtensions.description'),
-        },
-      ],
-    },
-    {
-      title: t('settings.sections.triangleConcepts'),
-      subtitle: t('settings.sections.triangleConcepts.subtitle'),
+      title: t('settings.sections.triangleBuilder'),
+      subtitle: t('settings.sections.triangleBuilder.subtitle'),
       settings: [
         {
           key: 'showTriangleAngles',
@@ -203,42 +213,39 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
         },
       ],
     },
+
+    // 5. FUNCTION GRAPHER SETTINGS
     {
-      title: t('settings.sections.rectangleConcepts'),
-      subtitle: t('settings.sections.rectangleConcepts.subtitle'),
+      title: t('settings.sections.functionGrapher'),
+      subtitle: t('settings.sections.functionGrapher.subtitle'),
       settings: [
         {
-          key: 'showFactorPairs',
-          label: t('settings.factorPairs'),
-          description: t('settings.factorPairs.description'),
-        },
-        {
-          key: 'showCommutativeProperty',
-          label: t('settings.commutativeProperty'),
-          description: t('settings.commutativeProperty.description'),
-        },
-        {
-          key: 'showDistributiveProperty',
-          label: t('settings.distributiveProperty'),
-          description: t('settings.distributiveProperty.description'),
-        },
-        {
-          key: 'showPrimeComposite',
-          label: t('settings.primeComposite'),
-          description: t('settings.primeComposite.description'),
-        },
-        {
-          key: 'showGCF',
-          label: t('settings.gcf'),
-          description: t('settings.gcf.description'),
-        },
-        {
-          key: 'showLCM',
-          label: t('settings.lcm'),
-          description: t('settings.lcm.description'),
+          key: 'showFunctionExtensions',
+          label: t('settings.functionExtensions'),
+          description: t('settings.functionExtensions.description'),
         },
       ],
     },
+
+    // 6. GRID & REFERENCE SETTINGS
+    {
+      title: t('settings.sections.gridReference'),
+      subtitle: t('settings.sections.gridReference.subtitle'),
+      settings: [
+        {
+          key: 'showLatticePoints',
+          label: t('settings.latticePoints'),
+          description: t('settings.latticePoints.description'),
+        },
+        {
+          key: 'showReferenceLineY_equals_X',
+          label: t('settings.referenceLineY_equals_X'),
+          description: t('settings.referenceLineY_equals_X.description'),
+        },
+      ],
+    },
+
+    // 7. DISPLAY SETTINGS
     {
       title: t('settings.sections.display'),
       subtitle: t('settings.sections.display.subtitle'),
@@ -367,34 +374,6 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
                         {t('settings.fontSize.description')}
                       </div>
                       
-                      {/* Grid Scale Control */}
-                      <div className="space-y-3 pt-4 border-t border-gray-100">
-                        <div className="flex items-center justify-between">
-                          <label className="text-sm font-medium text-gray-700">
-                            {t('settings.gridDensity')}
-                          </label>
-                          <span className="text-xs text-gray-500 font-mono">
-                            {Math.round(visualizationStore.gridScale * 100)}%
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="text-xs text-gray-400">{t('settings.gridSparse')}</span>
-                          <input
-                            type="range"
-                            min="0.2"
-                            max="5.0"
-                            step="0.1"
-                            value={visualizationStore.gridScale}
-                            onChange={(e) => setGridScale(parseFloat(e.target.value))}
-                            className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-                          />
-                          <span className="text-xs text-gray-600">{t('settings.gridDense')}</span>
-                        </div>
-                        <div className="text-xs text-gray-500 leading-relaxed">
-                          {t('settings.gridDensity.description')}
-                        </div>
-                      </div>
-                      
                       {/* Coordinate System Control */}
                       <div className="space-y-3 pt-4 border-t border-gray-100">
                         <label className="text-sm font-medium text-gray-700">
@@ -463,42 +442,6 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
                         </div>
                         <div className="text-xs text-gray-500 leading-relaxed">
                           {t('settings.snapPrecision.description')}
-                        </div>
-                      </div>
-                      
-                      {/* Zoom Sensitivity */}
-                      <div className="space-y-3 pt-4 border-t border-gray-100">
-                        <label className="text-sm font-medium text-gray-700">
-                          {t('settings.zoomSensitivity')}
-                        </label>
-                        <div className="grid grid-cols-1 gap-1">
-                          {[
-                            { value: 'low', label: t('settings.low'), desc: t('settings.low.description') },
-                            { value: 'medium', label: t('settings.medium'), desc: t('settings.medium.description') },
-                            { value: 'high', label: t('settings.high'), desc: t('settings.high.description') }
-                          ].map(option => (
-                            <label key={option.value} className="flex items-start gap-3 p-2 rounded hover:bg-gray-50 cursor-pointer group">
-                              <input
-                                type="radio"
-                                name="zoomSensitivity"
-                                value={option.value}
-                                checked={visualizationStore.zoomSensitivity === option.value}
-                                onChange={(e) => setZoomSensitivity(e.target.value as 'low' | 'medium' | 'high')}
-                                className="mt-0.5"
-                              />
-                              <div>
-                                <div className="text-sm font-medium text-gray-900 group-hover:text-gray-700">
-                                  {option.label}
-                                </div>
-                                <div className="text-xs text-gray-500">
-                                  {option.desc}
-                                </div>
-                              </div>
-                            </label>
-                          ))}
-                        </div>
-                        <div className="text-xs text-gray-500 leading-relaxed">
-                          {t('settings.zoomSensitivity.description')}
                         </div>
                       </div>
                       

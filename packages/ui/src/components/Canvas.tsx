@@ -60,7 +60,6 @@ export function Canvas({
     objects,
     selectedObjects,
     snapToGrid,
-    gridDensity,
     canvasSize,
     setCanvasSize,
     removeObject,
@@ -79,8 +78,6 @@ export function Canvas({
   // Connect to transformation system
   const { rotate90, rotate180, rotate270, scaleObject, setSelectedObject } = useTransformationStore();
   
-  // Connect to visualization settings
-  const { zoomSensitivity } = useVisualizationStore();
 
   // Endpoint tooltip state
   const [showEndpointTooltip, setShowEndpointTooltip] = useState(false);
@@ -91,15 +88,8 @@ export function Canvas({
       const shouldShow = localStorage.getItem('grix-show-endpoint-tooltip');
       const tutorialCompleted = localStorage.getItem('grix-tutorial-completed');
       
-      console.log('Endpoint tooltip check:', {
-        shouldShow,
-        tutorialCompleted,
-        willShow: shouldShow === 'true' && tutorialCompleted === 'true'
-      });
-      
       // Only show after main tutorial is completed (or skipped)
       if (shouldShow === 'true' && tutorialCompleted === 'true') {
-        console.log('Showing endpoint tooltip in 1 second...');
         // Wait a moment for the canvas to render, then show tooltip
         const timer = setTimeout(() => {
           setShowEndpointTooltip(true);
@@ -174,7 +164,9 @@ export function Canvas({
   });
 
   // Find all objects at a point with priority scoring
-  const findObjectsAtPoint = useCallback((worldPoint: Point, tolerance: number = 0.5) => {
+  const findObjectsAtPoint = useCallback((worldPoint: Point, screenTolerance: number = 44) => {
+    // Convert screen tolerance to world tolerance based on current zoom
+    const tolerance = screenTolerance / viewport.zoom;
     const candidates: Array<{ object: any; priority: number; distance: number }> = [];
     
     for (const obj of objects) {
@@ -308,7 +300,7 @@ export function Canvas({
     });
     
     return candidates.map(c => c.object);
-  }, [objects, distanceToLineSegment, pointInTriangle, distanceToCircleEdge]);
+  }, [objects, viewport.zoom, distanceToLineSegment, pointInTriangle, distanceToCircleEdge]);
 
   // Handle pointer events
   const handlePointerDown = useCallback((event: UnifiedPointerEvent) => {
@@ -325,10 +317,9 @@ export function Canvas({
     
     // Smart object selection with edge priority and click cycling
     const worldPoint = screenToWorld(screenPoint);
-    const tolerance = 0.5; // World units tolerance
     
-    // Find all objects at this point
-    const overlappingObjects = findObjectsAtPoint(worldPoint, tolerance);
+    // Find all objects at this point using adaptive touch target size
+    const overlappingObjects = findObjectsAtPoint(worldPoint, touchTargetSize);
     let objectClicked = false;
     let selectedObject = null;
     
@@ -571,7 +562,7 @@ export function Canvas({
         // Handle tap events (tool interactions will be handled by plugins)
         break;
     }
-  }, [viewport.zoom, viewport.center, setViewport, objects.length, screenToWorld, zoomSensitivity]);
+  }, [viewport.zoom, viewport.center, setViewport, objects.length, screenToWorld]);
 
   // Set up input system
   const { capabilities, touchTargetSize } = useInputSystem(

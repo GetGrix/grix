@@ -147,7 +147,6 @@ export function PWAManager({ children }: PWAManagerProps) {
           showTriangleAltitudes: visualizationState.showTriangleAltitudes,
           showPythagoreanSquares: visualizationState.showPythagoreanSquares,
           fontScale: visualizationState.fontScale,
-          gridScale: visualizationState.gridScale,
           snapPrecision: visualizationState.snapPrecision,
           coordinateSystem: visualizationState.coordinateSystem
         }

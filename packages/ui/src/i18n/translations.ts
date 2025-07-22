@@ -156,6 +156,16 @@ export const translationKeys = {
   'error.importFile': 'Failed to import state. Please check the file format.',
   'error.readFile': 'Failed to read file. Please select a valid Grix export file.',
   
+  // Debug info
+  'debug.input': 'Input',
+  'debug.zoom': 'Zoom',
+  'debug.center': 'Center',
+  'debug.tool': 'Tool',
+  'debug.selected': 'Selected',
+  'debug.panMode': 'Pan Mode',
+  'debug.object': 'object',
+  'debug.objects': 'objects',
+  
   // Common
   'common.loading': 'Loading...',
   'common.shapes': 'shapes',

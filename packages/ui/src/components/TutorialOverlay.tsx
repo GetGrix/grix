@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { examplesManager } from '../utils/examplesManager.js';
 
 const TUTORIAL_STORAGE_KEY = 'grix-tutorial-completed';
 
 export function TutorialOverlay() {
   const [showTutorial, setShowTutorial] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // Check if user has seen the tutorial before
@@ -56,21 +54,9 @@ export function TutorialOverlay() {
     setShowTutorial(false);
   };
 
-  const handleTryExample = async () => {
-    try {
-      setIsLoading(true);
-      // Load a beginner-friendly example
-      const beginnerExamples = await examplesManager.getBeginnerExamples();
-      if (beginnerExamples.length > 0) {
-        await examplesManager.applyExample(beginnerExamples[0].id);
-      }
-      handleComplete();
-    } catch (error) {
-      console.error('Failed to load example:', error);
-      handleComplete();
-    } finally {
-      setIsLoading(false);
-    }
+  const handleTryExample = () => {
+    // Just complete the tutorial - default line already exists
+    handleComplete();
   };
 
   if (!showTutorial) return null;
@@ -108,7 +94,6 @@ export function TutorialOverlay() {
           <button
             onClick={handleSkip}
             className="flex-1 px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors"
-            disabled={isLoading}
           >
             Skip Tutorial
           </button>
@@ -116,10 +101,9 @@ export function TutorialOverlay() {
           {isLastStep ? (
             <button
               onClick={handleTryExample}
-              className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
-              disabled={isLoading}
+              className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
             >
-              {isLoading ? 'Loading...' : 'Try an Example!'}
+              Get Started!
             </button>
           ) : (
             <button

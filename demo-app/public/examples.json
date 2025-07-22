@@ -1,97 +1,184 @@
 {
+  "categories": [
+    {
+      "id": "lines",
+      "name": "Line Builder",
+      "description": "Explore slopes, fractions, and linear relationships through interactive lines"
+    },
+    {
+      "id": "rectangles", 
+      "name": "Rectangle Builder",
+      "description": "Discover multiplication, area, factors, and algebra using rectangle visualizations"
+    },
+    {
+      "id": "circles",
+      "name": "Circle Builder", 
+      "description": "Learn about pi, radius, diameter, and circular geometry concepts"
+    },
+    {
+      "id": "triangles",
+      "name": "Triangle Builder",
+      "description": "Master angles, trigonometry, and the Pythagorean theorem with triangles"
+    },
+    {
+      "id": "functions",
+      "name": "Function Grapher",
+      "description": "Model real-world phenomena with exponential, quadratic, and advanced functions"
+    }
+  ],
   "examples": [
     {
-      "id": "basic-slope",
-      "title": "Basic Slope Visualization",
-      "description": "Explore how rise over run creates slope",
+      "id": "pizza-slices",
+      "title": "Pizza Fractions! 🍕",
+      "description": "Cut a pizza into equal slices and see fractions come alive",
       "difficulty": "beginner",
-      "category": "slopes",
+      "category": "lines",
       "objects": [
         {
           "type": "ray",
           "properties": {
             "startPoint": { "x": 0, "y": 0 },
-            "endPoint": { "x": 4, "y": 3 }
+            "endPoint": { "x": 3, "y": 9 }
+          }
+        }
+      ],
+      "settings": {
+        "showEquivalentFractions": true,
+        "showRiseRunTriangle": true,
+        "showCoordinateProjections": true
+      },
+      "viewport": {
+        "center": { "x": 1, "y": 3 },
+        "zoom": 35
+      }
+    },
+
+    {
+      "id": "stairs-slope",
+      "title": "Building Perfect Stairs 🪜",
+      "description": "Learn why stair builders use slope - rise over run keeps stairs safe and comfortable",
+      "difficulty": "beginner", 
+      "category": "lines",
+      "objects": [
+        {
+          "type": "ray",
+          "properties": {
+            "startPoint": { "x": 0, "y": 0 },
+            "endPoint": { "x": 7, "y": 4 }
+          }
+        }
+      ],
+      "settings": {
+        "showRiseRunTriangle": true,
+        "showDistanceMarkers": true,
+        "showDivisionAnswer": true
+      },
+      "viewport": {
+        "center": { "x": 3.5, "y": 2 },
+        "zoom": 25
+      }
+    },
+
+    {
+      "id": "mountain-grade",
+      "title": "Mountain Road Grade ⛰️", 
+      "description": "Why steep mountain roads show '8% Grade' - it's all about slope!",
+      "difficulty": "intermediate",
+      "category": "lines",
+      "objects": [
+        {
+          "type": "ray",
+          "properties": {
+            "startPoint": { "x": 0, "y": 0 },
+            "endPoint": { "x": 12, "y": 1 }
           }
         }
       ],
       "settings": {
         "showRiseRunTriangle": true,
         "showEquivalentFractions": true,
-        "showDivisionAnswer": true,
+        "showCoordinateProjections": true
+      },
+      "viewport": {
+        "center": { "x": 6, "y": 0.5 },
+        "zoom": 20
+      }
+    },
+
+    {
+      "id": "parallel-lines",
+      "title": "Parallel Universe 📏",
+      "description": "Parallel lines have identical slopes - see how they never meet!",
+      "difficulty": "intermediate",
+      "category": "lines", 
+      "objects": [
+        {
+          "type": "ray",
+          "properties": {
+            "startPoint": { "x": -2, "y": -1 },
+            "endPoint": { "x": 4, "y": 2 }
+          }
+        },
+        {
+          "type": "ray",
+          "properties": {
+            "startPoint": { "x": -1, "y": 2 },
+            "endPoint": { "x": 5, "y": 5 }
+          }
+        }
+      ],
+      "settings": {
+        "showRiseRunTriangle": true,
+        "showAngleArc": true,
         "showReferenceLineY_equals_X": true
       },
       "viewport": {
-        "center": { "x": 2, "y": 1.5 },
-        "zoom": 30
+        "center": { "x": 1.5, "y": 2 },
+        "zoom": 20
       }
     },
+
     {
-      "id": "area-multiplication",
-      "title": "Area as Multiplication",
-      "description": "See how rectangles demonstrate multiplication",
+      "id": "chocolate-bar",
+      "title": "Chocolate Bar Math 🍫",
+      "description": "Break chocolate into squares - discover why 2×6 = 6×2!",
       "difficulty": "beginner",
-      "category": "multiplication",
+      "category": "rectangles",
       "objects": [
         {
-          "type": "rectangle",
+          "type": "rectangle", 
           "properties": {
             "x": 1,
             "y": 1,
-            "width": 4,
-            "height": 3,
+            "width": 6,
+            "height": 2,
             "area": 12
           }
         }
       ],
       "settings": {
-        "showFactorPairs": true,
-        "showPrimeComposite": true,
-        "showIntegerGridLines": true
+        "showAreaRectangle": true,
+        "showCommutativeProperty": true,
+        "showFactorPairs": true
       },
       "viewport": {
-        "center": { "x": 3, "y": 2.5 },
-        "zoom": 25
+        "center": { "x": 4, "y": 2 },
+        "zoom": 30
       }
     },
+
     {
-      "id": "equivalent-fractions",
-      "title": "Equivalent Fractions",
-      "description": "Discover patterns in equivalent fractions",
-      "difficulty": "intermediate",
-      "category": "fractions",
-      "objects": [
-        {
-          "type": "ray",
-          "properties": {
-            "startPoint": { "x": 0, "y": 0 },
-            "endPoint": { "x": 6, "y": 4 }
-          }
-        }
-      ],
-      "settings": {
-        "showEquivalentFractions": true,
-        "showDivisionAnswer": true,
-        "showLengthMultiples": true,
-        "showReferenceLineY_equals_X": true
-      },
-      "viewport": {
-        "center": { "x": 3, "y": 2 },
-        "zoom": 20
-      }
-    },
-    {
-      "id": "gcf-visualization",
-      "title": "Greatest Common Factor",
-      "description": "See how GCF creates square tilings",
-      "difficulty": "intermediate",
-      "category": "number-theory",
+      "id": "garden-planning",
+      "title": "Planning Your Garden 🌻",
+      "description": "Design the perfect rectangular garden - explore area vs. perimeter trade-offs",
+      "difficulty": "beginner",
+      "category": "rectangles",
       "objects": [
         {
           "type": "rectangle",
           "properties": {
-            "x": 0,
-            "y": 0,
+            "x": 1,
+            "y": 1, 
             "width": 8,
             "height": 6,
             "area": 48
@@ -99,332 +186,316 @@
         }
       ],
       "settings": {
-        "showGCF": true,
+        "showAreaRectangle": true,
         "showFactorPairs": true,
-        "showIntegerGridLines": true
+        "showGCF": true
       },
       "viewport": {
-        "center": { "x": 4, "y": 3 },
-        "zoom": 20
+        "center": { "x": 5, "y": 4 },
+        "zoom": 22
       }
     },
+
     {
-      "id": "commutative-property",
-      "title": "Commutative Property",
-      "description": "Multiplication order doesn't matter",
-      "difficulty": "beginner",
-      "category": "multiplication",
+      "id": "prime-mystery",
+      "title": "The Prime Number Mystery 🔍",
+      "description": "Why can't you make a rectangle with 7 squares? Discover prime numbers!",
+      "difficulty": "intermediate",
+      "category": "rectangles",
       "objects": [
         {
           "type": "rectangle",
           "properties": {
             "x": 2,
-            "y": 1,
-            "width": 5,
-            "height": 3,
-            "area": 15
+            "y": 2,
+            "width": 7,
+            "height": 1,
+            "area": 7
           }
         }
       ],
       "settings": {
-        "showCommutativeProperty": true,
-        "showIntegerGridLines": true
+        "showAreaRectangle": true,
+        "showPrimeComposite": true,
+        "showFactorPairs": true
       },
       "viewport": {
-        "center": { "x": 4, "y": 2.5 },
-        "zoom": 25
+        "center": { "x": 5.5, "y": 2.5 },
+        "zoom": 28
       }
     },
+
     {
-      "id": "distributive-property",
-      "title": "Distributive Property",
-      "description": "Breaking apart multiplication: a(b+c) = ab+ac",
-      "difficulty": "intermediate",
-      "category": "algebra",
+      "id": "algebra-blocks",
+      "title": "Algebra with Blocks 🧮",
+      "description": "See why (a+b) × c = ac + bc using colorful rectangle blocks",
+      "difficulty": "advanced",
+      "category": "rectangles",
       "objects": [
         {
           "type": "rectangle",
           "properties": {
             "x": 1,
             "y": 1,
-            "width": 7,
-            "height": 4,
-            "area": 28
+            "width": 5,
+            "height": 3,
+            "area": 15
+          }
+        },
+        {
+          "type": "rectangle", 
+          "properties": {
+            "x": 6,
+            "y": 1,
+            "width": 2,
+            "height": 3,
+            "area": 6
           }
         }
       ],
       "settings": {
         "showDistributiveProperty": true,
-        "showIntegerGridLines": true
+        "showAreaRectangle": true,
+        "showCommutativeProperty": true
       },
       "viewport": {
-        "center": { "x": 4.5, "y": 3 },
-        "zoom": 22
-      }
-    },
-    {
-      "id": "angle-measurement",
-      "title": "Angle Measurement",
-      "description": "Measure angles with arc visualization",
-      "difficulty": "intermediate",
-      "category": "geometry",
-      "objects": [
-        {
-          "type": "ray",
-          "properties": {
-            "startPoint": { "x": 0, "y": 0 },
-            "endPoint": { "x": 5, "y": 3 }
-          }
-        }
-      ],
-      "settings": {
-        "showAngleArc": true,
-        "showDistanceMarkers": true,
-        "showRiseRunTriangle": true,
-        "showReferenceLineY_equals_X": true
-      },
-      "viewport": {
-        "center": { "x": 2.5, "y": 1.5 },
+        "center": { "x": 4.5, "y": 2.5 },
         "zoom": 25
       }
     },
+
     {
-      "id": "prime-vs-composite",
-      "title": "Prime vs Composite Numbers",
-      "description": "Explore prime and composite number patterns",
-      "difficulty": "intermediate",
-      "category": "number-theory",
-      "objects": [
-        {
-          "type": "rectangle",
-          "properties": {
-            "x": 0,
-            "y": 3,
-            "width": 7,
-            "height": 1,
-            "area": 7
-          }
-        },
-        {
-          "type": "rectangle",
-          "properties": {
-            "x": 0,
-            "y": 1,
-            "width": 4,
-            "height": 2,
-            "area": 8
-          }
-        }
-      ],
-      "settings": {
-        "showPrimeComposite": true,
-        "showFactorPairs": true,
-        "showIntegerGridLines": true
-      },
-      "viewport": {
-        "center": { "x": 3.5, "y": 2.5 },
-        "zoom": 28
-      }
-    },
-    {
-      "id": "circle-basics",
-      "title": "Circle Properties",
-      "description": "Explore radius, diameter, circumference, and area",
-      "difficulty": "beginner", 
-      "category": "geometry",
-      "objects": [
-        {
-          "type": "circle",
-          "properties": {
-            "center": { "x": 3, "y": 2 },
-            "radius": 2,
-            "diameter": 4,
-            "circumference": 12.566,
-            "area": 12.566
-          }
-        }
-      ],
-      "settings": {
-        "showIntegerGridLines": true
-      },
-      "viewport": {
-        "center": { "x": 3, "y": 2 },
-        "zoom": 25
-      }
-    },
-    {
-      "id": "pi-exploration",
-      "title": "Pi Exploration",
-      "description": "Understand π through circles and squares",
-      "difficulty": "intermediate",
-      "category": "geometry", 
+      "id": "pizza-circle",
+      "title": "Perfect Pizza Size 🍕",
+      "description": "Why do pizzas come in diameters? Explore radius, diameter, and circumference",
+      "difficulty": "beginner",
+      "category": "circles",
       "objects": [
         {
           "type": "circle",
           "properties": {
             "center": { "x": 0, "y": 0 },
-            "radius": 3,
-            "diameter": 6,
-            "circumference": 18.849,
-            "area": 28.274
-          }
-        },
-        {
-          "type": "rectangle",
-          "properties": {
-            "x": -3,
-            "y": -3,
-            "width": 6,
-            "height": 6,
-            "area": 36
+            "radius": 6
           }
         }
       ],
       "settings": {
-        "showIntegerGridLines": true
+        "showTangentLines": true
       },
       "viewport": {
         "center": { "x": 0, "y": 0 },
-        "zoom": 20
+        "zoom": 15
       }
     },
+
     {
-      "id": "triangle-types",
-      "title": "Triangle Types",
-      "description": "Explore different triangle classifications",
+      "id": "ferris-wheel",
+      "title": "Ferris Wheel Engineering 🎡",
+      "description": "How engineers use circles - from wheels to gears to satellites!",
+      "difficulty": "intermediate", 
+      "category": "circles",
+      "objects": [
+        {
+          "type": "circle",
+          "properties": {
+            "center": { "x": 3, "y": 4 },
+            "radius": 5
+          }
+        }
+      ],
+      "settings": {
+        "showTangentLines": true
+      },
+      "viewport": {
+        "center": { "x": 3, "y": 4 },
+        "zoom": 18
+      }
+    },
+
+    {
+      "id": "pi-discovery", 
+      "title": "Discovering Pi (π) 🥧",
+      "description": "The amazing number that's in every circle - measure it yourself!",
+      "difficulty": "intermediate",
+      "category": "circles",
+      "objects": [
+        {
+          "type": "circle",
+          "properties": {
+            "center": { "x": 0, "y": 0 },
+            "radius": 3
+          }
+        }
+      ],
+      "settings": {
+        "showTangentLines": true
+      },
+      "viewport": {
+        "center": { "x": 0, "y": 0 },
+        "zoom": 25
+      }
+    },
+
+    {
+      "id": "roof-angles",
+      "title": "Building Strong Roofs 🏠",
+      "description": "Why roof triangles matter - explore angles and stability",
       "difficulty": "beginner",
-      "category": "geometry",
+      "category": "triangles",
       "objects": [
         {
           "type": "triangle",
           "properties": {
             "vertices": [
               { "x": 1, "y": 1 },
-              { "x": 4, "y": 1 },
-              { "x": 4, "y": 4 }
-            ],
-            "sideA": 3,
-            "sideB": 3,
-            "sideC": 4.24,
-            "angleA": 45,
-            "angleB": 45,
-            "angleC": 90,
-            "area": 4.5,
-            "perimeter": 10.24,
-            "type": "right"
+              { "x": 7, "y": 1 },
+              { "x": 4, "y": 5 }
+            ]
           }
         }
       ],
       "settings": {
-        "showIntegerGridLines": true
+        "showTriangleAngles": true,
+        "showTriangleClassification": true
       },
       "viewport": {
-        "center": { "x": 2.5, "y": 2.5 },
+        "center": { "x": 4, "y": 3 },
         "zoom": 25
       }
     },
+
     {
-      "id": "pythagorean-theorem",
-      "title": "Pythagorean Theorem",
-      "description": "a² + b² = c² visualized with squares on triangle sides",
+      "id": "bridge-triangles",
+      "title": "Bridge Engineering 🌉",
+      "description": "Why bridges use triangles - the strongest shape in nature!",
       "difficulty": "intermediate",
-      "category": "geometry",
+      "category": "triangles",
+      "objects": [
+        {
+          "type": "triangle",
+          "properties": {
+            "vertices": [
+              { "x": 0, "y": 0 },
+              { "x": 6, "y": 0 },
+              { "x": 3, "y": 4 }
+            ]
+          }
+        }
+      ],
+      "settings": {
+        "showTriangleAngles": true,
+        "showTriangleAltitudes": true,
+        "showSpecialTriangles": true
+      },
+      "viewport": {
+        "center": { "x": 3, "y": 2 },
+        "zoom": 25
+      }
+    },
+
+    {
+      "id": "pythagorean-magic",
+      "title": "Pythagorean Magic ✨",
+      "description": "The most famous theorem ever: a² + b² = c² - see the squares!",
+      "difficulty": "intermediate",
+      "category": "triangles",
+      "objects": [
+        {
+          "type": "triangle", 
+          "properties": {
+            "vertices": [
+              { "x": 1, "y": 1 },
+              { "x": 4, "y": 1 },
+              { "x": 4, "y": 5 }
+            ]
+          }
+        }
+      ],
+      "settings": {
+        "showPythagoreanSquares": true,
+        "showTriangleAngles": true
+      },
+      "viewport": {
+        "center": { "x": 2.5, "y": 3 },
+        "zoom": 25
+      }
+    },
+
+    {
+      "id": "navigation-sohcahtoa",
+      "title": "GPS & Navigation 🧭",
+      "description": "How GPS uses trigonometry - SOH-CAH-TOA saves the day!",
+      "difficulty": "advanced",
+      "category": "triangles",
       "objects": [
         {
           "type": "triangle",
           "properties": {
             "vertices": [
               { "x": 2, "y": 1 },
-              { "x": 5, "y": 1 },
-              { "x": 5, "y": 5 }
-            ],
-            "sideA": 4,
-            "sideB": 3,
-            "sideC": 5,
-            "angleA": 53.13,
-            "angleB": 36.87,
-            "angleC": 90,
-            "area": 6,
-            "perimeter": 12,
-            "type": "right"
+              { "x": 8, "y": 1 },
+              { "x": 8, "y": 5 }
+            ]
           }
         }
       ],
       "settings": {
-        "showIntegerGridLines": true
+        "showSOHCAHTOA": true,
+        "showTrigValues": true,
+        "showTriangleAngles": true
       },
       "viewport": {
-        "center": { "x": 3.5, "y": 3 },
+        "center": { "x": 5, "y": 3 },
         "zoom": 22
       }
     },
+
     {
-      "id": "area-vs-perimeter",
-      "title": "Area vs Perimeter",
-      "description": "Compare different shapes with same area or perimeter",
-      "difficulty": "intermediate",
-      "category": "geometry",
+      "id": "population-growth",
+      "title": "Population Growth 📈", 
+      "description": "Model how cities grow exponentially over time",
+      "difficulty": "advanced",
+      "category": "functions",
       "objects": [
         {
-          "type": "rectangle",
+          "type": "function",
           "properties": {
-            "x": 1,
-            "y": 1,
-            "width": 4,
-            "height": 3,
-            "area": 12
-          }
-        },
-        {
-          "type": "circle",
-          "properties": {
-            "center": { "x": 8, "y": 2.5 },
-            "radius": 1.95,
-            "diameter": 3.9,
-            "circumference": 12.25,
-            "area": 11.95
+            "equation": "y = 2^x",
+            "domain": { "min": -2, "max": 4 }
           }
         }
       ],
       "settings": {
-        "showIntegerGridLines": true
+        "showFunctionExtensions": true
       },
       "viewport": {
-        "center": { "x": 5, "y": 2.5 },
+        "center": { "x": 1, "y": 4 },
+        "zoom": 20
+      }
+    },
+
+    {
+      "id": "satellite-orbit",
+      "title": "Satellite Orbits 🛰️",
+      "description": "Why satellites follow parabolic and circular paths around Earth", 
+      "difficulty": "advanced",
+      "category": "functions",
+      "objects": [
+        {
+          "type": "function",
+          "properties": {
+            "equation": "y = x^2/4 - 2",
+            "domain": { "min": -6, "max": 6 }
+          }
+        }
+      ],
+      "settings": {
+        "showFunctionExtensions": true
+      },
+      "viewport": {
+        "center": { "x": 0, "y": 2 },
         "zoom": 18
       }
-    }
-  ],
-  "categories": [
-    {
-      "id": "slopes",
-      "name": "Slopes & Lines",
-      "description": "Explore linear relationships and slope concepts"
-    },
-    {
-      "id": "multiplication",
-      "name": "Multiplication",
-      "description": "Visual multiplication using area models"
-    },
-    {
-      "id": "fractions",
-      "name": "Fractions",
-      "description": "Understand fractions through visual patterns"
-    },
-    {
-      "id": "number-theory",
-      "name": "Number Theory",
-      "description": "Explore properties of numbers and factors"
-    },
-    {
-      "id": "algebra",
-      "name": "Algebra",
-      "description": "Algebraic properties and relationships"
-    },
-    {
-      "id": "geometry",
-      "name": "Geometry",
-      "description": "Angles, distances, and geometric concepts"
     }
   ]
 }

@@ -25,17 +25,10 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
     labelMinSpacing: 40
   });
   
-  // Apply grid scale
-  const scaledGridSystem = {
-    ...gridSystem,
-    gridSize: gridSystem.gridSize / visualSettings.gridScale,
-    labelStep: gridSystem.labelStep / visualSettings.gridScale
-  };
-  
   const { verticalLines: vLines, horizontalLines: hLines } = generateGridLines(
     viewport,
     canvasSize,
-    scaledGridSystem,
+    gridSystem,
     worldToScreen,
     false // Never show integer grid lines
   );
@@ -274,9 +267,9 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
           {vLines
             .filter(line => {
               // Only show labels for values that are multiples of labelStep
-              const isLabelValue = Math.abs(line.value % scaledGridSystem.labelStep) < scaledGridSystem.gridSize / 10;
+              const isLabelValue = Math.abs(line.value % gridSystem.labelStep) < gridSystem.gridSize / 10;
               // Skip values too close to origin to avoid overcrowding
-              const notTooCloseToOrigin = Math.abs(line.value) >= scaledGridSystem.labelStep / 2;
+              const notTooCloseToOrigin = Math.abs(line.value) >= gridSystem.labelStep / 2;
               return isLabelValue && notTooCloseToOrigin;
             })
             // Remove duplicates by grouping nearby values (within 0.001 tolerance)
@@ -304,9 +297,9 @@ export function GridRenderer({ viewport, canvasSize, worldToScreen, objects = []
           {hLines
             .filter(line => {
               // Only show labels for values that are multiples of labelStep
-              const isLabelValue = Math.abs(line.value % scaledGridSystem.labelStep) < scaledGridSystem.gridSize / 10;
+              const isLabelValue = Math.abs(line.value % gridSystem.labelStep) < gridSystem.gridSize / 10;
               // Skip values too close to origin to avoid overcrowding
-              const notTooCloseToOrigin = Math.abs(line.value) >= scaledGridSystem.labelStep / 2;
+              const notTooCloseToOrigin = Math.abs(line.value) >= gridSystem.labelStep / 2;
               return isLabelValue && notTooCloseToOrigin;
             })
             // Remove duplicates by grouping nearby values (within 0.001 tolerance)

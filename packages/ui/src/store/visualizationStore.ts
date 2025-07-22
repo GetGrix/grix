@@ -44,7 +44,6 @@ interface VisualizationSettings {
 
   // Display settings
   fontScale: number; // 1.0 = normal, 1.5 = 50% bigger, etc.
-  gridScale: number; // 1.0 = normal, 2.0 = 2x denser, 0.5 = 2x sparser
 
   // Snapping settings
   snapPrecision: "adaptive" | "whole" | "half" | "quarter" | "tenth"; // Controls snapping granularity
@@ -54,21 +53,17 @@ interface VisualizationSettings {
   showPolarGrid: boolean;
   customOrigin: { x: number; y: number } | null; // null = default (0,0)
 
-  // Zoom behavior settings
-  zoomSensitivity: "low" | "medium" | "high";
 }
 
 interface VisualizationStore extends VisualizationSettings {
   // Actions
   toggleSetting: (setting: keyof VisualizationSettings) => void;
   setFontScale: (scale: number) => void;
-  setGridScale: (scale: number) => void;
   setSnapPrecision: (
     precision: "adaptive" | "whole" | "half" | "quarter" | "tenth"
   ) => void;
   setCoordinateSystem: (system: "cartesian" | "polar" | "both") => void;
   setCustomOrigin: (origin: { x: number; y: number } | null) => void;
-  setZoomSensitivity: (sensitivity: "low" | "medium" | "high") => void;
   resetToDefaults: () => void;
 }
 
@@ -115,7 +110,6 @@ const defaultSettings: VisualizationSettings = {
 
   // Display settings
   fontScale: 1.0,
-  gridScale: 1.0,
 
   // Snapping settings
   snapPrecision: "whole",
@@ -124,9 +118,6 @@ const defaultSettings: VisualizationSettings = {
   coordinateSystem: "cartesian",
   showPolarGrid: false,
   customOrigin: null,
-
-  // Zoom behavior settings
-  zoomSensitivity: "medium",
 };
 
 export const useVisualizationStore = create<VisualizationStore>((set) => ({
@@ -144,11 +135,6 @@ export const useVisualizationStore = create<VisualizationStore>((set) => ({
     storageManager.scheduleSave();
   },
 
-  setGridScale: (scale) => {
-    set({ gridScale: scale });
-    storageManager.scheduleSave();
-  },
-
   setSnapPrecision: (precision) => {
     set({ snapPrecision: precision });
     storageManager.scheduleSave();
@@ -161,11 +147,6 @@ export const useVisualizationStore = create<VisualizationStore>((set) => ({
 
   setCustomOrigin: (origin) => {
     set({ customOrigin: origin });
-    storageManager.scheduleSave();
-  },
-
-  setZoomSensitivity: (sensitivity) => {
-    set({ zoomSensitivity: sensitivity });
     storageManager.scheduleSave();
   },
 

@@ -201,9 +201,15 @@ export function generateGridLines(
   return { verticalLines, horizontalLines };
 }
 
-export function formatMathValue(value: number, maxDecimals: number = 3): string {
+export function formatMathValue(value: number | undefined | null, maxDecimals: number = 3): string {
   // Format a mathematical value with smart precision
   // Remove trailing zeros and use up to maxDecimals places
+  
+  // Guard against undefined/null values
+  if (value === undefined || value === null || isNaN(value)) {
+    return '0';
+  }
+  
   if (Number.isInteger(value)) {
     return value.toString();
   }
@@ -260,7 +266,6 @@ export function formatCoordinate(value: number, gridSize: number): string {
 
 export function calculateSnapSize(
   viewport: Viewport,
-  gridScale: number,
   snapPrecision: 'adaptive' | 'whole' | 'half' | 'quarter' | 'tenth'
 ): number {
   if (snapPrecision !== 'adaptive') {
@@ -281,15 +286,12 @@ export function calculateSnapSize(
     labelMinSpacing: 40
   });
   
-  // Apply grid scale to the adaptive grid size
-  const effectiveGridSize = adaptiveGrid.gridSize / gridScale;
-  
   // For very fine grids (high zoom), allow sub-unit snapping
-  if (effectiveGridSize <= 0.1) {
-    return effectiveGridSize; // Allow snapping to 0.05, 0.02, etc.
-  } else if (effectiveGridSize <= 0.5) {
+  if (adaptiveGrid.gridSize <= 0.1) {
+    return adaptiveGrid.gridSize; // Allow snapping to 0.05, 0.02, etc.
+  } else if (adaptiveGrid.gridSize <= 0.5) {
     return 0.1; // Snap to tenths
-  } else if (effectiveGridSize <= 2) {
+  } else if (adaptiveGrid.gridSize <= 2) {
     return 0.25; // Snap to quarters
   } else {
     return 1; // Snap to whole numbers

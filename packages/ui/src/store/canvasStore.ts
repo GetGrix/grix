@@ -19,7 +19,6 @@ interface CanvasStore extends CanvasState {
   selectObject: (id: string, multiSelect?: boolean) => void;
   clearSelection: () => void;
   setSnapToGrid: (enabled: boolean) => void;
-  setGridDensity: (density: 'fine' | 'coarse') => void;
   
   // Canvas dimensions (for coordinate transformations)
   canvasSize: { width: number; height: number };
@@ -54,7 +53,6 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
     objects: [],
     selectedObjects: [],
     snapToGrid: true,
-    gridDensity: 'fine',
     canvasSize: { width: 800, height: 600 },
 
     // Viewport actions
@@ -113,10 +111,6 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
     // Grid settings
     setSnapToGrid: (enabled) => {
       set({ snapToGrid: enabled });
-    },
-
-    setGridDensity: (density) => {
-      set({ gridDensity: density });
     },
 
     // Canvas size
@@ -253,8 +247,7 @@ export const createStateManager = (): StateManager => {
         viewport: state.viewport,
         objects: state.objects,
         selectedObjects: state.selectedObjects,
-        snapToGrid: state.snapToGrid,
-        gridDensity: state.gridDensity
+        snapToGrid: state.snapToGrid
       };
     },
     
@@ -268,8 +261,7 @@ export const createStateManager = (): StateManager => {
           viewport: state.viewport,
           objects: state.objects,
           selectedObjects: state.selectedObjects,
-          snapToGrid: state.snapToGrid,
-          gridDensity: state.gridDensity
+          snapToGrid: state.snapToGrid
         });
       });
     }

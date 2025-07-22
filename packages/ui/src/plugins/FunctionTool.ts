@@ -74,7 +74,6 @@ export class FunctionTool implements Plugin {
       const visualSettings = useVisualizationStore.getState();
       const snapSize = calculateSnapSize(
         canvasState.viewport,
-        visualSettings.gridScale,
         visualSettings.snapPrecision
       );
       

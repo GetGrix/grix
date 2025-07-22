@@ -166,15 +166,16 @@ class ExamplesManager {
         } as MathObject;
 
       case 'circle':
+        const radius = exampleObj.properties.radius;
         return {
           ...baseObject,
           type: 'circle',
           properties: {
             center: exampleObj.properties.center,
-            radius: exampleObj.properties.radius,
-            diameter: exampleObj.properties.diameter,
-            circumference: exampleObj.properties.circumference,
-            area: exampleObj.properties.area
+            radius: radius,
+            diameter: radius * 2,
+            circumference: 2 * Math.PI * radius,
+            area: Math.PI * radius * radius
           }
         } as MathObject;
 
@@ -241,8 +242,6 @@ class ExamplesManager {
           visualizationStore.setCoordinateSystem(value as any);
         } else if (key === 'fontScale' && typeof value === 'number') {
           visualizationStore.setFontScale(value);
-        } else if (key === 'gridScale' && typeof value === 'number') {
-          visualizationStore.setGridScale(value);
         }
       });
 

@@ -280,12 +280,13 @@ export function ObjectRenderer({
                   const numerator = formatCoordinate(endY, gridSize);
                   const denominator = formatCoordinate(endX, gridSize);
 
-                  // Always render as fraction for origin lines using actual coordinates
+                  // Always render as diagonal fraction for origin lines using actual coordinates
                   return (
                     <g>
+                      {/* Numerator (top-left) */}
                       <text
-                        x={labelX + 15}
-                        y={labelY - 25}
+                        x={labelX + 5}
+                        y={labelY - 18}
                         fontSize={scaledFontSize(9)}
                         fontWeight="500"
                         fill={isSelected ? "#1D4ED8" : "#2563eb"}
@@ -294,18 +295,20 @@ export function ObjectRenderer({
                       >
                         {numerator}
                       </text>
+                      {/* Diagonal slash - longer and better angle */}
                       <line
-                        x1={labelX + 8}
-                        y1={labelY - 19}
-                        x2={labelX + 22}
-                        y2={labelY - 19}
+                        x1={labelX + 10}
+                        y1={labelY - 8}
+                        x2={labelX + 20}
+                        y2={labelY - 20}
                         stroke={isSelected ? "#1D4ED8" : "#2563eb"}
                         strokeWidth="1"
                         opacity="0.8"
                       />
+                      {/* Denominator (bottom-right) */}
                       <text
-                        x={labelX + 15}
-                        y={labelY - 9}
+                        x={labelX + 25}
+                        y={labelY - 6}
                         fontSize={scaledFontSize(9)}
                         fontWeight="500"
                         fill={isSelected ? "#1D4ED8" : "#2563eb"}

@@ -110,7 +110,7 @@ const defaultSettings: VisualizationSettings = {
   showLCM: false,
 
   // Display settings
-  fontScale: 1.0,
+  fontScale: 1.2,
   showCoordinateCrosshairs: false,
 
   // Snapping settings

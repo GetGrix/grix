@@ -21,11 +21,6 @@ export function TutorialOverlay() {
       highlight: null
     },
     {
-      title: "Explore Examples 📚",
-      content: "Click the 'Examples' button in the toolbar to load pre-made mathematical demonstrations. Perfect for getting started!",
-      highlight: "examples"
-    },
-    {
       title: "Customize Visualizations ⚙️",
       content: "Use the 'Settings' button in the bottom-left to enable different mathematical features like equivalent fractions, area calculations, and more.",
       highlight: "settings"

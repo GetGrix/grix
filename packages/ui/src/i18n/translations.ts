@@ -166,6 +166,37 @@ export const translationKeys = {
   'debug.object': 'object',
   'debug.objects': 'objects',
   
+  // Settings - Crosshairs
+  'settings.coordinateCrosshairs': 'Coordinate Crosshairs',
+  'settings.coordinateCrosshairs.description': 'Show coordinate crosshairs when hovering in pan mode',
+  
+  // Context menu
+  'context.rayDetails': 'Line Details',
+  'context.rectangleDetails': 'Rectangle Details', 
+  'context.circleDetails': 'Circle Details',
+  'context.triangleDetails': 'Triangle Details',
+  'context.functionDetails': 'Function Details',
+  'context.start': 'Start',
+  'context.end': 'End',
+  'context.position': 'Position',
+  'context.size': 'Size',
+  'context.center': 'Center',
+  'context.radius': 'Radius',
+  'context.diameter': 'Diameter',
+  'context.circumference': 'Circumference',
+  'context.area': 'Area',
+  'context.type': 'Type',
+  'context.vertices': 'Vertices',
+  'context.sides': 'Sides',
+  'context.angles': 'Angles',
+  'context.perimeter': 'Perimeter',
+  'context.equation': 'Equation',
+  'context.domain': 'Domain',
+  'context.points': 'Points',
+  'context.editEquation': 'Edit Equation',
+  'context.fraction': 'Fraction',
+  'context.slope': 'Slope',
+  
   // Common
   'common.loading': 'Loading...',
   'common.shapes': 'shapes',

@@ -193,10 +193,12 @@ export function ToolBar({ className = '' }: ToolBarProps) {
         )}
       </div>
 
-      {/* Right side - Examples */}
-      <div className="ml-auto">
-        <ExamplesDropdown />
-      </div>
+      {/* Right side - Examples - Hidden for now */}
+      {false && (
+        <div className="ml-auto">
+          <ExamplesDropdown />
+        </div>
+      )}
 
     </div>
   );

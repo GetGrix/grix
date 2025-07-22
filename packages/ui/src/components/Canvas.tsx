@@ -78,6 +78,9 @@ export function Canvas({
   // Connect to transformation system
   const { rotate90, rotate180, rotate270, scaleObject, setSelectedObject } = useTransformationStore();
   
+  // Connect to visualization store
+  const visualizationStore = useVisualizationStore();
+  
 
   // Endpoint tooltip state
   const [showEndpointTooltip, setShowEndpointTooltip] = useState(false);
@@ -142,6 +145,7 @@ export function Canvas({
 
   // Track mouse position for preview cursor
   const [mousePosition, setMousePosition] = useState<Point | null>(null);
+  const [panModeMousePosition, setPanModeMousePosition] = useState<Point | null>(null);
   
   // Track context menu state
   const [showContextMenu, setShowContextMenu] = useState(false);
@@ -406,8 +410,14 @@ export function Canvas({
     // Update mouse position for preview cursor (only for mouse events in build mode)
     if (event.type === 'mouse' && activeTool) {
       setMousePosition(screenPoint);
-    } else if (!activeTool) {
+      setPanModeMousePosition(null);
+    } else if (!activeTool && event.type === 'mouse') {
+      // Track mouse position in pan mode for coordinate crosshairs
       setMousePosition(null);
+      setPanModeMousePosition(screenPoint);
+    } else {
+      setMousePosition(null);
+      setPanModeMousePosition(null);
     }
     
     // Check if pointer has moved significantly (for drag detection)
@@ -952,6 +962,65 @@ export function Canvas({
             style={{ pointerEvents: 'none' }}
           />
         )}
+
+        {/* Coordinate crosshairs in pan mode */}
+        {!activeTool && panModeMousePosition && visualizationStore.showCoordinateCrosshairs && !pointerStateRef.current.isDown && (
+          <>
+            {/* Vertical crosshair line */}
+            <line
+              x1={panModeMousePosition.x}
+              y1={0}
+              x2={panModeMousePosition.x}
+              y2={height}
+              stroke="rgba(75, 85, 99, 0.6)"
+              strokeWidth="1"
+              strokeDasharray="4,4"
+              style={{ pointerEvents: 'none' }}
+            />
+            {/* Horizontal crosshair line */}
+            <line
+              x1={0}
+              y1={panModeMousePosition.y}
+              x2={width}
+              y2={panModeMousePosition.y}
+              stroke="rgba(75, 85, 99, 0.6)"
+              strokeWidth="1"
+              strokeDasharray="4,4"
+              style={{ pointerEvents: 'none' }}
+            />
+            {/* Coordinate tooltip */}
+            {(() => {
+              const worldPoint = screenToWorld(panModeMousePosition);
+              const x = Math.round(worldPoint.x * 1000) / 1000; // Round to 3 decimal places
+              const y = Math.round(worldPoint.y * 1000) / 1000;
+              const tooltipX = panModeMousePosition.x + 15;
+              const tooltipY = panModeMousePosition.y - 15;
+              
+              return (
+                <g style={{ pointerEvents: 'none' }}>
+                  <rect
+                    x={tooltipX - 4}
+                    y={tooltipY - 16}
+                    width={`${(x + ", " + y).length * 7 + 8}px`}
+                    height="20"
+                    fill="rgba(17, 24, 39, 0.9)"
+                    rx="4"
+                    ry="4"
+                  />
+                  <text
+                    x={tooltipX}
+                    y={tooltipY - 4}
+                    fontSize="12"
+                    fill="white"
+                    fontFamily="monospace"
+                  >
+                    ({x}, {y})
+                  </text>
+                </g>
+              );
+            })()}
+          </>
+        )}
       </svg>
 
       <DebugInfo
@@ -1012,8 +1081,8 @@ export function Canvas({
         onDismiss={handleHomeButtonTutorialDismiss}
       />
 
-      {/* Endpoint tooltip for first-time users */}
-      {showEndpointTooltip && (
+      {/* Endpoint tooltip for first-time users - Disabled */}
+      {false && showEndpointTooltip && (
         <EndpointTooltip
           onDismiss={() => {
             setShowEndpointTooltip(false);

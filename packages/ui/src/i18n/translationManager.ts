@@ -102,9 +102,12 @@ export class TranslationManager {
       translation = this.fallbackTranslations[key];
     }
     
-    // If still not found, show the key with a warning
+    // If still not found, return the key silently
     if (!translation) {
-      console.warn(`Missing translation for key: ${key}`);
+      // Only log in development mode
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`Missing translation for key: ${key}`);
+      }
       return key;
     }
     

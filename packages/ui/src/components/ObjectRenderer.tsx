@@ -746,8 +746,8 @@ export function ObjectRenderer({
                         radiiToShow.forEach(({ radius, isUnit }, index) => {
                           const radiusInScreen = radius * viewport.zoom;
 
-                          // Only show if radius is reasonable size on screen
-                          if (radiusInScreen >= 15 && radiusInScreen <= 800) {
+                          // Only show if radius is reasonable size on screen (allow much larger distances)
+                          if (radiusInScreen >= 15 && radiusInScreen <= 5000) {
                             // Only show if we have a meaningful angle (not too close to x-axis)
                             if (Math.abs(lineAngle) > 0.05) {
                               // Calculate the correct sweep direction and large arc flag

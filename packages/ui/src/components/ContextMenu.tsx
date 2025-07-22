@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { MathObject } from '@getgrix/core';
 import { formatCoordinate, formatMathValue } from '../utils/gridUtils.js';
 import { storageManager } from '../utils/storageManager.js';
+import { useTranslation } from '../i18n/useTranslation.js';
 
 interface ContextMenuProps {
   selectedObject: MathObject | null;
@@ -11,6 +12,8 @@ interface ContextMenuProps {
 }
 
 export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: ContextMenuProps) {
+  const { t } = useTranslation();
+  
   // Detect if we're on a mobile device
   const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth < 768;
   
@@ -34,15 +37,15 @@ export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: Con
       // Handle cases where localStorage is not available
     }
     
-    // Otherwise default based on device type
-    return isMobile;
+    // Default to collapsed on all devices
+    return true;
   });
 
   // Ensure collapsed state is saved to storage on mount if not already set
   useEffect(() => {
     const state = storageManager.loadState();
     if (state?.uiSettings?.contextMenuCollapsed === undefined) {
-      const defaultCollapsed = isMobile;
+      const defaultCollapsed = true;
       const newState = {
         ...state,
         uiSettings: {
@@ -170,14 +173,13 @@ export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: Con
         
         return (
           <div className="space-y-2">
-            <div className="text-sm font-medium text-gray-700">Line Details</div>
             <div className="space-y-1 text-xs text-gray-600">
-              <div>Start: ({formatCoordinate(startPoint.x, 1)}, {formatCoordinate(startPoint.y, 1)})</div>
-              <div>End: ({formatCoordinate(endPoint.x, 1)}, {formatCoordinate(endPoint.y, 1)})</div>
+              <div>{t('context.start')}: ({formatCoordinate(startPoint.x, 1)}, {formatCoordinate(startPoint.y, 1)})</div>
+              <div>{t('context.end')}: ({formatCoordinate(endPoint.x, 1)}, {formatCoordinate(endPoint.y, 1)})</div>
               {isFromOrigin && (
-                <div>Fraction: {Math.round(endPoint.y)}/{Math.round(endPoint.x)}</div>
+                <div>{t('context.fraction')}: {Math.round(endPoint.y)}/{Math.round(endPoint.x)}</div>
               )}
-              <div>Slope: {isFinite(slope) ? slope.toFixed(3) : 'undefined'}</div>
+              <div>{t('context.slope')}: {isFinite(slope) ? slope.toFixed(3) : 'undefined'}</div>
             </div>
           </div>
         );
@@ -187,10 +189,9 @@ export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: Con
         
         return (
           <div className="space-y-2">
-            <div className="text-sm font-medium text-gray-700">Rectangle Details</div>
             <div className="space-y-1 text-xs text-gray-600">
-              <div>Position: ({formatCoordinate(x, 1)}, {formatCoordinate(y, 1)})</div>
-              <div>Size: {formatCoordinate(width, 1)} × {formatCoordinate(height, 1)}</div>
+              <div>{t('context.position')}: ({formatCoordinate(x, 1)}, {formatCoordinate(y, 1)})</div>
+              <div>{t('context.size')}: {formatCoordinate(width, 1)} × {formatCoordinate(height, 1)}</div>
             </div>
           </div>
         );
@@ -200,13 +201,12 @@ export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: Con
         
         return (
           <div className="space-y-2">
-            <div className="text-sm font-medium text-gray-700">Circle Details</div>
             <div className="space-y-1 text-xs text-gray-600">
-              <div>Center: ({formatCoordinate(center.x, 1)}, {formatCoordinate(center.y, 1)})</div>
-              <div>Radius: {formatMathValue(radius)}</div>
-              <div>Diameter: {formatMathValue(diameter)}</div>
-              <div>Circumference: {formatMathValue(circumference)}</div>
-              <div>Area: {formatMathValue(circleArea)}</div>
+              <div>{t('context.center')}: ({formatCoordinate(center.x, 1)}, {formatCoordinate(center.y, 1)})</div>
+              <div>{t('context.radius')}: {formatMathValue(radius)}</div>
+              <div>{t('context.diameter')}: {formatMathValue(diameter)}</div>
+              <div>{t('context.circumference')}: {formatMathValue(circumference)}</div>
+              <div>{t('context.area')}: {formatMathValue(circleArea)}</div>
             </div>
           </div>
         );
@@ -216,19 +216,18 @@ export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: Con
         
         return (
           <div className="space-y-2">
-            <div className="text-sm font-medium text-gray-700">Triangle Details</div>
             <div className="space-y-1 text-xs text-gray-600">
-              <div>Type: {triangleType}</div>
-              <div>Vertices:</div>
+              <div>{t('context.type')}: {triangleType}</div>
+              <div>{t('context.vertices')}:</div>
               <div className="ml-2">
                 <div>A: ({formatCoordinate(vertices[0].x, 1)}, {formatCoordinate(vertices[0].y, 1)})</div>
                 <div>B: ({formatCoordinate(vertices[1].x, 1)}, {formatCoordinate(vertices[1].y, 1)})</div>
                 <div>C: ({formatCoordinate(vertices[2].x, 1)}, {formatCoordinate(vertices[2].y, 1)})</div>
               </div>
-              <div>Sides: {formatMathValue(sideA)}, {formatMathValue(sideB)}, {formatMathValue(sideC)}</div>
-              <div>Angles: {formatMathValue(angleA)}°, {formatMathValue(angleB)}°, {formatMathValue(angleC)}°</div>
-              <div>Area: {formatMathValue(triangleArea)}</div>
-              <div>Perimeter: {formatMathValue(perimeter)}</div>
+              <div>{t('context.sides')}: {formatMathValue(sideA)}, {formatMathValue(sideB)}, {formatMathValue(sideC)}</div>
+              <div>{t('context.angles')}: {formatMathValue(angleA)}°, {formatMathValue(angleB)}°, {formatMathValue(angleC)}°</div>
+              <div>{t('context.area')}: {formatMathValue(triangleArea)}</div>
+              <div>{t('context.perimeter')}: {formatMathValue(perimeter)}</div>
             </div>
           </div>
         );
@@ -239,18 +238,17 @@ export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: Con
         
         return (
           <div className="space-y-2">
-            <div className="text-sm font-medium text-gray-700">Function Details</div>
             <div className="space-y-1 text-xs text-gray-600">
-              <div>Equation: f(x) = {equation}</div>
-              <div>Type: {functionType}</div>
-              <div>Domain: [{formatCoordinate(domain.min, 1)}, {formatCoordinate(domain.max, 1)}]</div>
-              <div>Points: {points.length}</div>
+              <div>{t('context.equation')}: f(x) = {equation}</div>
+              <div>{t('context.type')}: {functionType}</div>
+              <div>{t('context.domain')}: [{formatCoordinate(domain.min, 1)}, {formatCoordinate(domain.max, 1)}]</div>
+              <div>{t('context.points')}: {points.length}</div>
             </div>
             
             {/* Editable equation input */}
             <div className="mt-2 pt-2 border-t border-gray-100">
               <label className="block text-xs font-medium text-gray-700 mb-1">
-                Edit Equation:
+                {t('context.editEquation')}:
               </label>
               <input
                 type="text"
@@ -306,16 +304,16 @@ export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: Con
   const getObjectLabel = () => {
     switch (selectedObject.type) {
       case 'ray':
-        return `Line: slope ${formatMathValue((selectedObject as any).properties.slope)}`;
+        return `${t('objects.line')}: ${t('context.slope')} ${formatMathValue((selectedObject as any).properties.slope)}`;
       case 'rectangle':
         const rect = selectedObject as any;
-        return `Rectangle: ${formatMathValue(rect.properties.width)} × ${formatMathValue(rect.properties.height)}`;
+        return `${t('objects.rectangle')}: ${formatMathValue(rect.properties.width)} × ${formatMathValue(rect.properties.height)}`;
       case 'circle':
-        return `Circle: r=${formatMathValue((selectedObject as any).properties.radius)}`;
+        return `${t('objects.circle')}: r=${formatMathValue((selectedObject as any).properties.radius)}`;
       case 'triangle':
-        return `Triangle`;
+        return `${t('objects.triangle')}`;
       case 'function':
-        return `Function: ${(selectedObject as any).properties.equation}`;
+        return `${t('objects.function')}: ${(selectedObject as any).properties.equation}`;
       default:
         return selectedObject.type;
     }
@@ -328,7 +326,7 @@ export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: Con
           <button
             onClick={handleToggleCollapse}
             className="text-gray-500 hover:text-gray-700"
-            title="Expand"
+            title={t('context.expand')}
           >
             ▶
           </button>
@@ -336,7 +334,7 @@ export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: Con
           <button
             onClick={handleDelete}
             className="ml-2 text-red-600 hover:text-red-700"
-            title="Delete"
+            title={t('context.delete')}
           >
             🗑️
           </button>
@@ -367,11 +365,11 @@ export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: Con
       }}
     >
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-semibold text-gray-700">{selectedObject.type.charAt(0).toUpperCase() + selectedObject.type.slice(1)} Details</h3>
+        <h3 className="text-sm font-semibold text-gray-700">{t(`context.${selectedObject.type}Details`)}</h3>
         <button
           onClick={handleToggleCollapse}
           className="text-gray-400 hover:text-gray-600 text-xs"
-          title="Collapse"
+          title={t('context.collapse')}
         >
           ▼
         </button>
@@ -385,14 +383,14 @@ export function ContextMenu({ selectedObject, onDelete, onUpdate, onClose }: Con
           className="flex items-center gap-1 px-2 py-1 text-xs text-red-600 hover:bg-red-50 rounded transition-colors"
         >
           <span>🗑️</span>
-          Delete
+          {t('context.delete')}
         </button>
         <button
           onClick={onClose}
           className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:bg-gray-50 rounded transition-colors"
         >
           <span>✕</span>
-          Close
+          {t('context.close')}
         </button>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { useCanvasStore } from '../store/canvasStore.js';
 import { useVisualizationStore } from '../store/visualizationStore.js';
 
 export interface ExampleObject {
-  type: 'ray' | 'rectangle' | 'circle' | 'triangle';
+  type: 'ray' | 'rectangle' | 'circle' | 'triangle' | 'function';
   properties: any;
 }
 
@@ -194,6 +194,18 @@ class ExamplesManager {
             area: exampleObj.properties.area,
             perimeter: exampleObj.properties.perimeter,
             type: exampleObj.properties.type
+          }
+        } as MathObject;
+
+      case 'function':
+        return {
+          ...baseObject,
+          type: 'function',
+          properties: {
+            equation: exampleObj.properties.equation,
+            functionType: exampleObj.properties.functionType || 'custom',
+            domain: exampleObj.properties.domain || { min: -10, max: 10 },
+            points: exampleObj.properties.points || []
           }
         } as MathObject;
 

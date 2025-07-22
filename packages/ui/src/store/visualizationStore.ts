@@ -44,6 +44,7 @@ interface VisualizationSettings {
 
   // Display settings
   fontScale: number; // 1.0 = normal, 1.5 = 50% bigger, etc.
+  showCoordinateCrosshairs: boolean; // Show coordinate crosshairs when hovering in pan mode
 
   // Snapping settings
   snapPrecision: "adaptive" | "whole" | "half" | "quarter" | "tenth"; // Controls snapping granularity
@@ -110,6 +111,7 @@ const defaultSettings: VisualizationSettings = {
 
   // Display settings
   fontScale: 1.0,
+  showCoordinateCrosshairs: false,
 
   // Snapping settings
   snapPrecision: "whole",

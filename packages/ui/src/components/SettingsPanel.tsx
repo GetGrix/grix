@@ -445,6 +445,26 @@ export function SettingsPanel({ isOpen: externalIsOpen, onToggle }: SettingsPane
                         </div>
                       </div>
                       
+                      {/* Coordinate Crosshairs Toggle */}
+                      <div className="space-y-3 pt-4 border-t border-gray-100">
+                        <label className="flex items-center gap-3 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={visualizationStore.showCoordinateCrosshairs}
+                            onChange={() => visualizationStore.toggleSetting('showCoordinateCrosshairs')}
+                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm font-medium text-gray-700">
+                              {t('settings.coordinateCrosshairs')}
+                            </div>
+                            <div className="text-xs text-gray-500 leading-relaxed">
+                              {t('settings.coordinateCrosshairs.description')}
+                            </div>
+                          </div>
+                        </label>
+                      </div>
+                      
                       {/* Language Selector */}
                       <div className="space-y-3 pt-4 border-t border-gray-100">
                         <label className="text-sm font-medium text-gray-700">
